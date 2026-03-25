@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+.env/
+
+# Environment variables
+.env
+.flaskenv
+
+# Database
+*.db
+*.sqlite3
+
+# Migrations cache (keep migrations folder, ignore cache)
+migrations/__pycache__/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+htmlcov/
+.coverage
+
+# Build files
+dist/
+build/
+*.egg-info/
