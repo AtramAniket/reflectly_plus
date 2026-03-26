@@ -1,12 +1,16 @@
 from app.extensions import db
 from app.models.user import User
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 from flask import Blueprint, url_for, render_template, request, redirect, flash
 
 auth = Blueprint('auth', __name__)
 
 @auth.route('/signup', methods = ['GET', 'POST'])
 def signup():
+
+	if current_user.is_authenticated:
+		return redirect(url_for('main.dashboard'))
+
 	if request.method == 'POST':
 		email = request.form.get('email')
 		password = request.form.get('password')
@@ -36,6 +40,9 @@ def signup():
 
 @auth.route('/login', methods = ['GET', 'POST'])
 def login():
+
+	if current_user.is_authenticated:
+		return redirect(url_for('main.dashboard'))
 
 	if request.method == 'POST':
 
