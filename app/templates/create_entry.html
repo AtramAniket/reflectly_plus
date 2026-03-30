@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Journal Entry</title>
+</head>
+<body>
+	
+	<h2>New Journal Entry</h2>
+
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				<p>{{ message }}</p>
+			{% endfor %}			
+		{% endif %}
+	{% endwith %}	
+	
+	<form method="POST">
+		<input type="text" name="title" placeholder="Add title" required>
+		<br/><br/>
+		<textarea name="content" placeholder="Write your thoughts" required></textarea>
+		<br/><br/>
+		<input type="number" name="mood_score" placeholder="Mood (1-10)">
+		<br/><br/>
+		<button type="submit">Save Entry</button>
+	</form>
+	
+</body>
+</html>
