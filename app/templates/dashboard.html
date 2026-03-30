@@ -15,8 +15,8 @@
 		{% endif %}
 	{% endwith %}
 
-	<a href="/logout">Logout</a>
-	<a href="/create_new_entry">Create New +</a>
+	<a href="{{ url_for('auth.logout') }}">Logout</a>
+	<a href="{{ url_for('journal.create_new_entry') }}">Create New +</a>
 	<h1>Welcome {{email}}<h1>
 
 	<hr/>
@@ -28,6 +28,11 @@
 			<small>Mood Score: {{ entry.mood_score }}</small>
 			<br/>
 			<small>Created at: {{ entry.created_at.strftime('%Y/%m/%d') }} by {{ email }}</small>
+			<br/><br/>
+			<a href="{{ url_for('journal.edit_entry', entry_id=entry.id) }}">Edit</a>
+			<form method="POST" action="{{ url_for('journal.delete_entry', entry_id=entry.id) }}">
+				<button type="submit">Delete</button>
+			</form>	
 		</div>
 	{% else %}
 		<p>No entries yet</p>
