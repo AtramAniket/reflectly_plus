@@ -2,7 +2,7 @@ import datetime
 from app.extensions import db
 from flask_login import UserMixin
 from sqlalchemy import String, Integer, DateTime, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin, db.Model):
@@ -16,6 +16,9 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     password_hash: Mapped[str] = mapped_column(String(100), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+
+    # Relationship with JournalEntry
+    entries: Mapped[list['JournalEntry']] = relationship('JournalEntry', back_populates='user', cascade='all, delete-orphan')
 
     def set_password(self, raw_password_text) -> None:
 
