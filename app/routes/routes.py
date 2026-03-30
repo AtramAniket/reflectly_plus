@@ -15,4 +15,7 @@ def home():
 @main.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template('dashboard.html', email=current_user.email)
+    
+    entries = sorted(current_user.entries, key=lambda x: x.created_at, reverse=True)
+
+    return render_template('dashboard.html', email=current_user.email, journal_entries=entries)

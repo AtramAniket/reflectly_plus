@@ -18,5 +18,20 @@
 	<a href="/logout">Logout</a>
 	<a href="/create_new_entry">Create New +</a>
 	<h1>Welcome {{email}}<h1>
+
+	<hr/>
+
+	{% for entry in journal_entries %}
+		<div>
+			<h3>{{ entry.title }}</h3>
+			<p>{{ entry.content }}</p>
+			<small>Mood Score: {{ entry.mood_score }}</small>
+			<br/>
+			<small>Created at: {{ entry.created_at.strftime('%Y/%m/%d') }} by {{ email }}</small>
+		</div>
+	{% else %}
+		<p>No entries yet</p>
+	{% endfor %}
+
 </body>
 </html>
