@@ -25,8 +25,16 @@
 	<p>Total Entries: {{ total_entries }}</p>
 	<p>Average Mood Score: {{ average_mood_score }}</p>
 	<p>Entries This Week: {{ entries_this_week }}</p>
+	<p>Mood Trend: {{ trend }}</p>
 
-	<hr/>
+	<hr style="margin: 30px 0;"/>
+
+	<h2>Mood Over Time</h2>
+	<div style="max-width: 700px; height: 350px;">
+		<canvas id="moodChart"></canvas>
+	</div>
+
+	<hr style="margin: 30px 0;"/>
 
 	{% for entry in journal_entries %}
 		<div>
@@ -34,7 +42,7 @@
 			<p>{{ entry.content }}</p>
 			<small>Mood Score: {{ entry.mood_score }}</small>
 			<br/>
-			<small>Created at: {{ entry.created_at.strftime('%Y/%m/%d') }} by {{ email }}</small>
+			<small>Created at: {{ entry.created_at.strftime("%d %b %H:%M") }} by {{ email }}</small>
 			<br/><br/>
 			<a href="{{ url_for('journal.edit_entry', entry_id=entry.id) }}">Edit</a>
 			<form method="POST" action="{{ url_for('journal.delete_entry', entry_id=entry.id) }}">
@@ -44,6 +52,37 @@
 	{% else %}
 		<p>No entries yet</p>
 	{% endfor %}
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script>
+	    const labels = {{ dates | tojson }};
+	    const data = {{ moods | tojson }};
 
+	    const ctx = document.getElementById('moodChart').getContext('2d');
+
+	    new Chart(ctx, {
+	        type: 'line',
+	        data: {
+	            labels: labels,
+	            datasets: [{
+	                label: 'Mood Score',
+	                label: "Mood Score",
+	                data: data,
+	                borderWidth: 2,
+	                tension: 0.3,
+	                fill: true
+	            }]
+	        },
+	        options: {
+	        	responsive: true,
+	        	maintainAspectRatio: false,
+	            scales: {
+	                y: {
+	                    min: 1,
+	                    max: 10
+	                }
+	            }
+	        }
+	    });
+	</script>
 </body>
 </html>

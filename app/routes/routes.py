@@ -25,9 +25,21 @@ def dashboard():
 
     avg_mood_score = round(sum(mood_values) / len(mood_values), 2) if mood_values else None
 
+    dates = [e.created_at.strftime('%d %b %H:%M') for e in entries if e.mood_score is not None]
+
     one_week_ago = datetime.utcnow() - timedelta(days=7)
 
     entries_this_week = [e for e in entries if e.created_at and e.created_at >= one_week_ago]
+
+    trend = 'Not enough data'
+
+    if(len(mood_values) >= 3):
+        if mood_values[-3:] > mood_values[:4]:
+            trend = 'Improving 📈'
+        elif mood_values[-3:] < mood_values[:4]:
+            trend = 'Declining 📉'
+        else:
+            trend = 'Stable ➖'
 
 
     return render_template('dashboard.html', 
@@ -35,5 +47,8 @@ def dashboard():
         journal_entries=entries,
         average_mood_score = avg_mood_score,
         total_entries=total_entries,
-        entries_this_week = len(entries_this_week)
+        entries_this_week = len(entries_this_week),
+        trend = trend,
+        dates=dates,
+        moods = mood_values
         )
