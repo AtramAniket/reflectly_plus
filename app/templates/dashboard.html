@@ -1,58 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Dashboard</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-			{% for message in messages %}
-				<p>{{ message }}</p>
-			{% endfor %}			
-		{% endif %}
-	{% endwith %}
+{% block content %}
 
-	<a href="{{ url_for('auth.logout') }}">Logout</a>
-	<a href="{{ url_for('journal.create_new_entry') }}">Create New +</a>
-	<h1>Welcome {{email}}<h1>
+	<h2>Welcome {{ email }}</h2>
 
-	<hr/>
-
-	<h2>Your Insights</h2>
-	<p>Total Entries: {{ total_entries }}</p>
-	<p>Average Mood Score: {{ average_mood_score }}</p>
-	<p>Entries This Week: {{ entries_this_week }}</p>
-	<p>Mood Trend: {{ trend }}</p>
-	<p>AI Insights: {{ insights }}</p>
-
-	<hr style="margin: 30px 0;"/>
-
-	<h2>Mood Over Time</h2>
-	<div style="max-width: 700px; height: 350px;">
-		<canvas id="moodChart"></canvas>
+	<div class="card">
+	    <h3>🧠 Insight</h3>
+	    <p>{{ insights }}</p>
 	</div>
 
-	<hr style="margin: 30px 0;"/>
+	<div class="card">
+	    <h3>📊 Stats</h3>
+	    <p>Total Entries: {{ total_entries }}</p>
+	    <p>Average Mood: {{ average_mood_score }}</p>
+	    <p>Trend: {{ trend }}</p>
+	</div>
 
-	{% for entry in journal_entries %}
-		<div>
-			<h3>{{ entry.title }}</h3>
-			<p>{{ entry.content }}</p>
-			<small>Mood Score: {{ entry.mood_score }}</small>
-			<br/>
-			<small>Created at: {{ entry.created_at.strftime("%d %b %H:%M") }} by {{ email }}</small>
-			<br/><br/>
-			<a href="{{ url_for('journal.edit_entry', entry_id=entry.id) }}">Edit</a>
-			<form method="POST" action="{{ url_for('journal.delete_entry', entry_id=entry.id) }}">
-				<button type="submit">Delete</button>
-			</form>	
-		</div>
-	{% else %}
-		<p>No entries yet</p>
-	{% endfor %}
+	<div class="card">
+	    <h3>📈 Mood Over Time</h3>
+	    <div id="chart-container">
+	        <canvas id="moodChart"></canvas>
+	    </div>
+	</div>
+
+	<div class="card">
+	    <h3>📝 Journal Entries</h3>
+
+	    {% for entry in journal_entries %}
+	        <div class="card" style="margin-bottom: 10px;">
+	            <strong>{{ entry.title }}</strong><br>
+	            {{ entry.content }}<br>
+	            Mood: {{ entry.mood_score }}
+	        </div>
+	    {% else %}
+	        <p>No entries yet</p>
+	    {% endfor %}
+	</div>
+
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script>
 	    const labels = {{ dates | tojson }};
@@ -85,5 +69,4 @@
 	        }
 	    });
 	</script>
-</body>
-</html>
+{% endblock %}
