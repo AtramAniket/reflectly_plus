@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from flask_login import current_user, login_required
+from app.services.ai_insights import generate_insight
 from flask import Blueprint, render_template, redirect, url_for
 
 
@@ -41,6 +42,12 @@ def dashboard():
         else:
             trend = 'Stable ➖'
 
+    # generate AI insights using OpenAI API
+    if entries:
+        insights = generate_insight(avg_mood_score, trend, entries)
+    else:
+        insightts = 'Start Journalling to get insights'
+
 
     return render_template('dashboard.html', 
         email=current_user.email, 
@@ -50,5 +57,6 @@ def dashboard():
         entries_this_week = len(entries_this_week),
         trend = trend,
         dates=dates,
-        moods = mood_values
+        moods = mood_values,
+        insights = insights
         )
