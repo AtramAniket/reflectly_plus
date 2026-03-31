@@ -21,6 +21,13 @@
 
 	<hr/>
 
+	<h2>Your Insights</h2>
+	<p>Total Entries: {{ total_entries }}</p>
+	<p>Average Mood Score: {{ average_mood_score }}</p>
+	<p>Entries This Week: {{ entries_this_week }}</p>
+
+	<hr/>
+
 	{% for entry in journal_entries %}
 		<div>
 			<h3>{{ entry.title }}</h3>
