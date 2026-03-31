@@ -46,7 +46,7 @@ def dashboard():
     if entries:
         insights = generate_insight(avg_mood_score, trend, entries)
     else:
-        insightts = 'Start Journalling to get insights'
+        insights = 'Start Journalling to get insights'
 
 
     return render_template('dashboard.html', 
