@@ -1,15 +1,19 @@
-import datetime
+from datetime import date
 from app.extensions import db
-from sqlalchemy import Integer, DateTime, ForeignKey, Boolean, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Integer, Date, ForeignKey, Boolean, func, UniqueConstraint
 
 class HabitLog(db.Model):
 
 	__tablename__ = 'habit_logs'
 
+	__table_args__ = (
+	    UniqueConstraint('habit_id', 'date', name='unique_habit_per_day'),
+	)
+
 	id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-	date: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
+	date: Mapped[date] = mapped_column(Date, nullable=False, default=date.today)
 
 	completed: Mapped[bool] = mapped_column(Boolean, default=False)
 
