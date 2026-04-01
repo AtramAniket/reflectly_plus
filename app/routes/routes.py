@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+from app.models.habit_log import HabitLog
 from flask_login import current_user, login_required
 from app.services.ai_insights import generate_insight
 from flask import Blueprint, render_template, redirect, url_for
@@ -52,6 +53,12 @@ def dashboard():
     # Habits
     habits = current_user.habits
 
+    # Habit Logs
+
+    today_logs = {
+        log.habit_id for log in HabitLog.query.filter_by(date=date.today()).all()
+    }
+
 
     return render_template('dashboard.html', 
         email=current_user.email, 
@@ -63,5 +70,6 @@ def dashboard():
         dates=dates,
         moods = mood_values,
         insights = insights,
-        habits = habits
+        habits = habits,
+        today_logs = today_logs
         )

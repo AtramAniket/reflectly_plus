@@ -20,7 +20,11 @@
 		{% for habit in habits %}
 			<div style="margin-bottom:10px;">
 				{{ habit.name }}
-				<a href="{{url_for('habit.complete_habit', habit_id=habit.id)}}">Mark done</a>
+				{% if habit.id in today_logs %}
+					<span>✅ Done today</span>
+				{% else %}
+					<a href="{{url_for('habit.complete_habit', habit_id=habit.id)}}">Mark done</a>
+				{% endif %}
 			</div>
 		{% else %}
 			<p>No habits yet</p>
