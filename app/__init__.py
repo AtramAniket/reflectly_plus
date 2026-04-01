@@ -16,6 +16,8 @@ def create_app():
     from .routes.journal import journal
 
     from .models.user import User
+    from .models.habit import Habit
+    from .models.habit_log import HabitLog
     from .models.journal import JournalEntry
     
     app.register_blueprint(main)
