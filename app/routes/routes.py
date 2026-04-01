@@ -44,7 +44,8 @@ def dashboard():
 
     # generate AI insights using OpenAI API
     if entries:
-        insights = generate_insight(avg_mood_score, trend, entries)
+        # insights = generate_insight(avg_mood_score, trend, entries)
+        insights = 'This is a placeholder for AI Insights using OpenAI API'
     else:
         insights = 'Start Journalling to get insights'
 
