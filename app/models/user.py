@@ -20,6 +20,9 @@ class User(UserMixin, db.Model):
     # Relationship with JournalEntry
     entries: Mapped[list['JournalEntry']] = relationship('JournalEntry', back_populates='user', cascade='all, delete-orphan')
 
+    # Relationship with Habit
+    habits = relationship('Habit', back_populates='user', cascade='all, delete-orphan')
+
     def set_password(self, raw_password_text) -> None:
 
         self.password_hash = generate_password_hash(raw_password_text, method="pbkdf2:sha256:600000", salt_length=8)

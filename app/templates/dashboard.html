@@ -17,6 +17,17 @@
 	</div>
 
 	<div class="card">
+		{% for habit in habits %}
+			<div style="margin-bottom:10px;">
+				{{ habit.name }}
+				<a href="#">Mark done</a>
+			</div>
+		{% else %}
+			<p>No habits yet</p>
+		{% endfor %}
+	</div>
+
+	<div class="card">
 	    <h3>📈 Mood Over Time</h3>
 	    <div id="chart-container">
 	        <canvas id="moodChart"></canvas>

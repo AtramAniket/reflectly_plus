@@ -49,6 +49,9 @@ def dashboard():
     else:
         insights = 'Start Journalling to get insights'
 
+    # Habits
+    habits = current_user.habits
+
 
     return render_template('dashboard.html', 
         email=current_user.email, 
@@ -59,5 +62,6 @@ def dashboard():
         trend = trend,
         dates=dates,
         moods = mood_values,
-        insights = insights
+        insights = insights,
+        habits = habits
         )

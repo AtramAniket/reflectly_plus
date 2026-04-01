@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<h2>Create Habit</h2>
+
+	<form method="POST">
+		<input type="text" name="name" placeholder="Habit name" required>
+		<button type="submit">Create</button>
+	</form>
+
+{% endblock %}

@@ -13,3 +13,5 @@ class Habit(db.Model):
 	user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
 
 	logs  = relationship('HabitLog', back_populates='habit', cascade='all, delete-orphan')
+
+	user = relationship('User', back_populates='habits')
