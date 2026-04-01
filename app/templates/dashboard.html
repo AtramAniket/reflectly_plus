@@ -16,24 +16,31 @@
 	    <p>Trend: {{ trend }}</p>
 	</div>
 
-	<div class="card">
-		{% for habit in habits %}
-			<div style="margin-bottom:10px;">
-				{{ habit.name }}
-				{% if habit.id in today_logs %}
-					<span>✅ Done today</span>
-				{% else %}
-					<a href="{{url_for('habit.complete_habit', habit_id=habit.id)}}">Mark done</a>
-				{% endif %}
-			</div>
-		{% else %}
-			<p>No habits yet</p>
-		{% endfor %}
-	</div>
+	{% for habit in habits %}
+	    <div class="card">
+
+	        <strong>{{ habit.name }}</strong><br>
+
+	        {% if habit_streaks[habit.id] > 0 %}
+	            🔥 {{ habit_streaks[habit.id] }} day streak
+	        {% else %}
+	            Start your streak today 💪
+	        {% endif %}
+
+	        {% if habit.id in today_logs %}
+	            <span>✅ Done today</span>
+	        {% else %}
+	            <a href="{{ url_for('habit.complete_habit', habit_id=habit.id) }}">
+	                Mark Done
+	            </a>
+	        {% endif %}
+
+	    </div>
+	{% endfor %}
 
 	<div class="card">
 	    <h3>📈 Mood Over Time</h3>
-	    <div id="chart-container">
+	    <div class="chart-container">
 	        <canvas id="moodChart"></canvas>
 	    </div>
 	</div>
@@ -65,7 +72,6 @@
 	            labels: labels,
 	            datasets: [{
 	                label: 'Mood Score',
-	                label: "Mood Score",
 	                data: data,
 	                borderWidth: 2,
 	                tension: 0.3,
@@ -77,7 +83,7 @@
 	        	maintainAspectRatio: false,
 	            scales: {
 	                y: {
-	                    min: 1,
+	                    min: 0,
 	                    max: 10
 	                }
 	            }

@@ -1,5 +1,5 @@
-from datetime import datetime, timedelta, date
 from app.models.habit_log import HabitLog
+from datetime import datetime, timedelta, date
 from flask_login import current_user, login_required
 from app.services.ai_insights import generate_insight
 from flask import Blueprint, render_template, redirect, url_for
@@ -7,6 +7,25 @@ from flask import Blueprint, render_template, redirect, url_for
 
 
 main = Blueprint("main", __name__)
+
+def calculate_streaks(logs):
+    if not logs:
+        return 0
+
+    # Sort logs by date descending
+    logs = sorted(logs, key=lambda x: x.date, reverse=True)
+
+    streaks = 0
+    current_day = date.today()
+
+    for log in logs:
+        if log.date == current_day:
+            streaks += 1
+            current_day -= timedelta(days=1)
+        else:
+            break
+    return streaks 
+
 
 @main.route("/")
 def home():
@@ -54,11 +73,16 @@ def dashboard():
     habits = current_user.habits
 
     # Habit Logs
-
     today_logs = {
         log.habit_id for log in HabitLog.query.filter_by(date=date.today()).all()
     }
 
+    # Habit streaks
+    habit_streaks = {}
+
+    for habit in habits:
+        streak = calculate_streaks(habit.logs)
+        habit_streaks[habit.id] = streak
 
     return render_template('dashboard.html', 
         email=current_user.email, 
@@ -71,5 +95,6 @@ def dashboard():
         moods = mood_values,
         insights = insights,
         habits = habits,
-        today_logs = today_logs
+        today_logs = today_logs,
+        habit_streaks = habit_streaks
         )
