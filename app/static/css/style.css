@@ -268,3 +268,45 @@ body {
     color: #2563eb;
     text-decoration: none;
 }
+
+/* ===== Forms ===== */
+
+.form-container {
+    max-width: 600px;
+}
+
+.entry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #374151;
+}
+
+.entry-form input,
+.entry-form textarea {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+}
+
+.entry-form input:focus,
+.entry-form textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.entry-form textarea {
+    resize: vertical;
+}
