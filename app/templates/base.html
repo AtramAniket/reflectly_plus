@@ -3,22 +3,33 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <title>Reflectly</title>
     <style>
         body {
             display: flex;
             margin: 0;
-            font-family: Arial;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
             display: flex;
             align-items: stretch;
         }
 
+        .main {
+            margin-left: 220px;
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
         .sidebar {
             width: 220px;
-            min-height: 100vh;
-            background: #1e293b;
+            background: #111827;
             color: white;
-            padding: 20px;
+            height: 100vh;
+            position: fixed;
         }
 
         .sidebar a {
@@ -42,9 +53,10 @@
 
         .card {
             background: white;
-            padding: 15px;
-            border-radius: 10px;
+            border-radius: 12px;
+            padding: 20px;
             margin-bottom: 20px;
+            border: 1px solid #eee;
         }
 
         .card:hover {
@@ -53,7 +65,7 @@
         }
         .chart-container {
             position: relative;
-            height: 300px;   /* control height here */
+            height: 300px;
             width: 100%;
             overflow: hidden;
         }
