@@ -1,0 +1,198 @@
+/* ===== Base Reset ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    display: flex;
+    background: #f1f5f9;
+}
+
+/* ===== Layout ===== */
+.sidebar {
+    width: 220px;
+    background: #111827;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    color: #cbd5f5;
+    display: block;
+    margin: 10px 0;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.sidebar a:hover {
+    background: #1f2937;
+    color: white;
+}
+
+.sidebar a.active {
+    background: #334155;
+    color: white;
+}
+
+.main {
+    margin-left: 220px;
+    padding: 30px;
+    width: 100%;
+}
+
+/* ===== Dashboard Layout ===== */
+.dashboard {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.main-column,
+.side-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== Typography ===== */
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+/* ===== Cards ===== */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* ===== Habit Tracker ===== */
+.habit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.habit-item {
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #fafafa;
+}
+
+.habit-name {
+    font-weight: 600;
+}
+
+.habit-meta {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.habit-action {
+    margin-top: 5px;
+}
+
+.done {
+    color: #16a34a;
+    font-weight: 500;
+}
+
+/* ===== Journal Entries ===== */
+.entry-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.entry-item {
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #fafafa;
+}
+
+.entry-title {
+    font-weight: 600;
+}
+
+.entry-content {
+    margin-top: 5px;
+    color: #374151;
+}
+
+.entry-meta {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* ===== Chart ===== */
+.chart-container {
+    position: relative;
+    height: 260px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.chart-container canvas {
+    max-height: 100%;
+}
+
+/* ===== Links ===== */
+.btn-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== Flash Messages ===== */
+.flash {
+    background: #dcfce7;
+    color: #166534;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* ===== Empty State ===== */
+.empty-text {
+    color: #6b7280;
+    font-size: 14px;
+}

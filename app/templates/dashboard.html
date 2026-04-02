@@ -2,97 +2,133 @@
 
 {% block content %}
 
-	<h2>Welcome {{ email }}</h2>
+<h2 class="page-title">Dashboard</h2>
+<p class="subtitle">Welcome back, {{ email }}</p>
 
-	<div class="card">
-	    <h3>🧠 Insight</h3>
-	    <p>{{ insights }}</p>
-	</div>
+<div class="dashboard">
 
-	<div class="card">
-	    <h3>📊 Stats</h3>
-	    <p>Total Entries: {{ total_entries }}</p>
-	    <p>Average Mood: {{ average_mood_score }}</p>
-	    <p>Trend: {{ trend }}</p>
-	</div>
+    <!-- LEFT COLUMN -->
+    <div class="main-column">
 
+        <div class="card">
+            <h3 class="card-title">🧠 Insight</h3>
+            <p>{{ insights }}</p>
+        </div>
 
-    <div class="card">
-    	<h3>📝 Habit Tracker</h3>
-    	{% for habit in habits %}
-    		<div class="card" style="margin-bottom: 10px;">
-		        <strong>{{ habit.name }}</strong><br>
+        <div class="card">
+            <h3 class="card-title">📈 Mood Over Time</h3>
+            <div class="chart-container">
+                <canvas id="moodChart"></canvas>
+            </div>
+        </div>
 
-		        {% if habit_streaks[habit.id] > 0 %}
-		            🔥 {{ habit_streaks[habit.id] }} day streak
-		        {% else %}
-		            Start your streak today 💪
-		        {% endif %}
+        <div class="card">
+            <h3 class="card-title">📝 Journal Entries</h3>
 
-		        {% if habit.id in today_logs %}
-		            <span>✅ Done today</span>
-		        {% else %}
-		            <a href="{{ url_for('habit.complete_habit', habit_id=habit.id) }}">
-		                Mark Done
-		            </a>
-		        {% endif %}
-	    	</div>
-	    {% else %}
-	    	<p>There are no habits to track</p>
-        {% endfor %}
+            <div class="entry-list">
+                {% for entry in journal_entries %}
+                    <div class="entry-item">
+                        <strong class="entry-title">{{ entry.title }}</strong><br>
+                        <span class="entry-content">{{ entry.content }}</span><br>
+                        <span class="entry-meta">Mood: {{ entry.mood_score }}</span>
+                    </div>
+                {% else %}
+                    <p class="empty-text">No entries yet</p>
+                {% endfor %}
+            </div>
+
+        </div>
+
     </div>
 
 
-	<div class="card">
-	    <h3>📈 Mood Over Time</h3>
-	    <div class="chart-container">
-	        <canvas id="moodChart"></canvas>
-	    </div>
-	</div>
+    <!-- RIGHT COLUMN -->
+    <div class="side-column">
 
-	<div class="card">
-	    <h3>📝 Journal Entries</h3>
+        <div class="card">
+            <h3 class="card-title">📊 Stats</h3>
+            <p>Total Entries: {{ total_entries }}</p>
+            <p>Average Mood: {{ average_mood_score }}</p>
+            <p>Trend: {{ trend }}</p>
+        </div>
 
-	    {% for entry in journal_entries %}
-	        <div class="card" style="margin-bottom: 10px;">
-	            <strong>{{ entry.title }}</strong><br>
-	            {{ entry.content }}<br>
-	            Mood: {{ entry.mood_score }}
-	        </div>
-	    {% else %}
-	        <p>No entries yet</p>
-	    {% endfor %}
-	</div>
+        <div class="card">
+            <h3 class="card-title">📝 Habit Tracker</h3>
 
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<script>
-	    const labels = {{ dates | tojson }};
-	    const data = {{ moods | tojson }};
+            <div class="habit-list">
+                {% for habit in habits %}
 
-	    const ctx = document.getElementById('moodChart').getContext('2d');
+                    {% set streak = habit_streaks.get(habit.id, 0) %}
 
-	    new Chart(ctx, {
-	        type: 'line',
-	        data: {
-	            labels: labels,
-	            datasets: [{
-	                label: 'Mood Score',
-	                data: data,
-	                borderWidth: 2,
-	                tension: 0.3,
-	                fill: true
-	            }]
-	        },
-	        options: {
-	        	responsive: true,
-	        	maintainAspectRatio: false,
-	            scales: {
-	                y: {
-	                    min: 0,
-	                    max: 10
-	                }
-	            }
-	        }
-	    });
-	</script>
+                    <div class="habit-item">
+
+                        <div class="habit-name">
+                            <strong>{{ habit.name }}</strong>
+                        </div>
+
+                        <div class="habit-meta">
+                            {% if streak > 0 %}
+                                🔥 {{ streak }} day streak
+                            {% else %}
+                                Start your streak today 💪
+                            {% endif %}
+                        </div>
+
+                        <div class="habit-action">
+                            {% if habit.id in today_logs %}
+                                <span class="done">✅ Done today</span>
+                            {% else %}
+                                <a href="{{ url_for('habit.complete_habit', habit_id=habit.id) }}" class="btn-link">
+                                    Mark Done
+                                </a>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                {% else %}
+                    <p class="empty-text">No habits to track yet</p>
+                {% endfor %}
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ dates | tojson }};
+    const data = {{ moods | tojson }};
+
+    const ctx = document.getElementById('moodChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Mood Score',
+                data: data,
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    min: 0,
+                    max: 10
+                }
+            }
+        }
+    });
+</script>
+
 {% endblock %}

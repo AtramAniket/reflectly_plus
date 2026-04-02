@@ -3,98 +3,46 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
     <title>Reflectly</title>
-    <style>
-        body {
-            display: flex;
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            display: flex;
-            align-items: stretch;
-        }
-
-        .main {
-            margin-left: 220px;
-            padding: 30px;
-        }
-
-        .section {
-            margin-bottom: 30px;
-        }
-
-        .sidebar {
-            width: 220px;
-            background: #111827;
-            color: white;
-            height: 100vh;
-            position: fixed;
-        }
-
-        .sidebar a {
-            color: white;
-            display: block;
-            margin: 10px 0;
-            text-decoration: none;
-        }
-
-        .sidebar a.active {
-            background: #334155;
-            padding: 5px;
-            border-radius: 5px;
-        }
-
-        .main {
-            flex: 1;
-            padding: 20px;
-            background: #f1f5f9;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #eee;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            transition: 0.2s;
-        }
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-            overflow: hidden;
-        }
-        .chart-container canvas{
-            max-height: 100%;
-        }
-    </style>
 </head>
 
 <body>
 
+<!-- Sidebar -->
 <div class="sidebar">
-    <h2>Reflectly</h2>
-    <a href="/">Dashboard</a>
-    <a href="{{ url_for('journal.create_new_entry') }}">New Entry</a>
-    <a href="{{ url_for('auth.logout') }}">Logout</a>
-    <a href="{{ url_for('habit.create_habit') }}">Create New Habit</a>
+    <h2 class="logo">Reflectly</h2>
+
+    <nav class="nav">
+        <a href="/" class="nav-link">Dashboard</a>
+        <a href="{{ url_for('journal.create_new_entry') }}" class="nav-link">New Entry</a>
+        <a href="{{ url_for('habit.create_habit') }}" class="nav-link">Create Habit</a>
+        <a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a>
+    </nav>
 </div>
 
+<!-- Main Content -->
 <div class="main">
+
+    <!-- Flash Messages -->
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}            
+            <div class="flash-container">
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            </div>
         {% endif %}
     {% endwith %}
 
     {% block content %}{% endblock %}
+
 </div>
 
 </body>
