@@ -29,6 +29,19 @@ def create_new_entry():
 
 	return render_template('create_entry.html')
 
+
+@journal.route('/entries/<int:entry_id>')
+@login_required
+def view_entry(entry_id):
+	
+    entry = JournalEntry.query.get_or_404(entry_id)
+
+    if entry.user_id != current_user.id:
+        abort(403)
+
+    return render_template('view_entry.html', entry=entry)
+
+
 @journal.route('/journal/edit/<int:entry_id>', methods=['GET', 'POST'])
 @login_required
 def edit_entry(entry_id):

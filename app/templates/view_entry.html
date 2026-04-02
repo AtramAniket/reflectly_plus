@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="entry-header">
+    <h2 class="page-title">{{ entry.title }}</h2>
+    <p class="entry-date">{{ entry.created_at.strftime('%B %d, %Y') }}</p>
+</div>
+
+<div class="entry-container">
+
+    <div class="card">
+
+        <div class="entry-content-full">
+            {{ entry.content }}
+        </div>
+
+        <div class="entry-footer">
+            <span class="entry-mood-badge">
+                Mood: {{ entry.mood_score }}/10
+            </span>
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="entry-actions">
+
+        <a href="{{ url_for('journal.edit_entry', entry_id=entry.id) }}" class="btn-secondary">
+            Edit
+        </a>
+
+        <a href="{{ url_for('journal.delete_entry', entry_id=entry.id) }}" class="btn-danger">
+            Delete
+        </a>
+
+        <a href="{{ url_for('main.dashboard') }}" class="btn-link">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

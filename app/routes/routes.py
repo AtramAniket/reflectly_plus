@@ -38,7 +38,7 @@ def home():
 @login_required
 def dashboard():
     
-    entries = sorted(current_user.entries, key=lambda x: x.created_at, reverse=True)
+    entries = sorted(current_user.entries, key=lambda x: x.created_at, reverse=True)[:3]
 
     total_entries = len(entries)
 

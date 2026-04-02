@@ -28,7 +28,10 @@
             <div class="entry-list">
                 {% for entry in journal_entries %}
                     <div class="entry-item">
-                        <strong class="entry-title">{{ entry.title }}</strong><br>
+                        <a href="{{ url_for('journal.view_entry', entry_id=entry.id) }}" class="entry-title-link">
+                            {{ entry.title }}
+                        </a>
+                        <br/>
                         <span class="entry-content">{{ entry.content }}</span><br>
                         <span class="entry-meta">Mood: {{ entry.mood_score }}</span>
                     </div>

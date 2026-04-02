@@ -310,3 +310,73 @@ body {
 .entry-form textarea {
     resize: vertical;
 }
+
+/* ===== Entry Detail Page ===== */
+
+.entry-header {
+    margin-bottom: 20px;
+}
+
+.entry-date {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.entry-container {
+    max-width: 700px;
+}
+
+.entry-content-full {
+    white-space: pre-wrap;
+    line-height: 1.7;
+    color: #374151;
+}
+
+.entry-footer {
+    margin-top: 20px;
+}
+
+.entry-mood-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Actions */
+.entry-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-secondary {
+    padding: 8px 14px;
+    background: #e5e7eb;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #111827;
+}
+
+.btn-danger {
+    padding: 8px 14px;
+    background: #ef4444;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.entry-title-link {
+    font-weight: 600;
+    text-decoration: none;
+    color: #111827;
+}
+
+.entry-title-link:hover {
+    text-decoration: underline;
+}
