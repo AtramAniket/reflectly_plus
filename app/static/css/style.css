@@ -47,6 +47,9 @@ body {
 }
 
 .main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-left: 220px;
     padding: 30px;
     width: 100%;
@@ -273,6 +276,7 @@ body {
 
 .form-container {
     max-width: 600px;
+    margin: 0 auto;
 }
 
 .entry-form {
@@ -379,4 +383,13 @@ body {
 
 .entry-title-link:hover {
     text-decoration: underline;
+}
+
+/*=====QUILL=====*/
+.ql-container {
+    border-radius: 0 0 8px 8px;
+}
+
+.ql-toolbar {
+    border-radius: 8px 8px 0 0;
 }
