@@ -2,17 +2,24 @@
 
 {% block content %}
 
-<div class="entry-header">
-    <h2 class="page-title">{{ entry.title }}</h2>
-    <p class="entry-date">{{ entry.created_at.strftime('%B %d, %Y') }}</p>
-</div>
+<div class="reading-container">
 
-<div class="entry-container">
+    <!-- HERO IMAGE -->
+    <div class="entry-hero">
+        <img src="{{ entry.image_url or 'https://picsum.photos/1200/400' }}" alt="Entry Image">
 
-    <div class="card">
+        <div class="entry-hero-overlay">
+            <h1 class="entry-title">{{ entry.title }}</h1>
+            <p class="entry-date">{{ entry.created_at.strftime('%B %d, %Y') }}</p>
+        </div>
+    </div>
+
+
+    <!-- CONTENT CARD -->
+    <div class="card entry-view">
 
         <div class="entry-content-full">
-            {{ entry.content }}
+            {{ entry.content | safe }}
         </div>
 
         <div class="entry-footer">
@@ -23,16 +30,21 @@
 
     </div>
 
-    <!-- Actions -->
+
+    <!-- ACTIONS -->
     <div class="entry-actions">
 
-        <a href="{{ url_for('journal.edit_entry', entry_id=entry.id) }}" class="btn-secondary">
-            Edit
-        </a>
+        <div class="entry-actions-left">
+            
+            <a href="{{ url_for('journal.edit_entry', entry_id=entry.id) }}" class="btn-secondary">
+                ✏️ Edit
+            </a>
 
-        <a href="{{ url_for('journal.delete_entry', entry_id=entry.id) }}" class="btn-danger">
-            Delete
-        </a>
+            <a href="{{ url_for('journal.delete_entry', entry_id=entry.id) }}" class="btn-danger">
+                🗑 Delete
+            </a>
+
+        </div>
 
         <a href="{{ url_for('main.dashboard') }}" class="btn-link">
             ← Back to Dashboard

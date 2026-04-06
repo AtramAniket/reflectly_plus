@@ -2,28 +2,38 @@
 
 {% block content %}
 
-<h2 class="page-title">Dashboard</h2>
-<p class="subtitle">Welcome back, {{ email }}</p>
+<div class="dashboard-header">
+    <div>
+        <h1 class="dashboard-greeting">Welcome back</h1>
+        <p class="dashboard-identity">{{ email }}</p>
+    </div>
+</div>
 
-<div class="dashboard">
+<div class="dashboard-grid">
 
     <!-- LEFT COLUMN -->
-    <div class="main-column">
+    <section class="dashboard-main">
 
-        <div class="card">
+        <div class="card card-dashboard insight-card">
             <h3 class="card-title">🧠 Insight</h3>
-            <p>{{ insights }}</p>
+            <p class="insight-text">{{ insights }}</p>
         </div>
 
-        <div class="card">
-            <h3 class="card-title">📈 Mood Over Time</h3>
+        <div class="card card-dashboard">
+            <div class="section-header">
+                <h3 class="card-title">📈 Mood Over Time</h3>
+            </div>
+
             <div class="chart-container">
                 <canvas id="moodChart"></canvas>
             </div>
         </div>
 
-        <div class="card">
-            <h3 class="card-title">📝 Journal Entries</h3>
+        <div class="card card-dashboard">
+            <div class="section-header">
+                <h3 class="card-title">📝 Recent Journal Entries</h3>
+                <a href="{{ url_for('journal.all_entries') if false else '#' }}" class="section-link">View all</a>
+            </div>
 
             <div class="entry-list">
                 {% for entry in journal_entries %}
@@ -31,42 +41,62 @@
                         <a href="{{ url_for('journal.view_entry', entry_id=entry.id) }}" class="entry-title-link">
                             {{ entry.title }}
                         </a>
-                        <br/>
-                        <span class="entry-content">{{ entry.content }}</span><br>
+                        <p class="entry-content">
+                            {{ entry.content|striptags|truncate(140) }}
+                        </p>
                         <span class="entry-meta">Mood: {{ entry.mood_score }}</span>
                     </div>
                 {% else %}
                     <p class="empty-text">No entries yet</p>
                 {% endfor %}
             </div>
-
         </div>
 
-    </div>
-
+    </section>
 
     <!-- RIGHT COLUMN -->
-    <div class="side-column">
+    <aside class="dashboard-side">
 
-        <div class="card">
-            <h3 class="card-title">📊 Stats</h3>
-            <p>Total Entries: {{ total_entries }}</p>
-            <p>Average Mood: {{ average_mood_score }}</p>
-            <p>Trend: {{ trend }}</p>
+        <div class="stats-grid">
+            <div class="card stat-card">
+                <span class="stat-label">Total Entries</span>
+                <span class="stat-value">{{ total_entries }}</span>
+            </div>
+
+            <div class="card stat-card">
+                <span class="stat-label">Average Mood</span>
+                <span class="stat-value">
+                    {{ average_mood_score if average_mood_score is not none else '—' }}
+                </span>
+            </div>
+
+            <div class="card stat-card stat-card-wide">
+                <span class="stat-label">Trend</span>
+                <span class="stat-value stat-value-small">{{ trend }}</span>
+            </div>
         </div>
 
-        <div class="card">
-            <h3 class="card-title">📝 Habit Tracker</h3>
+        <div class="card card-dashboard habit-panel">
+            <div class="section-header">
+                <h3 class="card-title">🎯 Habit Tracker</h3>
+                <a href="{{ url_for('habit.create_habit') }}" class="section-link">New habit</a>
+            </div>
 
             <div class="habit-list">
                 {% for habit in habits %}
-
                     {% set streak = habit_streaks.get(habit.id, 0) %}
 
                     <div class="habit-item">
+                        <div class="habit-top-row">
+                            <div class="habit-name">{{ habit.name }}</div>
 
-                        <div class="habit-name">
-                            <strong>{{ habit.name }}</strong>
+                            {% if habit.id in today_logs %}
+                                <span class="habit-badge done-badge">Done</span>
+                            {% else %}
+                                <a href="{{ url_for('habit.complete_habit', habit_id=habit.id) }}" class="habit-badge action-badge">
+                                    Mark done
+                                </a>
+                            {% endif %}
                         </div>
 
                         <div class="habit-meta">
@@ -76,32 +106,17 @@
                                 Start your streak today 💪
                             {% endif %}
                         </div>
-
-                        <div class="habit-action">
-                            {% if habit.id in today_logs %}
-                                <span class="done">✅ Done today</span>
-                            {% else %}
-                                <a href="{{ url_for('habit.complete_habit', habit_id=habit.id) }}" class="btn-link">
-                                    Mark Done
-                                </a>
-                            {% endif %}
-                        </div>
-
                     </div>
-
                 {% else %}
-                    <p class="empty-text">No habits to track yet</p>
+                    <p class="empty-text">No habits yet</p>
                 {% endfor %}
             </div>
-
         </div>
 
-    </div>
+    </aside>
 
 </div>
 
-
-<!-- Chart -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const labels = {{ dates | tojson }};
@@ -117,17 +132,30 @@
                 label: 'Mood Score',
                 data: data,
                 borderWidth: 2,
-                tension: 0.3,
+                tension: 0.35,
                 fill: true
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
             scales: {
                 y: {
                     min: 0,
-                    max: 10
+                    max: 10,
+                    grid: {
+                        color: 'rgba(0,0,0,0.06)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
                 }
             }
         }

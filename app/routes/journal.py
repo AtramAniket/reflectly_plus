@@ -65,7 +65,7 @@ def edit_entry(entry_id):
 
 	return render_template('edit_entry.html', journal_entry = entry)
 
-@journal.route('/journal/delete_article/<int:entry_id>', methods=['POST'])
+@journal.route('/journal/delete_article/<int:entry_id>', methods=['GET', 'POST'])
 @login_required
 def delete_entry(entry_id):
 
@@ -74,13 +74,10 @@ def delete_entry(entry_id):
 	if entry.user_id != current_user.id:
 		abort(403)
 
+	db.session.delete(entry)
+	db.session.commit()
 
-	if request.method == 'POST':
-
-		db.session.delete(entry)
-		db.session.commit()
-
-		flash('Entry deleted successfully', 'success')
-		return redirect(url_for('main.dashboard'))
+	flash('Entry deleted successfully', 'success')
+	return redirect(url_for('main.dashboard'))
 
 	return render_template('edit_entry.html', journal_entry = entry)

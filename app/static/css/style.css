@@ -1,4 +1,7 @@
-/* ===== Base Reset ===== */
+/* =========================================================
+   1. GLOBAL RESET + BASE
+   ========================================================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -10,16 +13,22 @@ body {
     line-height: 1.6;
     display: flex;
     background: #f1f5f9;
+    color: #111827;
 }
 
-/* ===== Layout ===== */
+
+/* =========================================================
+   2. APP SHELL / MAIN LAYOUT
+   Sidebar + Main content area used across logged-in pages
+   ========================================================= */
+
 .sidebar {
     width: 220px;
-    background: #111827;
-    color: white;
     height: 100vh;
     position: fixed;
     padding: 20px;
+    background: #111827;
+    color: white;
 }
 
 .sidebar h2 {
@@ -27,12 +36,12 @@ body {
 }
 
 .sidebar a {
-    color: #cbd5f5;
     display: block;
     margin: 10px 0;
-    text-decoration: none;
     padding: 8px;
     border-radius: 6px;
+    color: #cbd5f5;
+    text-decoration: none;
     transition: 0.2s;
 }
 
@@ -47,205 +56,118 @@ body {
 }
 
 .main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: 220px;
-    padding: 30px;
     width: 100%;
+    margin-left: 220px;
+    padding: 28px;
 }
 
-/* ===== Dashboard Layout ===== */
-.dashboard {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
+
+/* =========================================================
+   3. GENERIC CONTAINERS
+   Used to control width for forms / reading pages
+   ========================================================= */
+
+.centered-container {
+    max-width: 720px;
+    margin: 0 auto;
 }
 
-.main-column,
-.side-column {
-    display: flex;
-    flex-direction: column;
+.reading-container {
+    max-width: 970px;
+    margin: 0 auto;
 }
 
-/* ===== Typography ===== */
+
+/* =========================================================
+   4. GENERIC TYPOGRAPHY
+   Reusable page titles / subtitles / section text
+   ========================================================= */
+
 .page-title {
     font-size: 24px;
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .subtitle {
+    font-size: 14px;
     color: #6b7280;
     margin-bottom: 20px;
 }
 
-/* ===== Cards ===== */
-.card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
+.page-header {
     margin-bottom: 20px;
-    border: 1px solid #e5e7eb;
-    transition: 0.2s;
 }
 
-.card:hover {
+.page-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   5. GENERIC CARD SYSTEM
+   Reusable white blocks used across dashboard/forms/views
+   ========================================================= */
+
+.card {
+    padding: 20px;
+    margin-bottom: 20px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.card-dashboard {
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card-dashboard:hover {
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
 }
 
 .card-title {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
     margin-bottom: 10px;
 }
 
-/* ===== Habit Tracker ===== */
-.habit-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
 
-.habit-item {
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    background: #fafafa;
-}
+/* =========================================================
+   6. FLASH MESSAGES
+   For success/info messages shown after actions
+   ========================================================= */
 
-.habit-name {
-    font-weight: 600;
-}
-
-.habit-meta {
-    margin-top: 5px;
+.flash {
+    margin-bottom: 18px;
+    padding: 12px 14px;
     font-size: 14px;
-    color: #6b7280;
-}
-
-.habit-action {
-    margin-top: 5px;
-}
-
-.done {
-    color: #16a34a;
-    font-weight: 500;
-}
-
-/* ===== Journal Entries ===== */
-.entry-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.entry-item {
-    padding: 15px;
+    color: #166534;
+    background: #ecfdf3;
+    border: 1px solid #bbf7d0;
     border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    background: #fafafa;
 }
 
-.entry-title {
-    font-weight: 600;
-}
 
-.entry-content {
-    margin-top: 5px;
-    color: #374151;
-}
+/* =========================================================
+   7. GENERIC LINKS + BUTTONS
+   Shared utility styles
+   ========================================================= */
 
-.entry-meta {
-    margin-top: 5px;
-    font-size: 14px;
-    color: #6b7280;
-}
-
-/* ===== Chart ===== */
-.chart-container {
-    position: relative;
-    height: 260px;
-    width: 100%;
-    overflow: hidden;
-}
-
-.chart-container canvas {
-    max-height: 100%;
-}
-
-/* ===== Links ===== */
 .btn-link {
+    font-size: 14px;
+    font-weight: 500;
     color: #2563eb;
     text-decoration: none;
-    font-weight: 500;
+    opacity: 0.95;
 }
 
 .btn-link:hover {
     text-decoration: underline;
+    opacity: 1;
 }
 
-/* ===== Flash Messages ===== */
-.flash {
-    background: #dcfce7;
-    color: #166534;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-/* ===== Empty State ===== */
-.empty-text {
-    color: #6b7280;
-    font-size: 14px;
-}
-
-/* ===== Auth Pages ===== */
-
-.auth-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.auth-container {
-    width: 100%;
-    max-width: 400px;
-}
-
-.auth-card {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-}
-
-.auth-title {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-/* Form */
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.auth-form input {
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #d1d5db;
-    font-size: 14px;
-}
-
-.auth-form input:focus {
-    outline: none;
-    border-color: #2563eb;
-}
-
-/* Button */
 .btn-primary {
     padding: 10px;
     border: none;
@@ -260,7 +182,351 @@ body {
     background: #1d4ed8;
 }
 
-/* Switch text */
+.btn-secondary {
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: #e5e7eb;
+    color: #111827;
+    text-decoration: none;
+}
+
+.btn-danger {
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: #ef4444;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+
+/* =========================================================
+   8. DASHBOARD HEADER
+   Greeting block at top of dashboard
+   ========================================================= */
+
+.dashboard-header {
+    margin-bottom: 20px;
+}
+
+.dashboard-greeting {
+    font-size: 28px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 2px;
+}
+
+.dashboard-identity {
+    font-size: 15px;
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   9. DASHBOARD LAYOUT
+   Main 2-column dashboard structure
+   ========================================================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(320px, 380px);
+    gap: 20px;
+    align-items: start;
+}
+
+.dashboard-main,
+.dashboard-side {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Older dashboard wrapper still supported if used elsewhere */
+.dashboard {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.main-column,
+.side-column {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   10. SECTION HEADERS INSIDE CARDS
+   Used for cards that have title + action link
+   ========================================================= */
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.section-link {
+    font-size: 14px;
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.section-link:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   11. INSIGHT CARD
+   Dashboard insight display
+   ========================================================= */
+
+.insight-card {
+    padding: 22px;
+}
+
+.insight-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #374151;
+}
+
+
+/* =========================================================
+   12. STATS CARDS
+   Small metrics shown on dashboard side column
+   ========================================================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    min-height: 110px;
+}
+
+.stat-card-wide {
+    grid-column: span 2;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.stat-value-small {
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   13. HABIT TRACKER
+   Habit list, habit rows, badges, streak info
+   ========================================================= */
+
+.habit-panel {
+    max-height: 520px;
+    overflow: auto;
+}
+
+.habit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.habit-item {
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fafafa;
+}
+
+.habit-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.habit-name {
+    font-weight: 600;
+    color: #111827;
+}
+
+.habit-meta {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.habit-action {
+    margin-top: 5px;
+}
+
+.habit-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.done {
+    color: #16a34a;
+    font-weight: 500;
+}
+
+.done-badge {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.action-badge {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.action-badge:hover {
+    background: #dbeafe;
+}
+
+
+/* =========================================================
+   14. DASHBOARD JOURNAL ENTRY PREVIEWS
+   Small cards used in recent entries section
+   ========================================================= */
+
+.entry-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.entry-item {
+    padding: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fafafa;
+}
+
+.entry-title-link {
+    font-weight: 600;
+    color: #111827;
+    text-decoration: none;
+}
+
+.entry-title-link:hover {
+    text-decoration: underline;
+}
+
+.entry-content {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4b5563;
+}
+
+.entry-meta {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   15. EMPTY STATE TEXT
+   Used where sections have no content yet
+   ========================================================= */
+
+.empty-text {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   16. CHART AREA
+   Dashboard chart container sizing
+   ========================================================= */
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+}
+
+.chart-container canvas {
+    max-height: 100%;
+}
+
+
+/* =========================================================
+   17. AUTH PAGES
+   Login / Signup pages use separate layout (no sidebar)
+   ========================================================= */
+
+.auth-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-card {
+    padding: 30px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.auth-title {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-form input {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+}
+
 .auth-switch {
     margin-top: 15px;
     font-size: 14px;
@@ -272,11 +538,21 @@ body {
     text-decoration: none;
 }
 
-/* ===== Forms ===== */
+
+/* =========================================================
+   18. FORMS (CREATE / EDIT JOURNAL ETC.)
+   Shared form styling for logged-in pages
+   ========================================================= */
 
 .form-container {
     max-width: 600px;
     margin: 0 auto;
+}
+
+.form-card {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 25px;
 }
 
 .entry-form {
@@ -291,47 +567,97 @@ body {
 }
 
 .form-group label {
+    margin-bottom: 5px;
     font-size: 14px;
     font-weight: 600;
-    margin-bottom: 5px;
-    color: #374151;
 }
 
 .entry-form input,
 .entry-form textarea {
+    width: 100%;
     padding: 10px;
-    border-radius: 6px;
     border: 1px solid #d1d5db;
-    font-size: 14px;
-}
-
-.entry-form input:focus,
-.entry-form textarea:focus {
-    outline: none;
-    border-color: #2563eb;
+    border-radius: 6px;
 }
 
 .entry-form textarea {
     resize: vertical;
 }
 
-/* ===== Entry Detail Page ===== */
 
-.entry-header {
-    margin-bottom: 20px;
+/* =========================================================
+   19. QUILL EDITOR
+   Rich text editor styling for journal forms
+   ========================================================= */
+
+#editor {
+    min-height: 220px;
+    background: white;
+    border-radius: 6px;
+}
+
+.ql-container {
+    min-height: 200px;
+    font-size: 15px;
+}
+
+.ql-editor {
+    min-height: 180px;
+}
+
+
+/* =========================================================
+   20. ENTRY VIEW PAGE
+   Single journal entry detail page
+   ========================================================= */
+
+/* ---------- Hero image ---------- */
+.entry-hero {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.entry-hero img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.entry-hero-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    border-radius: 12px;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.75) 0%,
+        rgba(0, 0, 0, 0.4) 40%,
+        rgba(0, 0, 0, 0.1) 100%
+    );
+}
+
+.entry-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .entry-date {
     font-size: 14px;
-    color: #6b7280;
+    color: rgba(255, 255, 255, 0.85);
 }
 
-.entry-container {
-    max-width: 700px;
+/* ---------- Entry body ---------- */
+.entry-view {
+    padding: 25px;
 }
 
 .entry-content-full {
-    white-space: pre-wrap;
     line-height: 1.7;
     color: #374151;
 }
@@ -341,55 +667,53 @@ body {
 }
 
 .entry-mood-badge {
-    background: #e0f2fe;
-    color: #0369a1;
-    padding: 6px 10px;
-    border-radius: 6px;
+    padding: 6px 12px;
     font-size: 14px;
+    color: #0369a1;
+    background: #e0f2fe;
+    border-radius: 8px;
 }
 
-/* Actions */
+/* ---------- Entry actions ---------- */
 .entry-actions {
-    margin-top: 20px;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.entry-actions-left {
     display: flex;
     gap: 10px;
 }
 
-.btn-secondary {
-    padding: 8px 14px;
-    background: #e5e7eb;
-    border-radius: 6px;
-    text-decoration: none;
-    color: #111827;
+.right-actions {
+    display: flex;
+    gap: 10px;
 }
 
-.btn-danger {
-    padding: 8px 14px;
-    background: #ef4444;
-    color: white;
-    border-radius: 6px;
+.back-link {
+    font-size: 14px;
+    color: #2563eb;
     text-decoration: none;
 }
 
-.btn-danger:hover {
-    background: #dc2626;
-}
-
-.entry-title-link {
-    font-weight: 600;
-    text-decoration: none;
-    color: #111827;
-}
-
-.entry-title-link:hover {
+.back-link:hover {
     text-decoration: underline;
 }
 
-/*=====QUILL=====*/
-.ql-container {
-    border-radius: 0 0 8px 8px;
-}
 
-.ql-toolbar {
-    border-radius: 8px 8px 0 0;
+/* =========================================================
+   21. RESPONSIVE
+   Collapse dashboard to one column on smaller screens
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-side {
+        order: -1;
+    }
 }
