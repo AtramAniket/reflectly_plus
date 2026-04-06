@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 from app.extensions import db
 from flask_login import UserMixin
 from sqlalchemy import String, Integer, DateTime, func, Text, ForeignKey
@@ -15,6 +16,8 @@ class JournalEntry(UserMixin, db.Model):
 	content: Mapped[str] = mapped_column(Text, nullable=False)
 
 	mood_score: Mapped[int] =  mapped_column(Integer, nullable=False)
+
+	image_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
 	created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
