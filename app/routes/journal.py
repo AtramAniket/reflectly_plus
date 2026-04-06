@@ -1,3 +1,4 @@
+import random
 from app.extensions import db
 from app.models.journal import JournalEntry
 from flask_login import current_user, login_required
@@ -10,6 +11,9 @@ journal = Blueprint('journal', __name__)
 def create_new_entry():
 	if request.method == 'POST':
 		
+		image_id = random.randint(1, 1000)
+		image_url = f"https://picsum.photos/id/{image_id}/1200/400"
+
 		title = request.form.get('title')
 		content = request.form.get('content')
 		mood_score = request.form.get('mood_score')
@@ -18,7 +22,8 @@ def create_new_entry():
 			title = title,
 			content = content,
 			mood_score = mood_score,
-			user_id = current_user.id
+			user_id = current_user.id,
+			image_url = image_url
 			)
 
 		db.session.add(new_entry)
