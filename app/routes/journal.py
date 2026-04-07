@@ -88,7 +88,7 @@ def create_new_entry(entry_type):
 		flash('New Journal entry added successfully', 'success')
 		return redirect(url_for('main.dashboard'))
 
-	return render_template('create_entry.html')
+	return render_template('create_entry.html', entry_type=entry_type)
 
 
 @journal.route('/entries/<int:entry_id>')

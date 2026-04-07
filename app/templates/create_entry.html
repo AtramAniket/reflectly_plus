@@ -2,19 +2,18 @@
 
 {% block content %}
 
-{% if entry_type == "simple" %}
-    <h2 class="page-title">Journal Entry</h2>
-    <p class="page-subtitle">Capture your thoughts</p>
-{% elif entry_type == "gratitude" %}
-    <h2 class="page-title">Gratitude Journal Entry</h2>
-    <p class="page-subtitle">Talk about things you are grateful for</p>
-{% elif entry_type == "reflection%}
-    <h2 class="page-title">Daily Reflections Journal Entry</h2>
-    <p class="page-subtitle">Reflect on your day</p>
-{% endif %}
-
-
 <div class="centered-container">
+
+    {% if entry_type == "simple" %}
+        <h2 class="page-title">Journal Entry</h2>
+        <p class="page-subtitle">Capture your thoughts</p>
+    {% elif entry_type == "gratitude" %}
+        <h2 class="page-title">Gratitude Journal Entry</h2>
+        <p class="page-subtitle">Talk about things you are grateful for</p>
+    {% elif entry_type == "reflection" %}
+        <h2 class="page-title">Daily Reflections Journal Entry</h2>
+        <p class="page-subtitle">Reflect on your day</p>
+    {% endif %}
 
     <div class="card">
 
@@ -31,7 +30,7 @@
 
         <form method="POST" class="entry-form">
 
-            {% include "templates/partials" + entry_type + ".html" %}
+            {% include "partials/_" + entry_type + ".html" %}
 
             <button type="submit" class="btn-primary">Save Entry</button>
 
