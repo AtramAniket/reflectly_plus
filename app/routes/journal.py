@@ -6,6 +6,15 @@ from flask import Blueprint, url_for, render_template, request, redirect, flash,
 
 journal = Blueprint('journal', __name__)
 
+@journal.route('/journal/view_all', methods=['GET'])
+@login_required
+def view_all_entries():
+
+	entries = JournalEntry.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.desc()).all()
+
+	return render_template('all_entries.html', entries = entries)
+
+
 @journal.route('/journal/create_new_entry', methods=['GET', 'POST'])
 @login_required
 def create_new_entry():
