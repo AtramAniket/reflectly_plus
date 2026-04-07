@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="reading-container">
+
+    <div class="page-header">
+        <h2 class="page-title">All Journal Entries</h2>
+        <p class="page-subtitle">
+            Your complete reflection history
+        </p>
+    </div>
+
+    {% for entry in entries %}
+        <div class="card entry-item">
+
+            <a href="{{ url_for('journal.view_entry', entry_id=entry.id) }}" 
+               class="entry-title-link">
+                {{ entry.title }}
+            </a>
+
+            <p class="entry-content">
+                {{ entry.content|striptags|truncate(180) }}
+            </p>
+
+            <div class="entry-meta">
+                Mood: {{ entry.mood_score }}
+                • {{ entry.created_at.strftime('%b %d, %Y') }}
+            </div>
+
+        </div>
+    {% else %}
+        <p class="empty-text">No entries yet</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
