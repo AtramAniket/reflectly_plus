@@ -32,7 +32,7 @@
         <div class="card card-dashboard">
             <div class="section-header">
                 <h3 class="card-title">📝 Recent Journal Entries</h3>
-                <a href="{{ url_for('journal.all_entries') if false else '#' }}" class="section-link">View all</a>
+                <a href="{{ url_for('journal.view_all_entries') if true else '#' }}" class="section-link">View all</a>
             </div>
 
             <div class="entry-list">
