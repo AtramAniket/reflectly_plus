@@ -1,0 +1,26 @@
+<div class="prompt-block">
+    <h4 class="prompt-title">What went well today?</h4>
+    <p class="prompt-answer">
+        {{ entry.structured_content.went_well }}
+    </p>
+</div>
+
+<div class="prompt-block">
+    <h4 class="prompt-title">What felt difficult?</h4>
+    <p class="prompt-answer">
+        {{ entry.structured_content.challenging }}
+    </p>
+</div>
+
+<div class="prompt-block">
+    <h4 class="prompt-title">What will you carry into tomorrow?</h4>
+    <p class="prompt-answer">
+        {{ entry.structured_content.tomorrow }}
+    </p>
+</div>
+
+<div class="entry-footer">
+    <span class="entry-mood-badge">
+        Mood: {{ entry.mood_score }}/10
+    </span>
+</div>
