@@ -717,3 +717,38 @@ body {
         order: -1;
     }
 }
+
+/* =========================================================
+   22. JOURNAL TYPE INFO CARD + PROMPT BLOCKS
+   Used for gratitude / reflection entry rendering
+   ========================================================= */
+
+.entry-type-card {
+    margin-bottom: 20px;
+}
+
+.entry-type-description {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #6b7280;
+}
+
+.prompt-block {
+    margin-bottom: 14px;
+    padding: 16px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.prompt-title {
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.prompt-answer {
+    line-height: 1.7;
+    color: #374151;
+}
