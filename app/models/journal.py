@@ -2,8 +2,9 @@ import datetime
 from typing import Optional
 from app.extensions import db
 from flask_login import UserMixin
-from sqlalchemy import String, Integer, DateTime, func, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column,relationship
+from sqlalchemy import String, Integer, DateTime, func, Text, ForeignKey, JSON
+
 
 class JournalEntry(UserMixin, db.Model):
 
@@ -16,6 +17,8 @@ class JournalEntry(UserMixin, db.Model):
 	title: Mapped[str] = mapped_column(String(250), nullable=False)
 
 	content: Mapped[str] = mapped_column(Text, nullable=False)
+
+	structured_content: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
 
 	mood_score: Mapped[int] =  mapped_column(Integer, nullable=False)
 
