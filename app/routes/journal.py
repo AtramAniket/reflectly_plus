@@ -18,22 +18,69 @@ def view_all_entries():
 @journal.route('/journal/create_new_entry/<entry_type>', methods=['GET', 'POST'])
 @login_required
 def create_new_entry(entry_type):
+
+	if entry_type not in ['simple', 'gratitude', 'reflection']:
+		abort(404)
+
 	if request.method == 'POST':
-		
+
+		# Title and Mood Score
+		title = request.form.get('title')
+		mood_score = request.form.get('mood_score')
+
+		# Image
 		image_id = random.randint(1, 1000)
 		image_url = f"https://picsum.photos/id/{image_id}/1200/400"
 
-		title = request.form.get('title')
-		content = request.form.get('content')
-		mood_score = request.form.get('mood_score')
+		# SIMPLE JOURNAL ENTRY
+		if entry_type == 'simple':
+		
+			content = request.form.get('content')
 
-		new_entry = JournalEntry(
-			title = title,
-			content = content,
-			mood_score = mood_score,
-			user_id = current_user.id,
-			image_url = image_url
-			)
+			new_entry = JournalEntry(
+				title = title,
+				content = content,
+				entry_type = 'simple',
+				mood_score = mood_score,
+				user_id = current_user.id,
+				image_url = image_url
+				)
+
+		# GRATITUDE JOURNAL ENTRY
+		elif entry_type == 'gratitude':
+
+			structured_content = {
+				'gratitude_1': request.form.get('gratitude_1'),
+				'gratitude_2': request.form.get('gratitude_2'),
+				'gratitude_3': request.form.get('gratitude_3'),
+			}
+
+			new_entry = JournalEntry(
+				title = title,
+				structured_content = structured_content,
+				entry_type = 'gratitude',
+				mood_score = mood_score,
+				user_id = current_user.id,
+				image_url = image_url
+				)
+
+		# DAILY REFLECTION JOURNAL ENTRY
+		elif entry_type == 'reflection':
+
+			structured_content = {
+				'went_well': request.form.get('went_well'),
+				'challenging': request.form.get('challenging'),
+				'tomorrow': request.form.get('tomorrow'),
+			}
+
+			new_entry = JournalEntry(
+				title = title,
+				structured_content = structured_content,
+				entry_type = 'reflection',
+				mood_score = mood_score,
+				user_id = current_user.id,
+				image_url = image_url
+				)
 
 		db.session.add(new_entry)
 		db.session.commit()
