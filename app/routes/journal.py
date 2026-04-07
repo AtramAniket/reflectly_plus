@@ -255,7 +255,7 @@ def edit_entry(entry_id):
             return redirect(request.url)
 
     return render_template(
-        "journal/edit_entry.html",
+        "edit_entry.html",
         entry=entry
     )
 
