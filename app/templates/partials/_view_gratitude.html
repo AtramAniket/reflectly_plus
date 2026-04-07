@@ -1,0 +1,26 @@
+<div class="prompt-block">
+    <h4 class="prompt-title">What are you grateful for today?</h4>
+    <p class="prompt-answer">
+        {{ entry.structured_content.gratitude_1 }}
+    </p>
+</div>
+
+<div class="prompt-block">
+    <h4 class="prompt-title">Who or what made today better?</h4>
+    <p class="prompt-answer">
+        {{ entry.structured_content.gratitude_2 }}
+    </p>
+</div>
+
+<div class="prompt-block">
+    <h4 class="prompt-title">Small moment you want to remember</h4>
+    <p class="prompt-answer">
+        {{ entry.structured_content.gratitude_3 }}
+    </p>
+</div>
+
+<div class="entry-footer">
+    <span class="entry-mood-badge">
+        Mood: {{ entry.mood_score }}/10
+    </span>
+</div>
