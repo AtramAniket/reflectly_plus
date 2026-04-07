@@ -16,7 +16,7 @@ class JournalEntry(UserMixin, db.Model):
 
 	title: Mapped[str] = mapped_column(String(250), nullable=False)
 
-	content: Mapped[str] = mapped_column(Text, nullable=False)
+	content: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
 	structured_content: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
 
