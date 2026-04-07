@@ -3,7 +3,7 @@ from app.extensions import db
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.journal import JournalEntry
 from flask_login import current_user, login_required
-from flask import Blueprint, url_for, render_template, request, redirect, flash, abort
+from flask import Blueprint, url_for, render_template, request, redirect, flash, abort, current_app
 
 journal = Blueprint('journal', __name__)
 
@@ -156,28 +156,109 @@ def view_entry(entry_id):
     return render_template('view_entry.html', entry=entry)
 
 
-@journal.route('/journal/edit/<int:entry_id>', methods=['GET', 'POST'])
+
+@journal.route('/entries/<int:entry_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_entry(entry_id):
+    entry = JournalEntry.query.get_or_404(entry_id)
 
-	entry = JournalEntry.query.get_or_404(entry_id) 
+    if entry.user_id != current_user.id:
+        abort(403)
 
-	if entry.user_id != current_user.id:
-		abort(403)
+    if request.method == 'POST':
+        title = request.form.get("title", "").strip()
+        mood_score_raw = request.form.get("mood_score", "").strip()
 
+        try:
+            if not title:
+                flash("Title is required.", "error")
+                return redirect(request.url)
 
-	if request.method == 'POST':
+            if not mood_score_raw:
+                flash("Mood score is required.", "error")
+                return redirect(request.url)
 
-		entry.title = request.form.get('title')
-		entry.content = request.form.get('content')
-		entry.mood_score = request.form.get('mood_score') or 0
+            mood_score = int(mood_score_raw)
 
-		db.session.commit()
+            if mood_score < 1 or mood_score > 10:
+                flash("Mood score must be between 1 and 10.", "error")
+                return redirect(request.url)
 
-		flash('Entry updated successfully', 'success')
-		return redirect(url_for('main.dashboard'))
+            entry.title = title
+            entry.mood_score = mood_score
 
-	return render_template('edit_entry.html', journal_entry = entry)
+            # SIMPLE JOURNAL
+            if entry.entry_type == "simple":
+                content = request.form.get("content", "").strip()
+
+                if not content:
+                    flash("Content is required for a simple journal entry.", "error")
+                    return redirect(request.url)
+
+                entry.content = content
+                entry.structured_content = None
+
+            # GRATITUDE JOURNAL
+            elif entry.entry_type == "gratitude":
+                gratitude_1 = request.form.get("gratitude_1", "").strip()
+                gratitude_2 = request.form.get("gratitude_2", "").strip()
+                gratitude_3 = request.form.get("gratitude_3", "").strip()
+
+                if not all([gratitude_1, gratitude_2, gratitude_3]):
+                    flash("Please answer all gratitude prompts.", "error")
+                    return redirect(request.url)
+
+                entry.content = None
+                entry.structured_content = {
+                    "gratitude_1": gratitude_1,
+                    "gratitude_2": gratitude_2,
+                    "gratitude_3": gratitude_3,
+                }
+
+            # REFLECTION JOURNAL
+            elif entry.entry_type == "reflection":
+                went_well = request.form.get("went_well", "").strip()
+                challenging = request.form.get("challenging", "").strip()
+                tomorrow = request.form.get("tomorrow", "").strip()
+
+                if not all([went_well, challenging, tomorrow]):
+                    flash("Please answer all reflection prompts.", "error")
+                    return redirect(request.url)
+
+                entry.content = None
+                entry.structured_content = {
+                    "went_well": went_well,
+                    "challenging": challenging,
+                    "tomorrow": tomorrow,
+                }
+
+            db.session.commit()
+
+            flash("Journal entry updated successfully.", "success")
+            return redirect(url_for("journal.view_entry", entry_id=entry.id))
+
+        except ValueError:
+            db.session.rollback()
+            flash("Mood score must be a valid number.", "error")
+            return redirect(request.url)
+
+        except SQLAlchemyError:
+            db.session.rollback()
+            current_app.logger.exception("Database error while editing journal entry")
+            flash("Something went wrong while updating your entry. Please try again.", "error")
+            return redirect(request.url)
+
+        except Exception:
+            db.session.rollback()
+            current_app.logger.exception("Unexpected error while editing journal entry")
+            flash("Unexpected error occurred. Please try again.", "error")
+            return redirect(request.url)
+
+    return render_template(
+        "journal/edit_entry.html",
+        entry=entry
+    )
+
 
 @journal.route('/journal/delete_article/<int:entry_id>', methods=['GET', 'POST'])
 @login_required
