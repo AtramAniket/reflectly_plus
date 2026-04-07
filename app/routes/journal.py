@@ -144,7 +144,7 @@ def create_new_entry(entry_type):
 	return render_template('create_entry.html', entry_type=entry_type)
 
 
-@journal.route('/entries/<int:entry_id>')
+@journal.route('/journal/entries/<int:entry_id>')
 @login_required
 def view_entry(entry_id):
 	
@@ -157,7 +157,7 @@ def view_entry(entry_id):
 
 
 
-@journal.route('/entries/<int:entry_id>/edit', methods=['GET', 'POST'])
+@journal.route('/journal/entries/<int:entry_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_entry(entry_id):
     entry = JournalEntry.query.get_or_404(entry_id)
