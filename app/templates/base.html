@@ -29,16 +29,16 @@
 
     <div class="sidebar-section">
         <p class="sidebar-heading">Journal</p>
-        <a href="{{ url_for('journal.create_entry', entry_type='simple') }}" class="sidebar-sub-link">
+        <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="sidebar-sub-link">
             Simple Journal
         </a>
-        <a href="{{ url_for('journal.create_entry', entry_type='gratitude') }}" class="sidebar-sub-link">
+        <a href="{{ url_for('journal.create_new_entry', entry_type='gratitude') }}" class="sidebar-sub-link">
             Gratitude Journal
         </a>
-        <a href="{{ url_for('journal.create_entry', entry_type='reflection') }}" class="sidebar-sub-link">
+        <a href="{{ url_for('journal.create_new_entry', entry_type='reflection') }}" class="sidebar-sub-link">
             Daily Reflection
         </a>
-        <a href="{{ url_for('journal.all_entries') }}" class="sidebar-sub-link">
+        <a href="{{ url_for('journal.view_all_entries') }}" class="sidebar-sub-link">
             All Entries
         </a>
     </div>
