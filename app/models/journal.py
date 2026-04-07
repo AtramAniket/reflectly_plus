@@ -12,7 +12,7 @@ class JournalEntry(UserMixin, db.Model):
 
 	id: Mapped[int] =  mapped_column(Integer, primary_key=True)
 
-	entry_type: Mapped[str] = mapped_column(String(50), nullable=False, default='simple')
+	entry_type: Mapped[str] = mapped_column(String(50), default='simple')
 
 	title: Mapped[str] = mapped_column(String(250), nullable=False)
 
