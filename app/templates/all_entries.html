@@ -4,34 +4,155 @@
 
 <div class="reading-container">
 
+    <!-- Page Header -->
     <div class="page-header">
         <h2 class="page-title">All Journal Entries</h2>
         <p class="page-subtitle">
-            Your complete reflection history
+            Your reflection history across all journal types
         </p>
     </div>
 
-    {% for entry in entries %}
-        <div class="card entry-item">
+    <!-- Summary Cards -->
+    <div class="entries-summary-grid">
 
-            <a href="{{ url_for('journal.view_entry', entry_id=entry.id) }}" 
-               class="entry-title-link">
-                {{ entry.title }}
-            </a>
+        <div class="summary-card">
+            <span class="summary-label">Total Entries</span>
+            <span class="summary-value">{{ total_entries }}</span>
+        </div>
 
-            <p class="entry-content">
-                {{ entry.content|striptags|truncate(180) }}
-            </p>
+        <div class="summary-card">
+            <span class="summary-label">Simple</span>
+            <span class="summary-value">{{ simple_count }}</span>
+        </div>
 
-            <div class="entry-meta">
-                Mood: {{ entry.mood_score }}
-                • {{ entry.created_at.strftime('%b %d, %Y') }}
-            </div>
+        <div class="summary-card">
+            <span class="summary-label">Gratitude</span>
+            <span class="summary-value">{{ gratitude_count }}</span>
+        </div>
+
+        <div class="summary-card">
+            <span class="summary-label">Reflection</span>
+            <span class="summary-value">{{ reflection_count }}</span>
+        </div>
+
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="entries-filter-bar">
+
+        <a href="{{ url_for('journal.all_entries', type='all') }}"
+           class="filter-pill {% if selected_type == 'all' %}filter-pill-active{% endif %}">
+            All
+        </a>
+
+        <a href="{{ url_for('journal.all_entries', type='simple') }}"
+           class="filter-pill {% if selected_type == 'simple' %}filter-pill-active{% endif %}">
+            Simple
+        </a>
+
+        <a href="{{ url_for('journal.all_entries', type='gratitude') }}"
+           class="filter-pill {% if selected_type == 'gratitude' %}filter-pill-active{% endif %}">
+            Gratitude
+        </a>
+
+        <a href="{{ url_for('journal.all_entries', type='reflection') }}"
+           class="filter-pill {% if selected_type == 'reflection' %}filter-pill-active{% endif %}">
+            Reflection
+        </a>
+
+    </div>
+
+    <!-- Entries -->
+    {% if entries %}
+        <div class="entries-grid">
+
+            {% for entry in entries %}
+                <article class="entry-library-card">
+
+                    <div class="entry-library-top">
+
+                        <div>
+                            <a href="{{ url_for('journal.view_entry', entry_id=entry.id) }}"
+                               class="entry-library-title">
+                                {{ entry.title }}
+                            </a>
+                        </div>
+
+                        <div>
+                            {% if entry.entry_type == "simple" %}
+                                <span class="entry-type-badge simple-badge">Simple</span>
+                            {% elif entry.entry_type == "gratitude" %}
+                                <span class="entry-type-badge gratitude-badge">Gratitude</span>
+                            {% elif entry.entry_type == "reflection" %}
+                                <span class="entry-type-badge reflection-badge">Reflection</span>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <div class="entry-library-preview">
+
+                        {% if entry.entry_type == "simple" %}
+                            {{ entry.content|striptags|truncate(180) }}
+
+                        {% elif entry.entry_type == "gratitude" %}
+                            {{ entry.structured_content.gratitude_1|truncate(180) }}
+
+                        {% elif entry.entry_type == "reflection" %}
+                            {{ entry.structured_content.went_well|truncate(180) }}
+                        {% endif %}
+
+                    </div>
+
+                    <div class="entry-library-footer">
+                        <span class="entry-library-meta">
+                            Mood: {{ entry.mood_score }}/10
+                        </span>
+
+                        <span class="entry-library-meta">
+                            {{ entry.created_at.strftime('%b %d, %Y') }}
+                        </span>
+                    </div>
+
+                </article>
+            {% endfor %}
 
         </div>
+
+        <!-- Pagination -->
+        {% if pagination.pages > 1 %}
+            <div class="pagination">
+
+                {% if pagination.has_prev %}
+                    <a href="{{ url_for('journal.all_entries', page=pagination.prev_num, type=selected_type) }}"
+                       class="pagination-link">
+                        ← Previous
+                    </a>
+                {% else %}
+                    <span class="pagination-link pagination-disabled">← Previous</span>
+                {% endif %}
+
+                <span class="pagination-info">
+                    Page {{ pagination.page }} of {{ pagination.pages }}
+                </span>
+
+                {% if pagination.has_next %}
+                    <a href="{{ url_for('journal.all_entries', page=pagination.next_num, type=selected_type) }}"
+                       class="pagination-link">
+                        Next →
+                    </a>
+                {% else %}
+                    <span class="pagination-link pagination-disabled">Next →</span>
+                {% endif %}
+
+            </div>
+        {% endif %}
+
     {% else %}
-        <p class="empty-text">No entries yet</p>
-    {% endfor %}
+        <div class="card">
+            <p class="empty-text">No journal entries found for this filter.</p>
+        </div>
+    {% endif %}
 
 </div>
 
