@@ -4,9 +4,9 @@
 
 <div class="reading-container">
 
-    <!-- HERO IMAGE -->
+    <!-- Hero -->
     <div class="entry-hero">
-        <img src="{{ entry.image_url or 'https://picsum.photos/1200/400' }}" alt="Entry Image">
+        <img src="{{ entry.image_url or 'https://picsum.photos/1200/400' }}" alt="Journal cover image">
 
         <div class="entry-hero-overlay">
             <h1 class="entry-title">{{ entry.title }}</h1>
@@ -14,28 +14,51 @@
         </div>
     </div>
 
+    <!-- Journal Type Info -->
+    <div class="card entry-type-card">
 
-    <!-- CONTENT CARD -->
-    <div class="card entry-view">
+        {% if entry.entry_type == "simple" %}
+            <h3 class="card-title">Simple Journal</h3>
+            <p class="entry-type-description">
+                A free-form space to write whatever is on your mind.
+            </p>
 
-        <div class="entry-content-full">
-            {{ entry.content | safe }}
-        </div>
+        {% elif entry.entry_type == "gratitude" %}
+            <h3 class="card-title">Gratitude Journal</h3>
+            <p class="entry-type-description">
+                Gratitude entries help you notice the people, moments, and small things that made the day better.
+                Over time, they can make it easier to spot what feels steady, supportive, and meaningful.
+            </p>
 
-        <div class="entry-footer">
-            <span class="entry-mood-badge">
-                Mood: {{ entry.mood_score }}/10
-            </span>
-        </div>
+        {% elif entry.entry_type == "reflection" %}
+            <h3 class="card-title">Daily Reflection</h3>
+            <p class="entry-type-description">
+                Reflection helps you look back on the day with a little more clarity — what worked,
+                what felt difficult, and what you want to carry into tomorrow.
+            </p>
+        {% endif %}
 
     </div>
 
+    <!-- Entry Content -->
+    <div class="card entry-view">
 
-    <!-- ACTIONS -->
+        {% if entry.entry_type == "simple" %}
+            {% include 'partials/_view_simple.html' %}
+
+        {% elif entry.entry_type == "gratitude" %}
+            {% include 'partials/_view_gratitude.html' %}
+
+        {% elif entry.entry_type == "reflection" %}
+            {% include 'partials/_view_reflection.html' %}
+        {% endif %}
+
+    </div>
+
+    <!-- Actions -->
     <div class="entry-actions">
 
         <div class="entry-actions-left">
-            
             <a href="{{ url_for('journal.edit_entry', entry_id=entry.id) }}" class="btn-secondary">
                 ✏️ Edit
             </a>
@@ -43,10 +66,9 @@
             <a href="{{ url_for('journal.delete_entry', entry_id=entry.id) }}" class="btn-danger">
                 🗑 Delete
             </a>
-
         </div>
 
-        <a href="{{ url_for('main.dashboard') }}" class="btn-link">
+        <a href="{{ url_for('main.dashboard') }}" class="back-link">
             ← Back to Dashboard
         </a>
 
