@@ -11,9 +11,39 @@ journal = Blueprint('journal', __name__)
 @login_required
 def view_all_entries():
 
-	entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.desc()).all()
+	selected_type = request.args.get("type", "all")
+	page = request.args.get("page", 1, type=int)
 
-	return render_template('all_entries.html', entries = entries)
+	base_query = JournalEntry.query.filter_by(user_id=current_user.id)
+
+	# Summary counts
+	total_entries = base_query.count()
+	simple_count = base_query.filter_by(entry_type="simple").count()
+	gratitude_count = base_query.filter_by(entry_type="gratitude").count()
+	reflection_count = base_query.filter_by(entry_type="reflection").count()
+
+	# Filtered query
+	filtered_query = base_query
+
+	if selected_type in ["simple", "gratitude", "reflection"]:
+	    filtered_query = filtered_query.filter_by(entry_type=selected_type)
+
+	entries_pagination = (
+	    filtered_query
+	    .order_by(JournalEntry.created_at.desc())
+	    .paginate(page=page, per_page=6, error_out=False)
+	)
+
+	return render_template(
+	    'all_entries.html',
+	    entries=entries_pagination.items,
+	    pagination=entries_pagination,
+	    selected_type=selected_type,
+	    total_entries=total_entries,
+	    simple_count=simple_count,
+	    gratitude_count=gratitude_count,
+	    reflection_count=reflection_count
+	)
 
 
 @journal.route('/journal/create_new_entry/<entry_type>', methods=['GET', 'POST'])
