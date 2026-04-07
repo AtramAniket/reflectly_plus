@@ -2,8 +2,17 @@
 
 {% block content %}
 
-<h2 class="page-title">New Journal Entry</h2>
-<p class="page-subtitle">Capture your thoughts and reflect on your day</p>
+{% if entry_type == "simple" %}
+    <h2 class="page-title">Journal Entry</h2>
+    <p class="page-subtitle">Capture your thoughts</p>
+{% elif entry_type == "gratitude" %}
+    <h2 class="page-title">Gratitude Journal Entry</h2>
+    <p class="page-subtitle">Talk about things you are grateful for</p>
+{% elif entry_type == "reflection%}
+    <h2 class="page-title">Daily Reflections Journal Entry</h2>
+    <p class="page-subtitle">Reflect on your day</p>
+{% endif %}
+
 
 <div class="centered-container">
 
