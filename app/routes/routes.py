@@ -39,7 +39,7 @@ def home():
 @login_required
 def dashboard():
     
-    all_entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.desc()).all()
+    all_entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.asc()).all()
 
     recent_entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.desc()).limit(3).all()
 
