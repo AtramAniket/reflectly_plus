@@ -20,28 +20,44 @@
 
 <!-- Sidebar -->
 <div class="sidebar">
-    <h2 class="logo">Reflectly</h2>
+    <h2>Reflectly</h2>
 
-    <nav class="nav">
-        <a href="/" class="nav-link">Dashboard</a>
-        <a href="{{ url_for('habit.create_habit') }}" class="nav-link">Create Habit</a>
-        <a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a>
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Journal</p>
+    <div class="sidebar-section">
+        <p class="sidebar-heading">Overview</p>
+        <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+    </div>
 
-            <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}">
-                Simple Journal
-            </a>
+    <div class="sidebar-section">
+        <p class="sidebar-heading">Journal</p>
+        <a href="{{ url_for('journal.create_entry', entry_type='simple') }}" class="sidebar-sub-link">
+            Simple Journal
+        </a>
+        <a href="{{ url_for('journal.create_entry', entry_type='gratitude') }}" class="sidebar-sub-link">
+            Gratitude Journal
+        </a>
+        <a href="{{ url_for('journal.create_entry', entry_type='reflection') }}" class="sidebar-sub-link">
+            Daily Reflection
+        </a>
+        <a href="{{ url_for('journal.all_entries') }}" class="sidebar-sub-link">
+            All Entries
+        </a>
+    </div>
 
-            <a href="{{ url_for('journal.create_new_entry', entry_type='gratitude') }}">
-                Gratitude Journal
-            </a>
+    <div class="sidebar-section">
+        <p class="sidebar-heading">Habits</p>
+        <a href="{{ url_for('habit.create_habit') }}" class="sidebar-sub-link">
+            Create Habit
+        </a>
+    </div>
 
-            <a href="{{ url_for('journal.create_new_entry', entry_type='reflection') }}">
-                Daily Reflection
-            </a>
-        </div>
-    </nav>
+    <div class="sidebar-section">
+        <p class="sidebar-heading">Tools</p>
+        <span class="sidebar-muted">Coming soon</span>
+    </div>
+
+    <div class="sidebar-section sidebar-footer">
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    </div>
 </div>
 
 <!-- Main Content -->
