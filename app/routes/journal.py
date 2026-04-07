@@ -27,10 +27,10 @@ def create_new_entry(entry_type):
 
 		# Title and Mood Score
 		title = request.form.get('title', '').strip()
-		mood_score = request.form.get('mood_score', 0)
+		mood_score = request.form.get('mood_score', '').strip()
 
 		# Image
-		image_id = random.randint(1, 1000)
+		image_id = random.randint(1, 700)
 		image_url = f"https://picsum.photos/id/{image_id}/1200/400"
 
 		try: 
@@ -43,7 +43,7 @@ def create_new_entry(entry_type):
 				flash('Mood score is required.', 'error')
 				return redirect(request.url)
 
-			if mood_score < 0 or mood_score > 10:
+			if int(mood_score) < 0 or int(mood_score) > 10:
 				flash('Mood score must be between 0 and 10', 'error')
 				return redirect(request.url)
 
@@ -85,6 +85,7 @@ def create_new_entry(entry_type):
 
 				new_entry = JournalEntry(
 					title = title,
+					content=None,
 					structured_content = structured_content,
 					entry_type = 'gratitude',
 					mood_score = mood_score,
@@ -111,6 +112,7 @@ def create_new_entry(entry_type):
 
 				new_entry = JournalEntry(
 					title = title,
+					content=None,
 					structured_content = structured_content,
 					entry_type = 'reflection',
 					mood_score = mood_score,
