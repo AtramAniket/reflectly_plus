@@ -10,7 +10,7 @@ journal = Blueprint('journal', __name__)
 @login_required
 def view_all_entries():
 
-	entries = JournalEntry.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.desc()).all()
+	entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.desc()).all()
 
 	return render_template('all_entries.html', entries = entries)
 
