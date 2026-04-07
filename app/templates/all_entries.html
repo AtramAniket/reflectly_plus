@@ -40,22 +40,22 @@
     <!-- Filter Tabs -->
     <div class="entries-filter-bar">
 
-        <a href="{{ url_for('journal.all_entries', type='all') }}"
+        <a href="{{ url_for('journal.view_all_entries', type='all') }}"
            class="filter-pill {% if selected_type == 'all' %}filter-pill-active{% endif %}">
             All
         </a>
 
-        <a href="{{ url_for('journal.all_entries', type='simple') }}"
+        <a href="{{ url_for('journal.view_all_entries', type='simple') }}"
            class="filter-pill {% if selected_type == 'simple' %}filter-pill-active{% endif %}">
             Simple
         </a>
 
-        <a href="{{ url_for('journal.all_entries', type='gratitude') }}"
+        <a href="{{ url_for('journal.view_all_entries', type='gratitude') }}"
            class="filter-pill {% if selected_type == 'gratitude' %}filter-pill-active{% endif %}">
             Gratitude
         </a>
 
-        <a href="{{ url_for('journal.all_entries', type='reflection') }}"
+        <a href="{{ url_for('journal.view_all_entries', type='reflection') }}"
            class="filter-pill {% if selected_type == 'reflection' %}filter-pill-active{% endif %}">
             Reflection
         </a>
