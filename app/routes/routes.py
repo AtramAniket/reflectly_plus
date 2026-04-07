@@ -1,4 +1,5 @@
 from app.models.habit_log import HabitLog
+from app.models.journal import JournalEntry
 from datetime import datetime, timedelta, date
 from flask_login import current_user, login_required
 from app.services.ai_insights import generate_insight
@@ -38,7 +39,7 @@ def home():
 @login_required
 def dashboard():
     
-    entries = sorted(current_user.entries, key=lambda x: x.created_at, reverse=True)[:3]
+    entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.desc()).limit(3).all()
 
     total_entries = len(entries)
 
