@@ -15,9 +15,9 @@ def view_all_entries():
 	return render_template('all_entries.html', entries = entries)
 
 
-@journal.route('/journal/create_new_entry', methods=['GET', 'POST'])
+@journal.route('/journal/create_new_entry/<entry_type>', methods=['GET', 'POST'])
 @login_required
-def create_new_entry():
+def create_new_entry(entry_type):
 	if request.method == 'POST':
 		
 		image_id = random.randint(1, 1000)

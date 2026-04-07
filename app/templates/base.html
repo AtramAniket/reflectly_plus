@@ -24,9 +24,23 @@
 
     <nav class="nav">
         <a href="/" class="nav-link">Dashboard</a>
-        <a href="{{ url_for('journal.create_new_entry') }}" class="nav-link">New Entry</a>
         <a href="{{ url_for('habit.create_habit') }}" class="nav-link">Create Habit</a>
         <a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Journal</p>
+
+            <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}">
+                Simple Journal
+            </a>
+
+            <a href="{{ url_for('journal.create_new_entry', entry_type='gratitude') }}">
+                Gratitude Journal
+            </a>
+
+            <a href="{{ url_for('journal.create_new_entry', entry_type='reflection') }}">
+                Daily Reflection
+            </a>
+        </div>
     </nav>
 </div>
 
