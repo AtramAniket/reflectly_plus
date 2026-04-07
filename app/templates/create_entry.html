@@ -17,17 +17,6 @@
 
     <div class="card">
 
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="flash-container">
-                    {% for message in messages %}
-                        <div class="flash">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-
         <form method="POST" class="entry-form">
 
             {% include "partials/_" + entry_type + ".html" %}

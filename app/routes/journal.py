@@ -1,5 +1,6 @@
 import random
 from app.extensions import db
+from sqlalchemy.exc import SQLAlchemyError
 from app.models.journal import JournalEntry
 from flask_login import current_user, login_required
 from flask import Blueprint, url_for, render_template, request, redirect, flash, abort
@@ -25,68 +26,118 @@ def create_new_entry(entry_type):
 	if request.method == 'POST':
 
 		# Title and Mood Score
-		title = request.form.get('title')
-		mood_score = request.form.get('mood_score')
+		title = request.form.get('title', '').strip()
+		mood_score = request.form.get('mood_score', 0)
 
 		# Image
 		image_id = random.randint(1, 1000)
 		image_url = f"https://picsum.photos/id/{image_id}/1200/400"
 
-		# SIMPLE JOURNAL ENTRY
-		if entry_type == 'simple':
-		
-			content = request.form.get('content')
+		try: 
 
-			new_entry = JournalEntry(
-				title = title,
-				content = content,
-				entry_type = 'simple',
-				mood_score = mood_score,
-				user_id = current_user.id,
-				image_url = image_url
-				)
+			if not title:
+				flash('Tile is required and cannot be empty', 'error')
+				return redirect(request.url)
 
-		# GRATITUDE JOURNAL ENTRY
-		elif entry_type == 'gratitude':
+			if not mood_score:
+				flash('Mood score is required.', 'error')
+				return redirect(request.url)
 
-			structured_content = {
-				'gratitude_1': request.form.get('gratitude_1'),
-				'gratitude_2': request.form.get('gratitude_2'),
-				'gratitude_3': request.form.get('gratitude_3'),
-			}
+			if mood_score < 0 or mood_score > 10:
+				flash('Mood score must be between 0 and 10', 'error')
+				return redirect(request.url)
 
-			new_entry = JournalEntry(
-				title = title,
-				structured_content = structured_content,
-				entry_type = 'gratitude',
-				mood_score = mood_score,
-				user_id = current_user.id,
-				image_url = image_url
-				)
+			# SIMPLE JOURNAL ENTRY
+			if entry_type == 'simple':
+			
+				content = request.form.get('content')
 
-		# DAILY REFLECTION JOURNAL ENTRY
-		elif entry_type == 'reflection':
+				if not content:
+					flash('Content is required to save journal entry.', 'error')
+					return redirect(request.url)
 
-			structured_content = {
-				'went_well': request.form.get('went_well'),
-				'challenging': request.form.get('challenging'),
-				'tomorrow': request.form.get('tomorrow'),
-			}
+				new_entry = JournalEntry(
+					title = title,
+					content = content,
+					entry_type = 'simple',
+					mood_score = mood_score,
+					user_id = current_user.id,
+					image_url = image_url
+					)
 
-			new_entry = JournalEntry(
-				title = title,
-				structured_content = structured_content,
-				entry_type = 'reflection',
-				mood_score = mood_score,
-				user_id = current_user.id,
-				image_url = image_url
-				)
+			# GRATITUDE JOURNAL ENTRY
+			elif entry_type == 'gratitude':
 
-		db.session.add(new_entry)
-		db.session.commit()
+				gratitude_1 = request.form.get('gratitude_1')
+				gratitude_2 = request.form.get('gratitude_2')
+				gratitude_3 = request.form.get('gratitude_3')
 
-		flash('New Journal entry added successfully', 'success')
-		return redirect(url_for('main.dashboard'))
+				if not all([gratitude_1, gratitude_2, gratitude_3]):
+					flash('Please answer all questions', 'error')
+					return redirect(request.url)
+
+				structured_content = {
+					'gratitude_1': gratitude_1,
+					'gratitude_2': gratitude_2,
+					'gratitude_3': gratitude_3,
+				}
+
+
+				new_entry = JournalEntry(
+					title = title,
+					structured_content = structured_content,
+					entry_type = 'gratitude',
+					mood_score = mood_score,
+					user_id = current_user.id,
+					image_url = image_url
+					)
+
+			# DAILY REFLECTION JOURNAL ENTRY
+			elif entry_type == 'reflection':
+
+				went_well = request.form.get('went_well')
+				challenging = request.form.get('challenging')
+				tomorrow = request.form.get('tomorrow')
+
+				if not all([went_well, challenging, tomorrow]):
+					flash('Please answer all reflection prompts', 'error')
+					return redirect(request.url)
+
+				structured_content = {
+					'went_well': request.form.get('went_well'),
+					'challenging': request.form.get('challenging'),
+					'tomorrow': request.form.get('tomorrow'),
+				}
+
+				new_entry = JournalEntry(
+					title = title,
+					structured_content = structured_content,
+					entry_type = 'reflection',
+					mood_score = mood_score,
+					user_id = current_user.id,
+					image_url = image_url
+					)
+
+			db.session.add(new_entry)
+			db.session.commit()
+
+			flash('New Journal entry added successfully', 'success')
+			return redirect(url_for('main.dashboard'))
+
+		except ValueError:
+			db.session.rollback()
+			flash('Mood score must be valid number.', 'error')
+			return(redirect(request.url))
+
+		except SQLAlchemyError:
+			db.session.rollback()
+			flash('Something went wrong while saving entry, please try again.', 'error')
+			return(redirect(request.url))
+
+		except Exception:
+			db.session.rollback()
+			flash('Unexpected error occured. Please try again later.', 'error')
+			return(redirect(request.url))
 
 	return render_template('create_entry.html', entry_type=entry_type)
 
