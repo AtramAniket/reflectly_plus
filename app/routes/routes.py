@@ -39,19 +39,21 @@ def home():
 @login_required
 def dashboard():
     
-    entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.desc()).limit(3).all()
+    all_entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.desc()).all()
 
-    total_entries = len(entries)
+    recent_entries = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.created_at.desc()).limit(3).all()
 
-    mood_values = [e.mood_score for e in entries if e.mood_score is not None]
+    total_entries = len(all_entries)
+
+    mood_values = [e.mood_score for e in all_entries if e.mood_score is not None]
 
     avg_mood_score = round(sum(mood_values) / len(mood_values), 2) if mood_values else None
 
-    dates = [e.created_at.strftime('%d %b %H:%M') for e in entries if e.mood_score is not None]
+    dates = [e.created_at.strftime('%d %b %H:%M') for e in all_entries if e.mood_score is not None]
 
     one_week_ago = datetime.utcnow() - timedelta(days=7)
 
-    entries_this_week = [e for e in entries if e.created_at and e.created_at >= one_week_ago]
+    entries_this_week = [e for e in all_entries if e.created_at and e.created_at >= one_week_ago]
 
     trend = 'Not enough data'
 
@@ -64,7 +66,7 @@ def dashboard():
             trend = 'Stable ➖'
 
     # generate AI insights using OpenAI API
-    if entries:
+    if all_entries:
         # insights = generate_insight(avg_mood_score, trend, entries)
         insights = 'This is a placeholder for AI Insights using OpenAI API'
     else:
@@ -87,7 +89,7 @@ def dashboard():
 
     return render_template('dashboard.html', 
         email=current_user.email, 
-        journal_entries=entries,
+        journal_entries=recent_entries,
         average_mood_score = avg_mood_score,
         total_entries=total_entries,
         entries_this_week = len(entries_this_week),
