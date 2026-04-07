@@ -4,79 +4,104 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Fonts -->
+    <title>Reflectly</title>
+
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-    <!-- Include Quill -->
+    <!-- Quill -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
-    <title>Reflectly</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
-<!-- Sidebar -->
-<div class="sidebar">
-    <h2>Reflectly</h2>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon">✦</div>
+            <div>
+                <h2 class="sidebar-title">Reflectly</h2>
+                <p class="sidebar-tagline">Journal with intention</p>
+            </div>
+        </div>
 
-    <div class="sidebar-section">
-        <p class="sidebar-heading">Overview</p>
-        <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
-    </div>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Overview</p>
+            <a href="{{ url_for('main.dashboard') }}" class="sidebar-link">
+                <span class="sidebar-icon" data-lucide="layout-dashboard"></span>
+                <span>Dashboard</span>
+            </a>
+        </div>
 
-    <div class="sidebar-section">
-        <p class="sidebar-heading">Journal</p>
-        <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="sidebar-sub-link">
-            Simple Journal
-        </a>
-        <a href="{{ url_for('journal.create_new_entry', entry_type='gratitude') }}" class="sidebar-sub-link">
-            Gratitude Journal
-        </a>
-        <a href="{{ url_for('journal.create_new_entry', entry_type='reflection') }}" class="sidebar-sub-link">
-            Daily Reflection
-        </a>
-        <a href="{{ url_for('journal.view_all_entries') }}" class="sidebar-sub-link">
-            All Entries
-        </a>
-    </div>
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Journal</p>
 
-    <div class="sidebar-section">
-        <p class="sidebar-heading">Habits</p>
-        <a href="{{ url_for('habit.create_habit') }}" class="sidebar-sub-link">
-            Create Habit
-        </a>
-    </div>
+            <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="sidebar-link sidebar-sub-link">
+                <span class="sidebar-icon" data-lucide="pen-square"></span>
+                <span>Simple Journal</span>
+            </a>
 
-    <div class="sidebar-section">
-        <p class="sidebar-heading">Tools</p>
-        <span class="sidebar-muted">Coming soon</span>
-    </div>
+            <a href="{{ url_for('journal.create_new_entry', entry_type='gratitude') }}" class="sidebar-link sidebar-sub-link">
+                <span class="sidebar-icon" data-lucide="heart-handshake"></span>
+                <span>Gratitude Journal</span>
+            </a>
 
-    <div class="sidebar-section sidebar-footer">
-        <a href="{{ url_for('auth.logout') }}">Logout</a>
-    </div>
-</div>
+            <a href="{{ url_for('journal.create_new_entry', entry_type='reflection') }}" class="sidebar-link sidebar-sub-link">
+                <span class="sidebar-icon" data-lucide="sparkles"></span>
+                <span>Daily Reflection</span>
+            </a>
 
-<!-- Main Content -->
-<div class="main">
+            <a href="{{ url_for('journal.view_all_entries') }}" class="sidebar-link sidebar-sub-link">
+                <span class="sidebar-icon" data-lucide="book-open-text"></span>
+                <span>All Entries</span>
+            </a>
+        </div>
 
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="flash-container">
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Habits</p>
+
+            <a href="{{ url_for('habit.create_habit') }}" class="sidebar-link sidebar-sub-link">
+                <span class="sidebar-icon" data-lucide="badge-check"></span>
+                <span>Create Habit</span>
+            </a>
+        </div>
+
+        <div class="sidebar-section">
+            <p class="sidebar-heading">Tools</p>
+
+            <div class="sidebar-muted-item">
+                <span class="sidebar-icon" data-lucide="brain-circuit"></span>
+                <span>Coming soon</span>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-link logout-link">
+                <span class="sidebar-icon" data-lucide="log-out"></span>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
                 {% for message in messages %}
                     <div class="flash">{{ message }}</div>
                 {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
+            {% endif %}
+        {% endwith %}
 
-    {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
+    </main>
 
-</div>
+    <!-- Lucide icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
 
 </body>
 </html>
