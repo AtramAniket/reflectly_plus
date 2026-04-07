@@ -42,7 +42,15 @@
                             {{ entry.title }}
                         </a>
                         <p class="entry-content">
-                            {{ entry.content|striptags|truncate(140) }}
+                            {% if entry.entry_type == "simple" %}
+                                {{ entry.content|striptags|truncate(180) }}
+
+                            {% elif entry.entry_type == "gratitude" %}
+                                {{ entry.structured_content.gratitude_1|truncate(180) }}
+
+                            {% elif entry.entry_type == "reflection" %}
+                                {{ entry.structured_content.went_well|truncate(180) }}
+                            {% endif %}
                         </p>
                         <span class="entry-meta">Mood: {{ entry.mood_score }}</span>
                     </div>
