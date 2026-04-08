@@ -106,6 +106,13 @@
     <script>
         lucide.createIcons();
     </script>
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('.flash').forEach(flash => {
+                flash.classList.add('flash-hide');
+            });
+        }, 3000);
+    </script>
 
 </body>
 </html>
