@@ -137,47 +137,6 @@ body {
    padding: 28px;
 }
 
-
-/*.sidebar {
-    width: 220px;
-    height: 100vh;
-    position: fixed;
-    padding: 20px;
-    background: #111827;
-    color: white;
-}
-
-.sidebar h2 {
-    margin-bottom: 20px;
-}
-
-.sidebar a {
-    display: block;
-    margin: 10px 0;
-    padding: 8px;
-    border-radius: 6px;
-    color: #cbd5f5;
-    text-decoration: none;
-    transition: 0.2s;
-}
-
-.sidebar a:hover {
-    background: #1f2937;
-    color: white;
-}
-
-.sidebar a.active {
-    background: #334155;
-    color: white;
-}
-
-.main {
-    width: 100%;
-    margin-left: 220px;
-    padding: 28px;
-}*/
-
-
 /* =========================================================
    3. GENERIC CONTAINERS
    Used to control width for forms / reading pages
