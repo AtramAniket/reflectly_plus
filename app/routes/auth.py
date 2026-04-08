@@ -33,8 +33,8 @@ def signup():
 		db.session.add(user)
 		db.session.commit()
 
-		flash('User created successfully', 'success')
-		return redirect(url_for('auth.signup'))
+		flash('User created successfully. Please Login to comtinue', 'success')
+		return redirect(url_for('auth.login'))
 
 	return render_template('signup.html')
 
