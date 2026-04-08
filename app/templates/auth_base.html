@@ -11,6 +11,18 @@
 
 <body class="auth-body">
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <div class="auth-container">
         <div class="auth-card">
 
@@ -19,18 +31,6 @@
                 <h2 class="auth-title">{% block auth_title %}{% endblock %}</h2>
                 <p class="auth-subtitle">{% block subtitle %}{% endblock %}</p>
             </div>
-
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div class="flash-container">
-                        {% for category, message in messages %}
-                            <div class="flash flash-{{ category }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
 
             {% block content %}{% endblock %}
 
