@@ -1,22 +1,26 @@
 {% extends 'auth_base.html' %}
 
-{% block title %}Signup{% endblock %}
+{% block title %}Create account{% endblock %}
+{% block subtitle %}Start journaling, tracking habits, and reflecting with intention.{% endblock %}
 
 {% block content %}
-
 <form method="POST" class="auth-form">
 
-    <input type="email" name="email" placeholder="Email" required>
+    <div class="input-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email" placeholder="Enter your email" required>
+    </div>
 
-    <input type="password" name="password" placeholder="Password" required>
+    <div class="input-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" placeholder="Create a password" required>
+    </div>
 
     <button type="submit" class="btn-primary">Signup</button>
-
 </form>
 
 <p class="auth-switch">
     Already have an account?
     <a href="{{ url_for('auth.login') }}">Login</a>
 </p>
-
 {% endblock %}
