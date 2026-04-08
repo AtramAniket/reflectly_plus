@@ -3,26 +3,30 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Reflectly</title>
+    <title>Reflectly - {% block title %}{% endblock %}</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body class="auth-body">
 
     <div class="auth-container">
-
         <div class="auth-card">
 
-            <h2 class="auth-title">{% block title %}{% endblock %}</h2>
+            <div class="auth-header">
+                <div class="auth-brand">Reflectly</div>
+                <h2 class="auth-title">{% block title %}{% endblock %}</h2>
+                <p class="auth-subtitle">{% block subtitle %}{% endblock %}</p>
+            </div>
 
-            <!-- Flash Messages -->
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     <div class="flash-container">
-                        {% for message in messages %}
-                            <div class="flash">{{ message }}</div>
+                        {% for category, message in messages %}
+                            <div class="flash flash-{{ category }}">
+                                {{ message }}
+                            </div>
                         {% endfor %}
                     </div>
                 {% endif %}
@@ -31,8 +35,15 @@
             {% block content %}{% endblock %}
 
         </div>
-
     </div>
+
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('.flash').forEach(flash => {
+                flash.classList.add('flash-hide');
+            });
+        }, 3000);
+    </script>
 
 </body>
 </html>
