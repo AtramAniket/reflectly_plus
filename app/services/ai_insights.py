@@ -1,3 +1,4 @@
+import re
 import json
 from openai import OpenAI
 from flask import current_app
@@ -101,9 +102,16 @@ Return format:
     response = client.chat.completions.create(
         model="gpt-4.1-mini",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.2
+        temperature=0.2,
+        response_format={"type": "json_object"}
     )
 
     content = response.choices[0].message.content
+
+    # extract JSON from markdown if wrapped
+    match = re.search(r"\{.*\}", content, re.DOTALL)
+
+    if match:
+        content = match.group(0)
 
     return json.loads(content)
