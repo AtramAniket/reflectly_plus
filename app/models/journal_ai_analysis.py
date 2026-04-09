@@ -11,7 +11,9 @@ class JournalAIAnalysis(db.Model):
 
 	id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-	entry_id: Mapped[int] = mapped_column(Integer, ForeignKey("journal_entries.id"), nullable=False)
+	entry_id: Mapped[int] = mapped_column(Integer, ForeignKey("journal_entries.id", ondelete='CASCADE'), unique=True, nullable=False)
+
+	entry: Mapped["JournalEntry"] = relationship("JournalEntry", back_populates="ai_analysis")
 
 	entry_type: Mapped[str] = mapped_column(String(50))
 
