@@ -1,8 +1,11 @@
+import json
 import random
 from app.extensions import db
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.journal import JournalEntry
 from flask_login import current_user, login_required
+from app.services.ai_insights import analyze_simple_journal
+from app.models.journal_ai_analysis import JournalAIAnalysis
 from flask import Blueprint, url_for, render_template, request, redirect, flash, abort, current_app
 
 journal = Blueprint('journal', __name__)
@@ -85,6 +88,30 @@ def create_new_entry(entry_type):
 				if not content:
 					flash('Content is required to save journal entry.', 'error')
 					return redirect(request.url)
+
+				# Generate AI insights for simple entry
+				
+				analysis = JournalAIAnalysis.query.filter_by(
+				    entry_id=entry.id,
+				    entry_type="simple"
+				).first()
+
+				if not analysis:
+
+				    result = analyze_simple_journal(entry.content)
+
+				    analysis = JournalAIAnalysis(
+				        entry_id=entry.id,
+				        entry_type="simple",
+				        summary=result.get("summary"),
+				        tone=result.get("tone"),
+				        distortions_json=json.dumps(result.get("distortions", [])),
+				        reframe=result.get("reframe"),
+				        assessment=result.get("assessment")
+				    )
+
+				    db.session.add(analysis)
+				    db.session.commit()
 
 				new_entry = JournalEntry(
 					title = title,

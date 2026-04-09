@@ -21,7 +21,7 @@ class JournalAIAnalysis(db.Model):
 
 	tone: Mapped[str] = mapped_column(String(100))
 
-	distortions: Mapped[Optional[dict]] = mapped_column(JSON)
+	distortions: Mapped[Optional[list]] = mapped_column(JSON)
 
 	reframe: Mapped[str] = mapped_column(Text)
 
