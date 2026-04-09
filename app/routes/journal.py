@@ -240,7 +240,7 @@ def view_entry(entry_id):
                     entry_type="simple",
                     summary=result.get("summary", ""),
                     tone=result.get("tone", ""),
-                    distortions=result.get("distortions", []),
+                    distortions=json.dumps(result.get("distortions", [])),
                     reframe=result.get("reframe", ""),
                     assessment=result.get("assessment", "balanced_reflection")
                 )
@@ -248,8 +248,9 @@ def view_entry(entry_id):
                 db.session.add(analysis)
                 db.session.commit()
 
-            except Exception:
+            except Exception as e:
                 db.session.rollback()
+                print("AI ANALYSIS ERROR:", e)
                 analysis = None
 
     return render_template(
