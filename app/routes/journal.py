@@ -216,13 +216,47 @@ def create_new_entry(entry_type):
 @journal.route('/journal/entries/<int:entry_id>')
 @login_required
 def view_entry(entry_id):
-	
+
     entry = JournalEntry.query.get_or_404(entry_id)
 
     if entry.user_id != current_user.id:
         abort(403)
 
-    return render_template('view_entry.html', entry=entry)
+    analysis = None
+
+    # Only analyze SIMPLE entries
+    if entry.entry_type == "simple":
+
+        analysis = entry.ai_analysis
+
+        # generate if not exists
+        if not analysis:
+
+            try:
+                result = analyze_simple_journal(entry.content)
+
+                analysis = JournalAIAnalysis(
+                    entry_id=entry.id,
+                    entry_type="simple",
+                    summary=result.get("summary", ""),
+                    tone=result.get("tone", ""),
+                    distortions=result.get("distortions", []),
+                    reframe=result.get("reframe", ""),
+                    assessment=result.get("assessment", "balanced_reflection")
+                )
+
+                db.session.add(analysis)
+                db.session.commit()
+
+            except Exception:
+                db.session.rollback()
+                analysis = None
+
+    return render_template(
+        'view_entry.html',
+        entry=entry,
+        analysis=analysis
+    )
 
 
 
