@@ -7,3 +7,49 @@
         Mood: {{ entry.mood_score }}/10
     </span>
 </div>
+
+{% if analysis %}
+<div class="ai-insights">
+
+    <div class="ai-insights-header">
+        <h3>AI Reflection Insights</h3>
+        <span class="ai-badge">AI</span>
+    </div>
+
+    {% if analysis.summary %}
+    <div class="ai-block">
+        <div class="ai-label">Summary</div>
+        <p>{{ analysis.summary }}</p>
+    </div>
+    {% endif %}
+
+    {% if analysis.tone %}
+    <div class="ai-block">
+        <div class="ai-label">Tone</div>
+        <span class="ai-tone">{{ analysis.tone }}</span>
+    </div>
+    {% endif %}
+
+    {% if analysis.distortions %}
+    <div class="ai-block">
+        <div class="ai-label">Possible thinking patterns</div>
+
+        {% for d in analysis.distortions %}
+        <div class="distortion-item">
+            <div class="distortion-type">{{ d.type }}</div>
+            <div class="distortion-evidence">"{{ d.evidence }}"</div>
+            <div class="distortion-reason">{{ d.reason }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if analysis.reframe %}
+    <div class="ai-reframe">
+        <div class="ai-label">Balanced perspective</div>
+        <p>{{ analysis.reframe }}</p>
+    </div>
+    {% endif %}
+
+</div>
+{% endif %}
