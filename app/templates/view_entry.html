@@ -44,7 +44,7 @@
     <div class="card entry-view">
 
         {% if entry.entry_type == "simple" %}
-            {% include 'partials/_view_simple.html' %}
+            {% include 'partials/_view_simple.html' with analysis=analysis %}
 
         {% elif entry.entry_type == "gratitude" %}
             {% include 'partials/_view_gratitude.html' %}
