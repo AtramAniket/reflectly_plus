@@ -53,152 +53,164 @@ def view_all_entries():
 @login_required
 def create_new_entry(entry_type):
 
-	if entry_type not in ['simple', 'gratitude', 'reflection']:
-		abort(404)
+    if entry_type not in ['simple', 'gratitude', 'reflection']:
+        abort(404)
 
-	if request.method == 'POST':
+    if request.method == 'POST':
 
-		# Title and Mood Score
-		title = request.form.get('title', '').strip()
-		mood_score = request.form.get('mood_score', '').strip()
+        title = request.form.get('title', '').strip()
+        mood_score_raw = request.form.get('mood_score', '').strip()
 
-		# Image
-		image_id = random.randint(1, 700)
-		image_url = f"https://picsum.photos/id/{image_id}/1200/400"
+        image_id = random.randint(1, 700)
+        image_url = f"https://picsum.photos/id/{image_id}/1200/400"
 
-		try: 
+        try:
+            # Basic validation
+            if not title:
+                flash('Title is required and cannot be empty.', 'error')
+                return redirect(request.url)
 
-			if not title:
-				flash('Tile is required and cannot be empty', 'error')
-				return redirect(request.url)
+            if not mood_score_raw:
+                flash('Mood score is required.', 'error')
+                return redirect(request.url)
 
-			if not mood_score:
-				flash('Mood score is required.', 'error')
-				return redirect(request.url)
+            mood_score = int(mood_score_raw)
 
-			if int(mood_score) < 0 or int(mood_score) > 10:
-				flash('Mood score must be between 0 and 10', 'error')
-				return redirect(request.url)
+            if mood_score < 0 or mood_score > 10:
+                flash('Mood score must be between 0 and 10.', 'error')
+                return redirect(request.url)
 
-			# SIMPLE JOURNAL ENTRY
-			if entry_type == 'simple':
-			
-				content = request.form.get('content')
+            # -----------------------------
+            # SIMPLE JOURNAL ENTRY
+            # -----------------------------
+            if entry_type == 'simple':
 
-				if not content:
-					flash('Content is required to save journal entry.', 'error')
-					return redirect(request.url)
+                content = request.form.get('content', '').strip()
 
-				# Generate AI insights for simple entry
-				
-				analysis = JournalAIAnalysis.query.filter_by(
-				    entry_id=entry.id,
-				    entry_type="simple"
-				).first()
+                if not content:
+                    flash('Content is required to save journal entry.', 'error')
+                    return redirect(request.url)
 
-				if not analysis:
+                new_entry = JournalEntry(
+                    title=title,
+                    content=content,
+                    entry_type='simple',
+                    mood_score=mood_score,
+                    user_id=current_user.id,
+                    image_url=image_url
+                )
 
-				    result = analyze_simple_journal(entry.content)
+                db.session.add(new_entry)
+                db.session.commit()
 
-				    analysis = JournalAIAnalysis(
-				        entry_id=entry.id,
-				        entry_type="simple",
-				        summary=result.get("summary"),
-				        tone=result.get("tone"),
-				        distortions_json=json.dumps(result.get("distortions", [])),
-				        reframe=result.get("reframe"),
-				        assessment=result.get("assessment")
-				    )
+                # Try AI analysis after entry is safely saved
+                try:
+                    result = analyze_simple_journal(content)
 
-				    db.session.add(analysis)
-				    db.session.commit()
+                    analysis = JournalAIAnalysis(
+                        entry_id=new_entry.id,
+                        entry_type='simple',
+                        summary=result.get('summary', ''),
+                        tone=result.get('tone', ''),
+                        distortions=result.get('distortions', []),
+                        reframe=result.get('reframe', ''),
+                        assessment=result.get('assessment', 'balanced_reflection')
+                    )
 
-				new_entry = JournalEntry(
-					title = title,
-					content = content,
-					entry_type = 'simple',
-					mood_score = mood_score,
-					user_id = current_user.id,
-					image_url = image_url
-					)
+                    db.session.add(analysis)
+                    db.session.commit()
 
-			# GRATITUDE JOURNAL ENTRY
-			elif entry_type == 'gratitude':
+                except Exception:
+                    db.session.rollback()
+                    # Journal entry is already saved, so don't fail the whole request
+                    flash('Journal saved, but AI insights could not be generated right now.', 'warning')
 
-				gratitude_1 = request.form.get('gratitude_1')
-				gratitude_2 = request.form.get('gratitude_2')
-				gratitude_3 = request.form.get('gratitude_3')
+                else:
+                    flash('New journal entry added successfully.', 'success')
 
-				if not all([gratitude_1, gratitude_2, gratitude_3]):
-					flash('Please answer all questions', 'error')
-					return redirect(request.url)
+                return redirect(url_for('main.dashboard'))
 
-				structured_content = {
-					'gratitude_1': gratitude_1,
-					'gratitude_2': gratitude_2,
-					'gratitude_3': gratitude_3,
-				}
+            # -----------------------------
+            # GRATITUDE JOURNAL ENTRY
+            # -----------------------------
+            elif entry_type == 'gratitude':
 
+                gratitude_1 = request.form.get('gratitude_1', '').strip()
+                gratitude_2 = request.form.get('gratitude_2', '').strip()
+                gratitude_3 = request.form.get('gratitude_3', '').strip()
 
-				new_entry = JournalEntry(
-					title = title,
-					content=None,
-					structured_content = structured_content,
-					entry_type = 'gratitude',
-					mood_score = mood_score,
-					user_id = current_user.id,
-					image_url = image_url
-					)
+                if not all([gratitude_1, gratitude_2, gratitude_3]):
+                    flash('Please answer all gratitude prompts.', 'error')
+                    return redirect(request.url)
 
-			# DAILY REFLECTION JOURNAL ENTRY
-			elif entry_type == 'reflection':
+                structured_content = {
+                    'gratitude_1': gratitude_1,
+                    'gratitude_2': gratitude_2,
+                    'gratitude_3': gratitude_3,
+                }
 
-				went_well = request.form.get('went_well')
-				challenging = request.form.get('challenging')
-				tomorrow = request.form.get('tomorrow')
+                new_entry = JournalEntry(
+                    title=title,
+                    content=None,
+                    structured_content=structured_content,
+                    entry_type='gratitude',
+                    mood_score=mood_score,
+                    user_id=current_user.id,
+                    image_url=image_url
+                )
 
-				if not all([went_well, challenging, tomorrow]):
-					flash('Please answer all reflection prompts', 'error')
-					return redirect(request.url)
+            # -----------------------------
+            # REFLECTION JOURNAL ENTRY
+            # -----------------------------
+            elif entry_type == 'reflection':
 
-				structured_content = {
-					'went_well': request.form.get('went_well'),
-					'challenging': request.form.get('challenging'),
-					'tomorrow': request.form.get('tomorrow'),
-				}
+                went_well = request.form.get('went_well', '').strip()
+                challenging = request.form.get('challenging', '').strip()
+                tomorrow = request.form.get('tomorrow', '').strip()
 
-				new_entry = JournalEntry(
-					title = title,
-					content=None,
-					structured_content = structured_content,
-					entry_type = 'reflection',
-					mood_score = mood_score,
-					user_id = current_user.id,
-					image_url = image_url
-					)
+                if not all([went_well, challenging, tomorrow]):
+                    flash('Please answer all reflection prompts.', 'error')
+                    return redirect(request.url)
 
-			db.session.add(new_entry)
-			db.session.commit()
+                structured_content = {
+                    'went_well': went_well,
+                    'challenging': challenging,
+                    'tomorrow': tomorrow,
+                }
 
-			flash('New Journal entry added successfully', 'success')
-			return redirect(url_for('main.dashboard'))
+                new_entry = JournalEntry(
+                    title=title,
+                    content=None,
+                    structured_content=structured_content,
+                    entry_type='reflection',
+                    mood_score=mood_score,
+                    user_id=current_user.id,
+                    image_url=image_url
+                )
 
-		except ValueError:
-			db.session.rollback()
-			flash('Mood score must be valid number.', 'error')
-			return(redirect(request.url))
+            # Save gratitude/reflection entries here
+            db.session.add(new_entry)
+            db.session.commit()
 
-		except SQLAlchemyError:
-			db.session.rollback()
-			flash('Something went wrong while saving entry, please try again.', 'error')
-			return(redirect(request.url))
+            flash('New journal entry added successfully.', 'success')
+            return redirect(url_for('main.dashboard'))
 
-		except Exception:
-			db.session.rollback()
-			flash('Unexpected error occured. Please try again later.', 'error')
-			return(redirect(request.url))
+        except ValueError:
+            db.session.rollback()
+            flash('Mood score must be a valid number.', 'error')
+            return redirect(request.url)
 
-	return render_template('create_entry.html', entry_type=entry_type)
+        except SQLAlchemyError:
+            db.session.rollback()
+            flash('Something went wrong while saving the entry. Please try again.', 'error')
+            return redirect(request.url)
+
+        except Exception:
+            db.session.rollback()
+            flash('An unexpected error occurred. Please try again later.', 'error')
+            return redirect(request.url)
+
+    return render_template('create_entry.html', entry_type=entry_type)
 
 
 @journal.route('/journal/entries/<int:entry_id>')
