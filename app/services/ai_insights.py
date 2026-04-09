@@ -1,7 +1,10 @@
+import json
 from openai import OpenAI
 from flask import current_app
 
 client = OpenAI()
+
+# Helper function used for generating AI summaries for dashboard
 
 def generate_insight(avg_mood, trend, entries):
     try:
@@ -55,3 +58,52 @@ def generate_insight(avg_mood, trend, entries):
     except Exception as e:
         print("OpenAI Error:", e)
         return "Insights unavailable right now."
+
+
+# Helper function to generate AI summaries for Each Simple Journal entry
+
+def analyze_simple_journal(text):
+
+    prompt = f"""
+You are analyzing a personal journal entry for possible cognitive distortions
+based on principles similar to cognitive behavioral therapy.
+
+IMPORTANT RULES:
+- Only identify distortions if clearly supported
+- Do NOT flag positive or neutral writing
+- Do NOT over-pathologize normal reflection
+- Prefer no distortion over weak guess
+- Only focus on negative bias
+- Use soft language
+
+Return JSON only.
+
+Journal Entry:
+{text}
+
+Return format:
+
+{{
+"summary": "",
+"tone": "",
+"distortions": [
+    {{
+      "type": "",
+      "evidence": "",
+      "reason": ""
+    }}
+],
+"reframe": "",
+"assessment": "balanced_reflection OR possible_negative_bias"
+}}
+"""
+
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.2
+    )
+
+    content = response.choices[0].message.content
+
+    return json.loads(content)
