@@ -32,6 +32,9 @@ class JournalEntry(UserMixin, db.Model):
 	# Relationship(backref)
 	user: Mapped['User'] = relationship('User', back_populates='entries')
 
+	# Relationship with journalAiAnalysis
+	ai_analysis: Mapped['JournalAIAnalysis'] = relationship('JournalAIAnalysis', back_populates='entry', cascade='all, delete-orphan', uselist=False)
+
 	
 	def __repr__(self):
 		return f'<JournalEntry {self.id}>'
