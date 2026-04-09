@@ -64,40 +64,42 @@ def generate_insight(avg_mood, trend, entries):
 # Helper function to generate AI summaries for Each Simple Journal entry
 
 def analyze_simple_journal(text):
-
+    
     prompt = f"""
-You are analyzing a personal journal entry for possible cognitive distortions
-based on principles similar to cognitive behavioral therapy.
+    You are analyzing a personal journal entry and reflecting it back to the user.
 
-IMPORTANT RULES:
-- Only identify distortions if clearly supported
-- Do NOT flag positive or neutral writing
-- Do NOT over-pathologize normal reflection
-- Prefer no distortion over weak guess
-- Only focus on negative bias
-- Use soft language
+    Write in a warm, supportive, human tone.
+    Do NOT refer to "the writer".
+    Speak directly using "you" when appropriate.
+    Avoid clinical or academic language.
+    Be gentle, not judgmental.
 
-Return JSON only.
+    IMPORTANT:
+    - Only identify distortions if clearly present
+    - Do NOT flag positive writing
+    - Prefer no distortion over weak guess
+    - Do not over-analyze normal thoughts
+    - Keep responses concise and readable for UI cards
 
-Journal Entry:
-{text}
+    Journal Entry:
+    {text}
 
-Return format:
+    Return JSON:
 
-{{
-"summary": "",
-"tone": "",
-"distortions": [
     {{
-      "type": "",
-      "evidence": "",
-      "reason": ""
+    "summary": "",
+    "tone": "",
+    "distortions": [
+        {{
+          "type": "",
+          "evidence": "",
+          "reason": ""
+        }}
+    ],
+    "reframe": "",
+    "assessment": "balanced_reflection OR possible_negative_bias"
     }}
-],
-"reframe": "",
-"assessment": "balanced_reflection OR possible_negative_bias"
-}}
-"""
+    """
 
     response = client.chat.completions.create(
         model="gpt-4.1-mini",
