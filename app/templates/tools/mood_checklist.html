@@ -26,20 +26,22 @@
 
     <form method="POST" class="card checklist-form-card">
         {% for question in questions %}
-        <div class="checklist-question-block">
-            <div class="checklist-question-text">
-                {{ loop.index }}. {{ question }}
-            </div>
+            {% set q_index = loop.index0 %}
 
-            <div class="checklist-options">
-                {% for score in range(5) %}
-                <label class="checklist-option">
-                    <input type="radio" name="q_{{ loop.parent.index0 }}" value="{{ score }}" required>
-                    <span>{{ score }}</span>
-                </label>
-                {% endfor %}
+            <div class="checklist-question-block">
+                <div class="checklist-question-text">
+                    {{ loop.index }}. {{ question }}
+                </div>
+
+                <div class="checklist-options">
+                    {% for score in range(5) %}
+                    <label class="checklist-option">
+                        <input type="radio" name="q_{{ q_index }}" value="{{ score }}" required>
+                        <span>{{ score }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
         {% endfor %}
 
         <div class="form-group">
