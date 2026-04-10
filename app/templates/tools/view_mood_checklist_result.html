@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="centered-container">
+    <div class="page-header">
+        <h1 class="page-title">Check-In Result</h1>
+        <p class="page-subtitle">
+            Completed on {{ result.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+        </p>
+    </div>
+
+    <div class="card checklist-result-card">
+        <div class="checklist-score-header">
+            <div>
+                <div class="checklist-score-label">Total Score</div>
+                <div class="checklist-score-value">{{ result.total_score }}/40</div>
+            </div>
+
+            <div class="checklist-status-badge checklist-status-{{ feedback.tone }}">
+                {{ feedback.label }}
+            </div>
+        </div>
+
+        <div class="checklist-result-message">
+            <p>{{ feedback.message }}</p>
+        </div>
+
+        {% if feedback.tone in ['high', 'severe'] %}
+        <div class="checklist-help-box">
+            If this reflects how you've been feeling for a while, or if daily life is becoming harder to manage,
+            consider reaching out to a licensed mental health professional or someone you trust for support.
+        </div>
+        {% endif %}
+
+        <div class="checklist-disclaimer-secondary">
+            This result is only a reflective screening tool and should not be used as a diagnosis or treatment recommendation.
+        </div>
+    </div>
+
+    <div class="card checklist-breakdown-card">
+        <h3 class="card-title">Response Breakdown</h3>
+
+        <div class="checklist-breakdown-list">
+            {% for item in question_answer_pairs %}
+            <div class="checklist-breakdown-item">
+                <div class="checklist-breakdown-question">{{ item.question }}</div>
+                <div class="checklist-breakdown-score">Score: {{ item.score }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if result.note %}
+    <div class="card">
+        <h3 class="card-title">Your note</h3>
+        <p>{{ result.note }}</p>
+    </div>
+    {% endif %}
+
+    <div class="entry-actions">
+        <div class="entry-actions-left">
+            <a href="{{ url_for('tools.mood_checklist') }}" class="btn-secondary">Take again</a>
+            <a href="{{ url_for('tools.mood_checklist_history') }}" class="btn-secondary">View history</a>
+        </div>
+
+        <a href="{{ url_for('main.dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}
