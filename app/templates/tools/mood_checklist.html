@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="centered-container">
+    <div class="page-header">
+        <h1 class="page-title">Mood & Wellbeing Check-In</h1>
+        <p class="page-subtitle">
+            A structured check-in to help you reflect on how you're doing emotionally and mentally.
+        </p>
+    </div>
+
+    <div class="card checklist-intro-card">
+        <p class="checklist-disclaimer">
+            This tool is meant for reflection and early self-awareness. It is not a diagnosis, treatment plan,
+            or substitute for professional care.
+        </p>
+
+        <div class="checklist-scale-guide">
+            <span>0 = Not at all</span>
+            <span>1 = A little</span>
+            <span>2 = Sometimes</span>
+            <span>3 = Often</span>
+            <span>4 = Very much</span>
+        </div>
+    </div>
+
+    <form method="POST" class="card checklist-form-card">
+        {% for question in questions %}
+        <div class="checklist-question-block">
+            <div class="checklist-question-text">
+                {{ loop.index }}. {{ question }}
+            </div>
+
+            <div class="checklist-options">
+                {% for score in range(5) %}
+                <label class="checklist-option">
+                    <input type="radio" name="q_{{ loop.parent.index0 }}" value="{{ score }}" required>
+                    <span>{{ score }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="form-group">
+            <label for="note">Optional note</label>
+            <textarea
+                id="note"
+                name="note"
+                rows="4"
+                placeholder="Anything you want to note about how you've been feeling?"
+            ></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary">Submit check-in</button>
+    </form>
+</div>
+{% endblock %}
