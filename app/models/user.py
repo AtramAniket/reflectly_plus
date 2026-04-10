@@ -24,7 +24,7 @@ class User(UserMixin, db.Model):
     habits = relationship('Habit', back_populates='user', cascade='all, delete-orphan')
 
     # Relationship with MoodChecklistResults
-    mood_checklist_results = relationship('MoodChecklistResult', back_populates='user',cascade='all, delete-orphan', order_by='desc(MoodChecklistResult.created_at')
+    mood_checklist_results = relationship('MoodChecklistResult', back_populates='user',cascade='all, delete-orphan', order_by='desc(MoodChecklistResult.created_at)')
 
     def set_password(self, raw_password_text) -> None:
 
