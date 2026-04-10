@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="centered-container">
+    <div class="page-header">
+        <h1 class="page-title">Check-In History</h1>
+        <p class="page-subtitle">
+            Review past mood and wellbeing check-ins over time.
+        </p>
+    </div>
+
+    <div class="entries-grid">
+        {% if results %}
+            {% for result in results %}
+                {% set feedback = get_checklist_feedback(result.total_score) %}
+                <div class="entry-library-card">
+                    <div class="entry-library-top">
+                        <div>
+                            <a href="{{ url_for('tools.view_mood_checklist_result', result_id=result.id) }}"
+                               class="entry-library-title">
+                                Check-In from {{ result.created_at.strftime('%B %d, %Y') }}
+                            </a>
+                        </div>
+
+                        <span class="entry-type-badge reflection-badge">
+                            {{ result.total_score }}/40
+                        </span>
+                    </div>
+
+                    <p class="entry-library-preview">{{ feedback.label }}</p>
+
+                    <div class="entry-library-footer">
+                        <span>{{ feedback.message }}</span>
+                        <span class="entry-library-meta">
+                            {{ result.created_at.strftime('%I:%M %p') }}
+                        </span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="card">
+                <p class="empty-text">No check-ins yet. Your results will appear here once you complete one.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
