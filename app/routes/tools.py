@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 
 from app.extensions import db
 from app.models.mood_checklist import MoodChecklistResult
-from app.helper.mood_wellbeing_check import get_checklist_feedback
+from app.helper.mood_wellbeing_check import CHECKLIST_QUESTIONS, get_checklist_feedback
 
 tools = Blueprint('tools', __name__)
 
