@@ -44,17 +44,19 @@
             </div>
         {% endfor %}
 
-        <div class="form-group">
-            <label for="note">Optional note</label>
-            <textarea
-                id="note"
-                name="note"
-                rows="4"
-                placeholder="Anything you want to note about how you've been feeling?"
-            ></textarea>
-        </div>
+        <div class="checklist-form-footer">
+            <div class="form-group">
+                <label for="note">Optional note</label>
+                <textarea
+                    id="note"
+                    name="note"
+                    rows="4"
+                    placeholder="Anything you want to note about how you've been feeling?"
+                ></textarea>
+            </div>
 
-        <button type="submit" class="btn-primary">Submit check-in</button>
+            <button type="submit" class="btn-primary">Submit check-in</button>
+        </div>
     </form>
 </div>
 {% endblock %}
