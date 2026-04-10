@@ -14,6 +14,7 @@ def create_app():
     from .routes.auth import auth
     from .routes.routes import main
     from .routes.habit import habit
+    from .routes.tools import tools
     from .routes.journal import journal
 
     from .models.user import User
