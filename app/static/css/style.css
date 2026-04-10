@@ -1417,3 +1417,204 @@ body {
     background: #ecfdf5;
     border: 1px solid #bbf7d0;
 }
+
+/* =========================================================
+   26.MOOD & WELLBEING CHECKLIST
+   ========================================================= */
+
+.checklist-intro-card {
+    margin-bottom: 20px;
+}
+
+.checklist-disclaimer,
+.checklist-disclaimer-secondary {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #6b7280;
+}
+
+.checklist-scale-guide {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.checklist-scale-guide span {
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 999px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    color: #475569;
+}
+
+.checklist-form-card {
+    padding: 24px;
+}
+
+.checklist-question-block {
+    padding: 18px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.checklist-question-block:last-of-type {
+    border-bottom: none;
+}
+
+.checklist-question-text {
+    margin-bottom: 12px;
+    font-weight: 500;
+    color: #111827;
+    line-height: 1.7;
+}
+
+.checklist-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.checklist-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.checklist-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.checklist-option span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #374151;
+    font-weight: 600;
+    transition: 0.18s ease;
+}
+
+.checklist-option input:checked + span {
+    background: #111827;
+    color: white;
+    border-color: #111827;
+}
+
+.checklist-option span:hover {
+    background: #f8fafc;
+}
+
+.checklist-result-card,
+.checklist-breakdown-card {
+    margin-bottom: 20px;
+}
+
+.checklist-score-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.checklist-score-label {
+    font-size: 13px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.checklist-score-value {
+    font-size: 34px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.checklist-status-badge {
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.checklist-status-low {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.checklist-status-mild {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.checklist-status-moderate {
+    background: #fde68a;
+    color: #92400e;
+}
+
+.checklist-status-high {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.checklist-status-severe {
+    background: #fecaca;
+    color: #7f1d1d;
+}
+
+.checklist-result-message {
+    margin-bottom: 16px;
+    line-height: 1.7;
+    color: #374151;
+}
+
+.checklist-help-box {
+    margin-bottom: 14px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #fff7ed;
+    border: 1px solid #fdba74;
+    color: #9a3412;
+    line-height: 1.7;
+}
+
+.checklist-breakdown-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checklist-breakdown-item {
+    padding: 14px;
+    border-radius: 10px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+}
+
+.checklist-breakdown-question {
+    margin-bottom: 6px;
+    color: #111827;
+}
+
+.checklist-breakdown-score {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+@media (max-width: 640px) {
+    .checklist-score-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .checklist-options {
+        gap: 8px;
+    }
+}
