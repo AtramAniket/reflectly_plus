@@ -27,6 +27,7 @@ def create_app():
     app.register_blueprint(main)
     app.register_blueprint(auth)
     app.register_blueprint(habit)
+    app.register_blueprint(tools)
     app.register_blueprint(journal)
 
     @login_manager.user_loader
