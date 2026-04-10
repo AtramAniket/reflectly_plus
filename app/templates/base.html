@@ -71,10 +71,20 @@
         <div class="sidebar-section">
             <p class="sidebar-heading">Tools</p>
 
-            <div class="sidebar-muted-item">
+            <a href="{{ url_for('tools.mood_checklist') }}" class="sidebar-link">
+                <span class="sidebar-icon">🧠</span>
+                <span>Mood Check-In</span>
+            </a>
+
+            <a href="{{ url_for('tools.mood_checklist_history') }}" class="sidebar-link sidebar-sub-link">
+                <span class="sidebar-icon">↳</span>
+                <span>Check-In History</span>
+            </a>
+
+<!--             <div class="sidebar-muted-item">
                 <span class="sidebar-icon" data-lucide="brain-circuit"></span>
                 <span>Coming soon</span>
-            </div>
+            </div> -->
         </div>
 
         <div class="sidebar-footer">
