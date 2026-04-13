@@ -27,7 +27,12 @@ class User(UserMixin, db.Model):
     mood_checklist_results = relationship('MoodChecklistResult', back_populates='user',cascade='all, delete-orphan', order_by='desc(MoodChecklistResult.created_at)')
 
     # Relationship with ProcrastinationSheet
-    procrastination_sheets = relationship('ProcrastinationSheet', back_populates='user',cascade='all, delete-orphan', order_by='desc(ProcrastinationSheet.created_at)')
+    procrastination_sheets: Mapped[list["ProcrastinationSheet"]] = relationship(
+        "ProcrastinationSheet",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        order_by="desc(ProcrastinationSheet.created_at)"
+    )
 
     def set_password(self, raw_password_text) -> None:
 
