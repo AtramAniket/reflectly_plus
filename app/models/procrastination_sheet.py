@@ -1,45 +1,92 @@
 import datetime
 from typing import Optional
+
 from app.extensions import db
-from flask_login import UserMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, DateTime, func, Text, ForeignKey, JSON
+from sqlalchemy import String, Integer, DateTime, func, Text, ForeignKey, Boolean
+
 
 class ProcrastinationSheet(db.Model):
+    __tablename__ = "procrastination_sheets"
 
-	__tablename__ = 'procrastination_sheet'
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-	id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False
+    )
 
-	user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    note: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
-	task_name: Mapped[str] = mapped_column(String(500), nullable=False)
-	avoidence_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    is_completed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
-	expected_difficulty: Mapped[int] = mapped_column(Integer, nullable=False)
-	expected_statisfaction: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now()
+    )
 
-	resistance_thoughts: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-	tiny_steps: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        onupdate=func.now()
+    )
 
-	actual_difficulty: Mapped[int] = mapped_column(Integer, nullable=False)
-	actual_statisfaction: Mapped[int] = mapped_column(Integer, nullable=False)
+    user = relationship("User", back_populates="procrastination_sheets")
 
-	reflection: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    tasks: Mapped[list["ProcrastinationTask"]] = relationship(
+        "ProcrastinationTask",
+        back_populates="sheet",
+        cascade="all, delete-orphan",
+        order_by="ProcrastinationTask.created_at.asc()"
+    )
 
-	created_at: Mapped[datetime] = mapped_column(
-	    DateTime(timezone=True),
-	    nullable=False,
-	    server_default=func.now()
-	)
+    def __repr__(self):
+        return f"<ProcrastinationSheet {self.id}: {self.title}>"
 
-	updated_at: Mapped[Optional[datetime]] = mapped_column(
-	    DateTime(timezone=True),
-	    nullable=True,
-	    onupdate=func.now()
-	)
 
-	user = relationship("User", back_populates="procrastination_sheets")
+class ProcrastinationTask(db.Model):
+    __tablename__ = "procrastination_tasks"
 
-	def __repr__(self):
-		return f"Sheet {self.id}"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+
+    sheet_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("procrastination_sheets.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    task_name: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    avoidance_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    resistance_thoughts: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    tiny_step: Mapped[str] = mapped_column(Text, nullable=False)
+
+    expected_difficulty: Mapped[int] = mapped_column(Integer, nullable=False)
+    expected_satisfaction: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    actual_difficulty: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    actual_satisfaction: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
+    reflection: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    is_completed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now()
+    )
+
+    updated_at: Mapped[Optional[datetime.datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        onupdate=func.now()
+    )
+
+    sheet = relationship("ProcrastinationSheet", back_populates="tasks")
+
+    def __repr__(self):
+        return f"<ProcrastinationTask {self.id}: {self.task_name}>"
