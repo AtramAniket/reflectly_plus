@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="reading-container">
+    <div class="page-header">
+        <h1 class="page-title">Anti-Procrastination Sheet</h1>
+        <p class="page-subtitle">
+            Completed on {{ sheet.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+        </p>
+    </div>
+
+    <div class="card procrastination-view-card">
+        <div class="procrastination-view-top">
+            <div>
+                <div class="procrastination-view-label">Task</div>
+                <h2 class="procrastination-task-title">{{ sheet.task_name }}</h2>
+            </div>
+        </div>
+    </div>
+
+    {% if sheet.avoidance_reason %}
+    <div class="card procrastination-view-card">
+        <h3 class="card-title">Why you were avoiding it</h3>
+        <p>{{ sheet.avoidance_reason }}</p>
+    </div>
+    {% endif %}
+
+    <div class="card procrastination-view-card">
+        <h3 class="card-title">Before vs After</h3>
+
+        <div class="procrastination-comparison-grid">
+            <div class="comparison-card">
+                <div class="comparison-label">Expected difficulty</div>
+                <div class="comparison-value">{{ sheet.expected_difficulty }}/10</div>
+            </div>
+
+            <div class="comparison-card">
+                <div class="comparison-label">Actual difficulty</div>
+                <div class="comparison-value">{{ sheet.actual_difficulty }}/10</div>
+            </div>
+
+            <div class="comparison-card">
+                <div class="comparison-label">Expected satisfaction</div>
+                <div class="comparison-value">{{ sheet.expected_satisfaction }}/10</div>
+            </div>
+
+            <div class="comparison-card">
+                <div class="comparison-label">Actual satisfaction</div>
+                <div class="comparison-value">{{ sheet.actual_satisfaction }}/10</div>
+            </div>
+        </div>
+    </div>
+
+    {% if sheet.resistance_thoughts %}
+    <div class="card procrastination-view-card">
+        <h3 class="card-title">Resistance thoughts</h3>
+        <p>{{ sheet.resistance_thoughts }}</p>
+    </div>
+    {% endif %}
+
+    <div class="card procrastination-view-card procrastination-step-highlight">
+        <h3 class="card-title">Smallest possible first step</h3>
+        <p>{{ sheet.tiny_step }}</p>
+    </div>
+
+    {% if sheet.reflection %}
+    <div class="card procrastination-view-card">
+        <h3 class="card-title">Reflection</h3>
+        <p>{{ sheet.reflection }}</p>
+    </div>
+    {% endif %}
+
+    <div class="entry-actions">
+        <div class="entry-actions-left">
+            <a href="{{ url_for('tools.anti_procrastination') }}" class="btn-secondary">Create another</a>
+            <a href="{{ url_for('tools.procrastination_sheet_history') }}" class="btn-secondary">View history</a>
+        </div>
+
+        <a href="{{ url_for('main.dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}
