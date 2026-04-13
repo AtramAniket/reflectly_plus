@@ -159,13 +159,13 @@ def anti_procrastination():
             sheet = ProcrastinationSheet(
                 user_id=current_user.id,
                 task_name=task_name,
-                avoidance_reason=avoidance_reason,
+                avoidence_reason=avoidance_reason,
                 expected_difficulty=expected_difficulty,
-                expected_satisfaction=expected_satisfaction,
+                expected_statisfaction=expected_satisfaction,
                 resistance_thoughts=resistance_thoughts,
-                tiny_step=tiny_step,
+                tiny_steps=tiny_step,
                 actual_difficulty=actual_difficulty,
-                actual_satisfaction=actual_satisfaction,
+                actual_statisfaction=actual_satisfaction,
                 reflection=reflection
             )
 
@@ -185,9 +185,9 @@ def anti_procrastination():
             flash("Something went wrong while saving your sheet.", "error")
             return redirect(request.url)
 
-        except Exception:
+        except Exception as e:
             db.session.rollback()
-            flash("Unexpected error occurred. Please try again.", "error")
+            flash(f"Unexpected error occurred. Please try again", "error")
             return redirect(request.url)
 
     return render_template("tools/anti_procrastination.html")

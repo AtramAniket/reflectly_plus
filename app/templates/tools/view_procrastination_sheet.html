@@ -18,10 +18,10 @@
         </div>
     </div>
 
-    {% if sheet.avoidance_reason %}
+    {% if sheet.avoidence_reason %}
     <div class="card procrastination-view-card">
         <h3 class="card-title">Why you were avoiding it</h3>
-        <p>{{ sheet.avoidance_reason }}</p>
+        <p>{{ sheet.avoidence_reason }}</p>
     </div>
     {% endif %}
 
@@ -41,12 +41,12 @@
 
             <div class="comparison-card">
                 <div class="comparison-label">Expected satisfaction</div>
-                <div class="comparison-value">{{ sheet.expected_satisfaction }}/10</div>
+                <div class="comparison-value">{{ sheet.expected_statisfaction }}/10</div>
             </div>
 
             <div class="comparison-card">
                 <div class="comparison-label">Actual satisfaction</div>
-                <div class="comparison-value">{{ sheet.actual_satisfaction }}/10</div>
+                <div class="comparison-value">{{ sheet.actual_statisfaction }}/10</div>
             </div>
         </div>
     </div>
@@ -60,7 +60,7 @@
 
     <div class="card procrastination-view-card procrastination-step-highlight">
         <h3 class="card-title">Smallest possible first step</h3>
-        <p>{{ sheet.tiny_step }}</p>
+        <p>{{ sheet.tiny_steps }}</p>
     </div>
 
     {% if sheet.reflection %}
