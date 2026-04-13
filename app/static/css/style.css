@@ -1952,3 +1952,34 @@ body {
         grid-template-columns: 1fr;
     }
 }
+/* =========================================================
+   29. CREATE HABIT PAGE
+   ========================================================= */
+
+.habit-submit-btn {
+    align-self: flex-start;
+    min-width: 150px;
+}
+
+.form-card .entry-form input[type="text"] {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #dbe3ee;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #0f172a;
+    font-size: 14px;
+    line-height: 1.6;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-card .entry-form input[type="text"]:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.form-card .entry-form input[type="text"]::placeholder {
+    color: #94a3b8;
+}
