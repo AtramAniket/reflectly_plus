@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="centered-container">
+    <div class="page-header">
+        <h1 class="page-title">Complete Task</h1>
+        <p class="page-subtitle">
+            Update actual scores for <strong>{{ task.task_name }}</strong>.
+        </p>
+    </div>
+
+    <div class="card checklist-intro-card">
+        <p class="checklist-disclaimer">
+            Compare what you expected before starting with how the task actually felt after attempting it.
+        </p>
+    </div>
+
+    <div class="card procrastination-view-card">
+        <h3 class="card-title">Before you started</h3>
+        <div class="procrastination-comparison-grid">
+            <div class="comparison-card">
+                <div class="comparison-label">Expected difficulty</div>
+                <div class="comparison-value">{{ task.expected_difficulty }}/10</div>
+            </div>
+
+            <div class="comparison-card">
+                <div class="comparison-label">Expected satisfaction</div>
+                <div class="comparison-value">{{ task.expected_satisfaction }}/10</div>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" class="card procrastination-form-card">
+        <div class="procrastination-section">
+            <h3 class="card-title">After attempting the task</h3>
+
+            <div class="score-grid">
+                <div class="score-card">
+                    <label class="score-label">Actual difficulty</label>
+                    <div class="score-scale">0 = very easy, 10 = extremely hard</div>
+                    <input
+                        type="number"
+                        name="actual_difficulty"
+                        min="0"
+                        max="10"
+                        value="{{ task.actual_difficulty if task.actual_difficulty is not none else '' }}"
+                        required
+                    >
+                </div>
+
+                <div class="score-card">
+                    <label class="score-label">Actual satisfaction</label>
+                    <div class="score-scale">0 = none, 10 = extremely satisfying</div>
+                    <input
+                        type="number"
+                        name="actual_satisfaction"
+                        min="0"
+                        max="10"
+                        value="{{ task.actual_satisfaction if task.actual_satisfaction is not none else '' }}"
+                        required
+                    >
+                </div>
+            </div>
+        </div>
+
+        <div class="procrastination-section">
+            <h3 class="card-title">Reflection</h3>
+
+            <div class="form-group">
+                <label for="reflection">What did you notice or learn? <span class="muted-inline">(optional)</span></label>
+                <textarea
+                    id="reflection"
+                    name="reflection"
+                    rows="4"
+                    placeholder="Example: It was not as bad as I expected, and getting started was the hardest part."
+                >{{ task.reflection or '' }}</textarea>
+            </div>
+        </div>
+
+        <div class="procrastination-form-footer">
+            <button type="submit" class="btn-primary">Save completion</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
