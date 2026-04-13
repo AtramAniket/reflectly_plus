@@ -26,6 +26,9 @@ class User(UserMixin, db.Model):
     # Relationship with MoodChecklistResults
     mood_checklist_results = relationship('MoodChecklistResult', back_populates='user',cascade='all, delete-orphan', order_by='desc(MoodChecklistResult.created_at)')
 
+    # Relationship with ProcrastinationSheet
+    procrastination_sheets = relationship('ProcrastinationSheet', back_populates='user',cascade='all, delete-orphan', order_by='desc(ProcrastinationSheet.created_at)')
+
     def set_password(self, raw_password_text) -> None:
 
         self.password_hash = generate_password_hash(raw_password_text, method="pbkdf2:sha256:600000", salt_length=8)
