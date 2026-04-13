@@ -4,9 +4,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 
 from app.extensions import db
 from app.models.mood_checklist import MoodChecklistResult
-from app.helper.procrastination_sheets_helper import get_sheet_stats
 from app.models.procrastination_sheet import ProcrastinationSheet, ProcrastinationTask
 from app.helper.mood_wellbeing_check import CHECKLIST_QUESTIONS, get_checklist_feedback
+from app.helper.procrastination_sheets_helper import get_sheet_stats, MAX_PROCRASTINATION_TASKS
 
 tools = Blueprint('tools', __name__)
 
