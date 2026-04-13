@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="centered-container">
+    <div class="page-header">
+        <h1 class="page-title">Anti-Procrastination Sheet</h1>
+        <p class="page-subtitle">
+            A structured tool to help you work through avoidance, lower resistance, and reflect on what the task was actually like.
+        </p>
+    </div>
+
+    <div class="card checklist-intro-card">
+        <p class="checklist-disclaimer">
+            This tool is for reflection and action planning. It is not a diagnosis or treatment tool. Use it to better understand what you are avoiding and how the task felt in reality.
+        </p>
+    </div>
+
+    <form method="POST" class="card procrastination-form-card">
+
+        <div class="procrastination-section">
+            <h3 class="card-title">1. Task</h3>
+
+            <div class="form-group">
+                <label for="task_name">What task are you avoiding?</label>
+                <input
+                    type="text"
+                    id="task_name"
+                    name="task_name"
+                    placeholder="Example: Finish module 3 of my course"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="avoidance_reason">Why have you been putting it off? <span class="muted-inline">(optional)</span></label>
+                <textarea
+                    id="avoidance_reason"
+                    name="avoidance_reason"
+                    rows="4"
+                    placeholder="Example: It feels heavy, confusing, and I keep telling myself I'll do it later."
+                ></textarea>
+            </div>
+        </div>
+
+        <div class="procrastination-section">
+            <h3 class="card-title">2. Before you start</h3>
+
+            <div class="score-grid">
+                <div class="score-card">
+                    <label class="score-label">Expected difficulty</label>
+                    <div class="score-scale">0 = very easy, 10 = extremely hard</div>
+                    <input type="number" name="expected_difficulty" min="0" max="10" required>
+                </div>
+
+                <div class="score-card">
+                    <label class="score-label">Expected satisfaction</label>
+                    <div class="score-scale">0 = none, 10 = extremely satisfying</div>
+                    <input type="number" name="expected_satisfaction" min="0" max="10" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="procrastination-section">
+            <h3 class="card-title">3. What thoughts are making it harder?</h3>
+
+            <div class="form-group">
+                <label for="resistance_thoughts">Resistance thoughts <span class="muted-inline">(optional)</span></label>
+                <textarea
+                    id="resistance_thoughts"
+                    name="resistance_thoughts"
+                    rows="4"
+                    placeholder="Example: This will take forever. I'll probably do it badly anyway."
+                ></textarea>
+            </div>
+        </div>
+
+        <div class="procrastination-section">
+            <h3 class="card-title">4. Smallest possible first step</h3>
+
+            <div class="form-group">
+                <label for="tiny_step">What is the smallest step you can take?</label>
+                <textarea
+                    id="tiny_step"
+                    name="tiny_step"
+                    rows="3"
+                    placeholder="Example: Open the course and complete just one lesson or 10 minutes."
+                    required
+                ></textarea>
+            </div>
+        </div>
+
+        <div class="procrastination-section">
+            <h3 class="card-title">5. After attempting the task</h3>
+
+            <div class="score-grid">
+                <div class="score-card">
+                    <label class="score-label">Actual difficulty</label>
+                    <div class="score-scale">0 = very easy, 10 = extremely hard</div>
+                    <input type="number" name="actual_difficulty" min="0" max="10" required>
+                </div>
+
+                <div class="score-card">
+                    <label class="score-label">Actual satisfaction</label>
+                    <div class="score-scale">0 = none, 10 = extremely satisfying</div>
+                    <input type="number" name="actual_satisfaction" min="0" max="10" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="procrastination-section">
+            <h3 class="card-title">6. Reflection</h3>
+
+            <div class="form-group">
+                <label for="reflection">What did you notice or learn? <span class="muted-inline">(optional)</span></label>
+                <textarea
+                    id="reflection"
+                    name="reflection"
+                    rows="4"
+                    placeholder="Example: It was not as bad as I expected, and getting started was the hardest part."
+                ></textarea>
+            </div>
+        </div>
+
+        <div class="procrastination-form-footer">
+            <button type="submit" class="btn-primary">Save sheet</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
