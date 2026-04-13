@@ -23,6 +23,7 @@ def create_app():
     from .models.journal import JournalEntry
     from .models.mood_checklist import MoodChecklistResult
     from .models.journal_ai_analysis import JournalAIAnalysis
+    from .models.procrastination_sheet import ProcrastinationSheet
     
     app.register_blueprint(main)
     app.register_blueprint(auth)
