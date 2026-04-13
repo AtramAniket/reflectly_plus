@@ -72,29 +72,24 @@
             <p class="sidebar-heading">Tools</p>
 
             <a href="{{ url_for('tools.mood_checklist') }}" class="sidebar-link">
-                <span class="sidebar-icon">🧠</span>
+                <span class="sidebar-icon" data-lucide="brain"></span>
                 <span>Mood Check-In</span>
             </a>
 
             <a href="{{ url_for('tools.mood_checklist_history') }}" class="sidebar-link sidebar-sub-link">
-                <span class="sidebar-icon">↳</span>
+                <span class="sidebar-icon" data-lucide="history"></span>
                 <span>Check-In History</span>
             </a>
 
             <a href="{{ url_for('tools.anti_procrastination') }}" class="sidebar-link">
-                <span class="sidebar-icon">📝</span>
+                <span class="sidebar-icon" data-lucide="clipboard-pen-line"></span>
                 <span>Anti-Procrastination</span>
             </a>
 
             <a href="{{ url_for('tools.procrastination_sheet_history') }}" class="sidebar-link sidebar-sub-link">
-                <span class="sidebar-icon">↳</span>
+                <span class="sidebar-icon" data-lucide="table-properties"></span>
                 <span>Sheet History</span>
             </a>
-
-<!--             <div class="sidebar-muted-item">
-                <span class="sidebar-icon" data-lucide="brain-circuit"></span>
-                <span>Coming soon</span>
-            </div> -->
         </div>
 
         <div class="sidebar-footer">
