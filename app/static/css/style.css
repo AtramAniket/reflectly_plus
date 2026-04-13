@@ -1677,3 +1677,165 @@ body {
     box-shadow: 0 10px 20px rgba(99, 102, 241, 0.18);
     transform: translateY(-1px);
 }
+
+/* =========================================================
+   27.ANTI-PROCRASTINATION SHEET
+   ========================================================= */
+
+.procrastination-form-card {
+    padding: 24px;
+}
+
+.procrastination-section {
+    padding: 6px 0 22px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 22px;
+}
+
+.procrastination-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 8px;
+}
+
+.muted-inline {
+    color: #6b7280;
+    font-weight: 400;
+    font-size: 13px;
+}
+
+.procrastination-form-card input[type="text"],
+.procrastination-form-card input[type="number"],
+.procrastination-form-card textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #dbe3ee;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #0f172a;
+    font-size: 14px;
+    line-height: 1.6;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.procrastination-form-card input[type="text"]:focus,
+.procrastination-form-card input[type="number"]:focus,
+.procrastination-form-card textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.procrastination-form-card textarea::placeholder,
+.procrastination-form-card input::placeholder {
+    color: #94a3b8;
+}
+
+.score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.score-card {
+    padding: 16px;
+    border-radius: 12px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+}
+
+.score-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.score-scale {
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.procrastination-form-card input[type="number"] {
+    max-width: 140px;
+}
+
+.procrastination-form-footer {
+    margin-top: 6px;
+}
+
+.procrastination-form-footer .btn-primary {
+    min-width: 150px;
+}
+
+/* View page */
+
+.procrastination-view-card {
+    margin-bottom: 20px;
+}
+
+.procrastination-view-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.procrastination-view-label {
+    font-size: 13px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 6px;
+}
+
+.procrastination-task-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.procrastination-comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.comparison-card {
+    padding: 16px;
+    border-radius: 12px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+}
+
+.comparison-label {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+.comparison-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.procrastination-step-highlight {
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+}
+
+@media (max-width: 900px) {
+    .procrastination-comparison-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .score-grid,
+    .procrastination-comparison-grid {
+        grid-template-columns: 1fr;
+    }
+}
