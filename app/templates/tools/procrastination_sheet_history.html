@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="centered-container">
+    <div class="page-header">
+        <h1 class="page-title">Anti-Procrastination History</h1>
+        <p class="page-subtitle">
+            Review the tasks you worked through and what they actually felt like.
+        </p>
+    </div>
+
+    <div class="entries-grid">
+        {% if sheets %}
+            {% for sheet in sheets %}
+            <div class="entry-library-card">
+                <div class="entry-library-top">
+                    <div>
+                        <a href="{{ url_for('tools.view_procrastination_sheet', sheet_id=sheet.id) }}"
+                           class="entry-library-title">
+                            {{ sheet.task_name }}
+                        </a>
+                    </div>
+
+                    <span class="entry-type-badge simple-badge">
+                        {{ sheet.created_at.strftime('%b %d') }}
+                    </span>
+                </div>
+
+                <p class="entry-library-preview">
+                    Tiny step: {{ sheet.tiny_step[:120] }}{% if sheet.tiny_step|length > 120 %}...{% endif %}
+                </p>
+
+                <div class="entry-library-footer">
+                    <span>
+                        Expected difficulty {{ sheet.expected_difficulty }}/10 → Actual difficulty {{ sheet.actual_difficulty }}/10
+                    </span>
+                    <span class="entry-library-meta">
+                        {{ sheet.created_at.strftime('%I:%M %p') }}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card">
+                <p class="empty-text">No anti-procrastination sheets yet. Your saved sheets will appear here.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
