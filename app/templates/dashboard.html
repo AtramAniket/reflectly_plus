@@ -2,127 +2,257 @@
 
 {% block content %}
 
-<div class="dashboard-header">
-    <div>
-        <h1 class="dashboard-greeting">Welcome back</h1>
-        <p class="dashboard-identity">{{ email }}</p>
-    </div>
-</div>
+<div class="dashboard-shell">
 
-<div class="dashboard-grid">
-
-    <!-- LEFT COLUMN -->
-    <section class="dashboard-main">
-
-        <div class="card card-dashboard insight-card">
-            <h3 class="card-title">🧠 Insight</h3>
-            <p class="insight-text">{{ insights }}</p>
-        </div>
-
-        <div class="card card-dashboard">
-            <div class="section-header">
-                <h3 class="card-title">📈 Mood Over Time</h3>
-            </div>
-
-            <div class="chart-container">
-                <canvas id="moodChart"></canvas>
+    <!-- HERO -->
+    <section class="dashboard-hero card card-dashboard">
+        <div class="dashboard-hero-copy">
+            <p class="dashboard-kicker">Reflectly Dashboard</p>
+            <h1 class="dashboard-greeting">Welcome back 👋</h1>
+            <p class="dashboard-hero-text">
+                Here’s a calm overview of your journaling, mood, and habits so you can see how things are going at a glance.
+            </p>
+            <div class="dashboard-hero-meta">
+                <span class="dashboard-identity">{{ email }}</span>
+                <span class="dashboard-divider">•</span>
+                <span class="dashboard-trend-pill">{{ trend }}</span>
             </div>
         </div>
 
-        <div class="card card-dashboard">
-            <div class="section-header">
-                <h3 class="card-title">📝 Recent Journal Entries</h3>
-                <a href="{{ url_for('journal.view_all_entries') if true else '#' }}" class="section-link">View all</a>
-            </div>
-
-            <div class="entry-list">
-                {% for entry in journal_entries %}
-                    <div class="entry-item">
-                        <a href="{{ url_for('journal.view_entry', entry_id=entry.id) }}" class="entry-title-link">
-                            {{ entry.title }}
-                        </a>
-                        <p class="entry-content">
-                            {% if entry.entry_type == "simple" %}
-                                {{ entry.content|striptags|truncate(180) }}
-
-                            {% elif entry.entry_type == "gratitude" %}
-                                {{ entry.structured_content.gratitude_1|truncate(180) }}
-
-                            {% elif entry.entry_type == "reflection" %}
-                                {{ entry.structured_content.went_well|truncate(180) }}
-                            {% endif %}
-                        </p>
-                        <span class="entry-meta">Mood: {{ entry.mood_score }}</span>
-                    </div>
-                {% else %}
-                    <p class="empty-text">No entries yet</p>
-                {% endfor %}
-            </div>
+        <div class="dashboard-hero-actions">
+            <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="btn-primary">
+                New Journal Entry
+            </a>
+            <a href="{{ url_for('habit.create_habit') }}" class="btn-secondary">
+                Create Habit
+            </a>
         </div>
-
     </section>
 
-    <!-- RIGHT COLUMN -->
-    <aside class="dashboard-side">
-
-        <div class="stats-grid">
-            <div class="card stat-card">
-                <span class="stat-label">Total Entries</span>
-                <span class="stat-value">{{ total_entries }}</span>
-            </div>
-
-            <div class="card stat-card">
-                <span class="stat-label">Average Mood</span>
-                <span class="stat-value">
-                    {{ average_mood_score if average_mood_score is not none else '—' }}
-                </span>
-            </div>
-
-            <div class="card stat-card stat-card-wide">
-                <span class="stat-label">Trend</span>
-                <span class="stat-value stat-value-small">{{ trend }}</span>
-            </div>
+    <!-- STATS -->
+    <section class="stats-grid dashboard-stats-grid">
+        <div class="card stat-card card-dashboard">
+            <span class="stat-label">Total Entries</span>
+            <span class="stat-value">{{ total_entries }}</span>
+            <p class="stat-support-text">Your journal library so far</p>
         </div>
 
-        <div class="card card-dashboard habit-panel">
-            <div class="section-header">
-                <h3 class="card-title">🎯 Habit Tracker</h3>
-                <a href="{{ url_for('habit.create_habit') }}" class="section-link">New habit</a>
+        <div class="card stat-card card-dashboard">
+            <span class="stat-label">Average Mood</span>
+            <span class="stat-value">
+                {{ average_mood_score if average_mood_score is not none else '—' }}
+            </span>
+            <p class="stat-support-text">Based on your recorded entries</p>
+        </div>
+
+        <div class="card stat-card stat-card-wide card-dashboard">
+            <span class="stat-label">Current Trend</span>
+            <span class="stat-value stat-value-small">{{ trend }}</span>
+            <p class="stat-support-text">A quick read on your recent direction</p>
+        </div>
+    </section>
+
+    <!-- MAIN GRID -->
+    <div class="dashboard-grid">
+
+        <!-- LEFT COLUMN -->
+        <section class="dashboard-main">
+
+            <div class="card card-dashboard insight-card insight-card-featured">
+                <div class="section-header">
+                    <h3 class="card-title">🧠 Insight of the Moment</h3>
+                </div>
+                <p class="insight-text">{{ insights }}</p>
             </div>
 
-            <div class="habit-list">
-                {% for habit in habits %}
-                    {% set streak = habit_streaks.get(habit.id, 0) %}
-
-                    <div class="habit-item">
-                        <div class="habit-top-row">
-                            <div class="habit-name">{{ habit.name }}</div>
-
-                            {% if habit.id in today_logs %}
-                                <span class="habit-badge done-badge">Done</span>
-                            {% else %}
-                                <a href="{{ url_for('habit.complete_habit', habit_id=habit.id) }}" class="habit-badge action-badge">
-                                    Mark done
-                                </a>
-                            {% endif %}
-                        </div>
-
-                        <div class="habit-meta">
-                            {% if streak > 0 %}
-                                🔥 {{ streak }} day streak
-                            {% else %}
-                                Start your streak today 💪
-                            {% endif %}
-                        </div>
+            <div class="card card-dashboard">
+                <div class="section-header">
+                    <div>
+                        <h3 class="card-title">📈 Mood Over Time</h3>
+                        <p class="card-subtitle">A visual snapshot of how your mood scores have moved recently.</p>
                     </div>
-                {% else %}
-                    <p class="empty-text">No habits yet</p>
-                {% endfor %}
+                </div>
+
+                <div class="chart-container chart-container-large">
+                    <canvas id="moodChart"></canvas>
+                </div>
             </div>
-        </div>
 
-    </aside>
+            <div class="card card-dashboard">
+                <div class="section-header">
+                    <div>
+                        <h3 class="card-title">📝 Recent Journal Entries</h3>
+                        <p class="card-subtitle">Your latest reflections, gratitude notes, and daily check-ins.</p>
+                    </div>
+                    <a href="{{ url_for('journal.view_all_entries') }}" class="section-link">View all</a>
+                </div>
 
+                <div class="entry-list entry-list-enhanced">
+                    {% for entry in journal_entries %}
+                        <article class="entry-item entry-item-enhanced">
+                            <div class="entry-item-top">
+                                <div class="entry-item-heading">
+                                    <a href="{{ url_for('journal.view_entry', entry_id=entry.id) }}" class="entry-title-link">
+                                        {{ entry.title }}
+                                    </a>
+
+                                    <div class="entry-type-row">
+                                        {% if entry.entry_type == "simple" %}
+                                            <span class="entry-type-badge simple-badge">Simple</span>
+                                        {% elif entry.entry_type == "gratitude" %}
+                                            <span class="entry-type-badge gratitude-badge">Gratitude</span>
+                                        {% elif entry.entry_type == "reflection" %}
+                                            <span class="entry-type-badge reflection-badge">Reflection</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <span class="entry-meta entry-meta-pill">
+                                    Mood: {{ entry.mood_score if entry.mood_score is not none else '—' }}
+                                </span>
+                            </div>
+
+                            <p class="entry-content">
+                                {% if entry.entry_type == "simple" %}
+                                    {{ entry.content|striptags|truncate(180) }}
+
+                                {% elif entry.entry_type == "gratitude" %}
+                                    {{ entry.structured_content.gratitude_1|truncate(180) }}
+
+                                {% elif entry.entry_type == "reflection" %}
+                                    {{ entry.structured_content.went_well|truncate(180) }}
+                                {% endif %}
+                            </p>
+                        </article>
+                    {% else %}
+                        <div class="empty-state-box">
+                            <h4 class="empty-state-title">No journal entries yet</h4>
+                            <p class="empty-text">Start with a simple journal entry and your reflections will begin showing up here.</p>
+                            <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="btn-primary empty-state-btn">
+                                Write your first entry
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </section>
+
+        <!-- RIGHT COLUMN -->
+        <aside class="dashboard-side">
+
+            <div class="card card-dashboard quick-actions-card">
+                <div class="section-header">
+                    <div>
+                        <h3 class="card-title">⚡ Quick Actions</h3>
+                        <p class="card-subtitle">Jump straight into the parts of Reflectly you use most.</p>
+                    </div>
+                </div>
+
+                <div class="quick-actions-grid">
+                    <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="quick-action-tile">
+                        <span class="quick-action-icon">✍️</span>
+                        <span class="quick-action-text">
+                            <strong>Simple Journal</strong>
+                            <small>Write freely</small>
+                        </span>
+                    </a>
+
+                    <a href="{{ url_for('journal.create_new_entry', entry_type='gratitude') }}" class="quick-action-tile">
+                        <span class="quick-action-icon">🙏</span>
+                        <span class="quick-action-text">
+                            <strong>Gratitude</strong>
+                            <small>Capture positives</small>
+                        </span>
+                    </a>
+
+                    <a href="{{ url_for('tools.mood_checklist') }}" class="quick-action-tile">
+                        <span class="quick-action-icon">😊</span>
+                        <span class="quick-action-text">
+                            <strong>Mood Check-In</strong>
+                            <small>Track how you feel</small>
+                        </span>
+                    </a>
+
+                    <a href="{{ url_for('tools.anti_procrastination') }}" class="quick-action-tile">
+                        <span class="quick-action-icon">🎯</span>
+                        <span class="quick-action-text">
+                            <strong>Focus Tool</strong>
+                            <small>Beat avoidance</small>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card card-dashboard habit-panel habit-panel-enhanced">
+                <div class="section-header">
+                    <div>
+                        <h3 class="card-title">🎯 Habit Tracker</h3>
+                        <p class="card-subtitle">Keep momentum by checking off today’s habits.</p>
+                    </div>
+                    <a href="{{ url_for('habit.create_habit') }}" class="section-link">New habit</a>
+                </div>
+
+                <div class="habit-list">
+                    {% for habit in habits %}
+                        {% set streak = habit_streaks.get(habit.id, 0) %}
+                        {% set completed_today = habit.id in today_logs %}
+
+                        <div class="habit-item habit-item-enhanced">
+                            <div class="habit-top-row">
+                                <div class="habit-title-stack">
+                                    <div class="habit-name">{{ habit.name }}</div>
+                                    <div class="habit-meta">
+                                        {% if streak > 0 %}
+                                            🔥 {{ streak }} day streak
+                                        {% else %}
+                                            Start your streak today 💪
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                {% if completed_today %}
+                                    <span class="habit-badge done-badge">Done today</span>
+                                {% else %}
+                                    <a href="{{ url_for('habit.complete_habit', habit_id=habit.id) }}" class="habit-badge action-badge">
+                                        Mark done
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                            <div class="habit-progress-row">
+                                <div class="habit-progress-track">
+                                    <div
+                                        class="habit-progress-fill {% if completed_today %}habit-progress-fill-complete{% endif %}"
+                                        style="width: {% if completed_today %}100%{% elif streak > 0 %}65%{% else %}24%{% endif %};">
+                                    </div>
+                                </div>
+                                <span class="habit-progress-label">
+                                    {% if completed_today %}
+                                        Completed
+                                    {% elif streak > 0 %}
+                                        In progress
+                                    {% else %}
+                                        Just getting started
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty-state-box compact-empty-state">
+                            <h4 class="empty-state-title">No habits yet</h4>
+                            <p class="empty-text">Create your first habit and start building consistency one day at a time.</p>
+                            <a href="{{ url_for('habit.create_habit') }}" class="btn-primary empty-state-btn">
+                                Create first habit
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </aside>
+
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -132,6 +262,10 @@
 
     const ctx = document.getElementById('moodChart').getContext('2d');
 
+    const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.22)');
+    gradient.addColorStop(1, 'rgba(99, 102, 241, 0.02)');
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -139,7 +273,13 @@
             datasets: [{
                 label: 'Mood Score',
                 data: data,
-                borderWidth: 2,
+                borderColor: '#6366f1',
+                backgroundColor: gradient,
+                borderWidth: 2.5,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                pointBackgroundColor: '#6366f1',
+                pointBorderWidth: 0,
                 tension: 0.35,
                 fill: true
             }]
@@ -147,22 +287,49 @@
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
             plugins: {
                 legend: {
-                    display: true
+                    display: false
+                },
+                tooltip: {
+                    displayColors: false,
+                    backgroundColor: '#111827',
+                    titleColor: '#ffffff',
+                    bodyColor: '#e5e7eb',
+                    padding: 12,
+                    cornerRadius: 10
                 }
             },
             scales: {
                 y: {
                     min: 0,
                     max: 10,
+                    ticks: {
+                        stepSize: 2,
+                        color: '#64748b',
+                        font: {
+                            size: 12
+                        }
+                    },
                     grid: {
-                        color: 'rgba(0,0,0,0.06)'
+                        color: 'rgba(148, 163, 184, 0.16)',
+                        drawBorder: false
                     }
                 },
                 x: {
+                    ticks: {
+                        color: '#64748b',
+                        font: {
+                            size: 12
+                        }
+                    },
                     grid: {
-                        display: false
+                        display: false,
+                        drawBorder: false
                     }
                 }
             }
