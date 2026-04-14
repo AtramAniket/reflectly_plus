@@ -1,6 +1,53 @@
 /* =========================================================
-   1. GLOBAL RESET + BASE
+   1. DESIGN TOKENS + RESET
    ========================================================= */
+
+:root {
+    --space-2xs: 4px;
+    --space-xs: 8px;
+    --space-sm: 12px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 40px;
+
+    --radius-sm: 10px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-pill: 999px;
+
+    --color-bg: #f3f6fb;
+    --color-surface: #ffffff;
+    --color-surface-soft: #f8fafc;
+    --color-surface-muted: #f8fafc;
+    --color-border: #e5e7eb;
+    --color-border-strong: #dbe3ee;
+
+    --color-text: #0f172a;
+    --color-text-soft: #334155;
+    --color-text-muted: #64748b;
+
+    --color-primary: #6366f1;
+    --color-primary-hover: #5558e6;
+    --color-primary-soft: #eef2ff;
+
+    --color-success: #16a34a;
+    --color-success-soft: #dcfce7;
+
+    --color-danger: #dc2626;
+    --color-danger-soft: #fee2e2;
+
+    --color-warning: #d97706;
+    --color-warning-soft: #fef3c7;
+
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 10px 24px rgba(15, 23, 42, 0.06);
+    --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.10);
+
+    --transition-fast: 0.18s ease;
+    --transition-med: 0.24s ease;
+}
 
 * {
     margin: 0;
@@ -8,77 +55,91 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
     display: flex;
-    background: #f1f5f9;
-    color: #111827;
+    background: var(--color-bg);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 
+a,
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
 
 /* =========================================================
    2. APP SHELL / MAIN LAYOUT
-   Sidebar + Main content area used across logged-in pages
    ========================================================= */
+
 .sidebar {
-   width: 240px;
-   height: 100vh;
-   position: fixed;
-   top: 0;
-   left: 0;
-   padding: 20px 16px;
-   background: #111827;
-   color: white;
-   display: flex;
-   flex-direction: column;
-   border-right: 1px solid rgba(255, 255, 255, 0.05);
+    width: 248px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 22px 16px;
+    background: #111827;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .sidebar-brand {
-   display: flex;
-   align-items: center;
-   gap: 12px;
-   margin-bottom: 28px;
-   padding: 6px 8px 14px;
-   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding: 6px 8px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .sidebar-brand-icon {
-   width: 34px;
-   height: 34px;
-   border-radius: 10px;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   background: #1f2937;
-   color: #f8fafc;
-   font-size: 14px;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1f2937;
+    color: #f8fafc;
+    font-size: 14px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
 }
 
 .sidebar-title {
-   font-size: 18px;
-   font-weight: 600;
-   margin: 0;
-   color: #f9fafb;
+    font-size: 18px;
+    font-weight: 600;
+    color: #f9fafb;
+    line-height: 1.2;
 }
 
 .sidebar-tagline {
-   font-size: 12px;
-   color: #94a3b8;
-   margin-top: 2px;
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 2px;
 }
 
 .sidebar-section {
-   margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .sidebar-heading {
     margin-bottom: 8px;
     padding: 0 8px;
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #94a3b8;
 }
@@ -88,17 +149,26 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 9px 10px;
-    border-radius: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
     color: #cbd5e1;
     text-decoration: none;
-    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    transition:
+        background var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
 }
 
 .sidebar-link:hover {
     background: #1f2937;
     color: #ffffff;
     transform: translateX(2px);
+}
+
+.sidebar-link:focus-visible {
+    outline: 2px solid rgba(99, 102, 241, 0.6);
+    outline-offset: 2px;
 }
 
 .sidebar-sub-link {
@@ -112,6 +182,10 @@ body {
     opacity: 0.95;
 }
 
+.sidebar-sub-link .sidebar-icon {
+    opacity: 0.85;
+}
+
 .sidebar-muted-item {
     color: #94a3b8;
     cursor: default;
@@ -120,11 +194,7 @@ body {
 .sidebar-footer {
     margin-top: auto;
     padding-top: 14px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.sidebar-sub-link .sidebar-icon {
-    opacity: 0.8;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .logout-link {
@@ -135,15 +205,15 @@ body {
     background: rgba(239, 68, 68, 0.12);
     color: #fecaca;
 }
+
 .main {
-   width: 100%;
-   margin-left: 240px;
-   padding: 28px;
+    width: 100%;
+    margin-left: 248px;
+    padding: 28px;
 }
 
 /* =========================================================
    3. GENERIC CONTAINERS
-   Used to control width for forms / reading pages
    ========================================================= */
 
 .centered-container {
@@ -156,73 +226,87 @@ body {
     margin: 0 auto;
 }
 
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
 
 /* =========================================================
-   4. GENERIC TYPOGRAPHY
-   Reusable page titles / subtitles / section text
+   4. TYPOGRAPHY
    ========================================================= */
-
-.page-title {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.subtitle {
-    font-size: 14px;
-    color: #6b7280;
-    margin-bottom: 20px;
-}
 
 .page-header {
     margin-bottom: 20px;
 }
 
-.page-subtitle {
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+    color: var(--color-text);
+}
+
+.page-subtitle,
+.subtitle {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--color-text-muted);
+    line-height: 1.7;
 }
 
-
-/* =========================================================
-   5. GENERIC CARD SYSTEM
-   Reusable white blocks used across dashboard/forms/views
-   ========================================================= */
-
-.card {
-    padding: 20px;
+.subtitle {
     margin-bottom: 20px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-}
-
-.card-dashboard {
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.card-dashboard:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
 }
 
 .card-title {
     font-size: 17px;
     font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
     margin-bottom: 10px;
 }
 
+.empty-text {
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+/* =========================================================
+   5. CARD SYSTEM
+   ========================================================= */
+
+.card {
+    padding: 20px;
+    margin-bottom: 20px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.card-dashboard {
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.card-dashboard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: #dde5f0;
+}
 
 /* =========================================================
    6. FLASH MESSAGES
-   For success/info messages shown after actions
    ========================================================= */
 
 .flash-container {
-   margin-bottom: 18px;
-   display: flex;
-   flex-direction: column;
-   gap: 10px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .flash {
@@ -230,6 +314,7 @@ body {
     border-radius: 12px;
     font-size: 14px;
     font-weight: 500;
+    box-shadow: var(--shadow-sm);
 
     opacity: 1;
     max-height: 60px;
@@ -246,7 +331,6 @@ body {
 .flash-hide {
     opacity: 0;
     transform: translateY(-6px);
-
     max-height: 0;
     margin: 0;
     padding-top: 0;
@@ -254,51 +338,38 @@ body {
 }
 
 .flash-success {
-   background: #dcfce7;
-   color: #166534;
-   border: 1px solid #bbf7d0;
+    background: #ecfdf5;
+    color: #166534;
+    border: 1px solid #bbf7d0;
 }
 
 .flash-error,
 .flash-danger {
-   background: #fee2e2;
-   color: #991b1b;
-   border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
 }
 
 .flash-warning {
-   background: #fef3c7;
-   color: #92400e;
-   border: 1px solid #fde68a;
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fde68a;
 }
 
 .flash-info {
-   background: #dbeafe;
-   color: #1e40af;
-   border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
 }
-
-@media (max-width: 480px) {
-   .auth-card {
-       padding: 28px 22px;
-       border-radius: 16px;
-   }
-
-   .auth-title {
-       font-size: 24px;
-   }
-}
-
 
 /* =========================================================
-   7. GENERIC LINKS + BUTTONS
-   Shared utility styles
+   7. LINKS + BUTTONS
    ========================================================= */
 
 .btn-link {
     font-size: 14px;
     font-weight: 500;
-    color: #2563eb;
+    color: var(--color-primary);
     text-decoration: none;
     opacity: 0.95;
 }
@@ -308,44 +379,65 @@ body {
     opacity: 1;
 }
 
-.btn-primary {
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    background: #2563eb;
-    color: white;
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
     font-weight: 600;
+    text-decoration: none;
     cursor: pointer;
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.btn-primary {
+    border: none;
+    background: var(--color-primary);
+    color: #ffffff;
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.18);
 }
 
 .btn-primary:hover {
-    background: #1d4ed8;
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 26px rgba(99, 102, 241, 0.24);
 }
 
 .btn-secondary {
-    padding: 8px 14px;
-    border-radius: 6px;
-    background: #e5e7eb;
-    color: #111827;
-    text-decoration: none;
+    border: 1px solid var(--color-border);
+    background: #ffffff;
+    color: var(--color-text);
+}
+
+.btn-secondary:hover {
+    background: var(--color-surface-soft);
+    border-color: #d7deea;
 }
 
 .btn-danger {
-    padding: 8px 14px;
-    border-radius: 6px;
+    border: none;
     background: #ef4444;
-    color: white;
-    text-decoration: none;
+    color: #ffffff;
 }
 
 .btn-danger:hover {
     background: #dc2626;
+    transform: translateY(-1px);
 }
-
 
 /* =========================================================
    8. DASHBOARD HEADER
-   Greeting block at top of dashboard
    ========================================================= */
 
 .dashboard-header {
@@ -353,21 +445,21 @@ body {
 }
 
 .dashboard-greeting {
-    font-size: 28px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 2px;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
 }
 
 .dashboard-identity {
     font-size: 15px;
-    color: #6b7280;
+    color: var(--color-text-muted);
 }
-
 
 /* =========================================================
    9. DASHBOARD LAYOUT
-   Main 2-column dashboard structure
    ========================================================= */
 
 .dashboard-grid {
@@ -383,7 +475,6 @@ body {
     flex-direction: column;
 }
 
-/* Older dashboard wrapper still supported if used elsewhere */
 .dashboard {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -396,22 +487,22 @@ body {
     flex-direction: column;
 }
 
-
 /* =========================================================
-   10. SECTION HEADERS INSIDE CARDS
-   Used for cards that have title + action link
+   10. SECTION HEADERS
    ========================================================= */
 
 .section-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
     margin-bottom: 12px;
 }
 
 .section-link {
     font-size: 14px;
-    color: #2563eb;
+    font-weight: 500;
+    color: var(--color-primary);
     text-decoration: none;
 }
 
@@ -419,26 +510,24 @@ body {
     text-decoration: underline;
 }
 
-
 /* =========================================================
    11. INSIGHT CARD
-   Dashboard insight display
    ========================================================= */
 
 .insight-card {
     padding: 22px;
+    background:
+        linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
 }
 
 .insight-text {
     font-size: 15px;
-    line-height: 1.7;
-    color: #374151;
+    line-height: 1.75;
+    color: var(--color-text-soft);
 }
-
 
 /* =========================================================
    12. STATS CARDS
-   Small metrics shown on dashboard side column
    ========================================================= */
 
 .stats-grid {
@@ -453,7 +542,8 @@ body {
     flex-direction: column;
     justify-content: center;
     gap: 6px;
-    min-height: 110px;
+    min-height: 112px;
+    text-align: left;
 }
 
 .stat-card-wide {
@@ -461,27 +551,28 @@ body {
 }
 
 .stat-label {
-    font-size: 13px;
-    color: #6b7280;
+    font-size: 12px;
+    color: var(--color-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.08em;
+    font-weight: 600;
 }
 
 .stat-value {
-    font-size: 28px;
-    font-weight: 600;
-    color: #111827;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
 }
 
 .stat-value-small {
     font-size: 18px;
-    line-height: 1.4;
+    line-height: 1.45;
 }
-
 
 /* =========================================================
    13. HABIT TRACKER
-   Habit list, habit rows, badges, streak info
    ========================================================= */
 
 .habit-panel {
@@ -497,9 +588,19 @@ body {
 
 .habit-item {
     padding: 14px;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    background: #fafafa;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.habit-item:hover {
+    border-color: #d9e1ed;
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
 }
 
 .habit-top-row {
@@ -511,13 +612,14 @@ body {
 
 .habit-name {
     font-weight: 600;
-    color: #111827;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
 }
 
 .habit-meta {
     margin-top: 8px;
     font-size: 14px;
-    color: #6b7280;
+    color: var(--color-text-muted);
 }
 
 .habit-action {
@@ -529,35 +631,35 @@ body {
     align-items: center;
     justify-content: center;
     padding: 6px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     font-size: 13px;
+    font-weight: 600;
     text-decoration: none;
     white-space: nowrap;
+    transition: background var(--transition-fast), color var(--transition-fast);
 }
 
 .done {
-    color: #16a34a;
+    color: var(--color-success);
     font-weight: 500;
 }
 
 .done-badge {
-    background: #dcfce7;
+    background: var(--color-success-soft);
     color: #15803d;
 }
 
 .action-badge {
-    background: #eff6ff;
-    color: #2563eb;
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
 }
 
 .action-badge:hover {
-    background: #dbeafe;
+    background: #e0e7ff;
 }
-
 
 /* =========================================================
    14. DASHBOARD JOURNAL ENTRY PREVIEWS
-   Small cards used in recent entries section
    ========================================================= */
 
 .entry-list {
@@ -568,15 +670,26 @@ body {
 
 .entry-item {
     padding: 15px;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    background: #fafafa;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.entry-item:hover {
+    border-color: #d9e1ed;
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
 }
 
 .entry-title-link {
     font-weight: 600;
-    color: #111827;
+    color: var(--color-text);
     text-decoration: none;
+    letter-spacing: -0.01em;
 }
 
 .entry-title-link:hover {
@@ -586,32 +699,19 @@ body {
 .entry-content {
     margin-top: 8px;
     font-size: 14px;
-    line-height: 1.6;
-    color: #4b5563;
+    line-height: 1.7;
+    color: #475569;
 }
 
 .entry-meta {
     display: inline-block;
     margin-top: 8px;
     font-size: 13px;
-    color: #6b7280;
+    color: var(--color-text-muted);
 }
 
-
 /* =========================================================
-   15. EMPTY STATE TEXT
-   Used where sections have no content yet
-   ========================================================= */
-
-.empty-text {
-    font-size: 14px;
-    color: #6b7280;
-}
-
-
-/* =========================================================
-   16. CHART AREA
-   Dashboard chart container sizing
+   15. CHART AREA
    ========================================================= */
 
 .chart-container {
@@ -625,10 +725,8 @@ body {
     max-height: 100%;
 }
 
-
 /* =========================================================
-   17. AUTH PAGES
-   Login / Signup pages use separate layout (no sidebar)
+   16. AUTH PAGES
    ========================================================= */
 
 .auth-body {
@@ -640,8 +738,6 @@ body {
     position: relative;
     overflow: hidden;
 }
-
-
 
 .auth-body::before,
 .auth-body::after {
@@ -670,42 +766,20 @@ body {
     animation: floatBlobTwo 38s ease-in-out infinite alternate;
 }
 
-
-
 @keyframes floatBlobOne {
-    0% {
-        transform: translate(0, 0) scale(1);
-    }
-    25% {
-        transform: translate(60px, 30px) scale(1.05);
-    }
-    50% {
-        transform: translate(120px, 80px) scale(0.98);
-    }
-    75% {
-        transform: translate(40px, 120px) scale(1.03);
-    }
-    100% {
-        transform: translate(100px, 60px) scale(1.08);
-    }
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(60px, 30px) scale(1.05); }
+    50% { transform: translate(120px, 80px) scale(0.98); }
+    75% { transform: translate(40px, 120px) scale(1.03); }
+    100% { transform: translate(100px, 60px) scale(1.08); }
 }
 
 @keyframes floatBlobTwo {
-    0% {
-        transform: translate(0, 0) scale(1);
-    }
-    25% {
-        transform: translate(-40px, -30px) scale(1.04);
-    }
-    50% {
-        transform: translate(-100px, -90px) scale(0.97);
-    }
-    75% {
-        transform: translate(-140px, -40px) scale(1.02);
-    }
-    100% {
-        transform: translate(-70px, -120px) scale(1.07);
-    }
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-40px, -30px) scale(1.04); }
+    50% { transform: translate(-100px, -90px) scale(0.97); }
+    75% { transform: translate(-140px, -40px) scale(1.02); }
+    100% { transform: translate(-70px, -120px) scale(1.07); }
 }
 
 .auth-container {
@@ -719,178 +793,105 @@ body {
 }
 
 .auth-card {
-   width: 25rem;
-   max-width: 430px;
-   background: #ffffff;
-   border-radius: 20px;
-   padding: 36px 32px;
-   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.10);
-   border: 1px solid #e2e8f0;
+    width: 25rem;
+    max-width: 430px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 36px 32px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid #e2e8f0;
 }
 
 .auth-header {
-   text-align: center;
-   margin-bottom: 24px;
+    text-align: center;
+    margin-bottom: 24px;
 }
 
 .auth-brand {
-   display: inline-block;
-   font-size: 20px;
-   font-weight: 700;
-   letter-spacing: 0.08em;
-   text-transform: uppercase;
-   color: #6366f1;
-   margin-bottom: 10px;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 10px;
 }
 
 .auth-title {
-   margin: 0;
-   font-size: 28px;
-   font-weight: 700;
-   color: #0f172a;
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-text);
 }
 
 .auth-subtitle {
-   margin: 10px 0 0;
-   font-size: 14px;
-   color: #64748b;
-   line-height: 1.6;
-}
-
-.auth-form {
-   display: flex;
-   flex-direction: column;
-   gap: 18px;
-}
-
-.input-group {
-   display: flex;
-   flex-direction: column;
-   gap: 8px;
-}
-
-.input-group label {
-   font-size: 14px;
-   font-weight: 600;
-   color: #334155;
-}
-
-.auth-form input {
-   width: 100%;
-   box-sizing: border-box;
-   padding: 13px 14px;
-   border: 1px solid #dbe3ee;
-   border-radius: 12px;
-   font-size: 15px;
-   background: #f8fafc;
-   color: #0f172a;
-   transition: all 0.2s ease;
-}
-
-.auth-form input:focus {
-   outline: none;
-   border-color: #6366f1;
-   background: #ffffff;
-   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
-}
-
-.auth-form input::placeholder {
-   color: #94a3b8;
-}
-
-.btn-primary {
-   border: none;
-   border-radius: 12px;
-   padding: 13px 16px;
-   font-size: 15px;
-   font-weight: 600;
-   cursor: pointer;
-   background: #6366f1;
-   color: white;
-   transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
-
-.btn-primary:hover {
-   background: #5558e6;
-   box-shadow: 0 10px 20px rgba(99, 102, 241, 0.20);
-   transform: translateY(-1px);
-}
-
-.auth-switch {
-   margin: 22px 0 0;
-   text-align: center;
-   font-size: 14px;
-   color: #64748b;
-}
-
-.auth-switch a {
-   color: #6366f1;
-   font-weight: 600;
-   text-decoration: none;
-}
-
-.auth-switch a:hover {
-   text-decoration: underline;
-}
-
-
-/*.auth-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
-
-.auth-container {
-    width: 100%;
-    max-width: 400px;
-}
-
-.auth-card {
-    padding: 30px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-}
-
-.auth-title {
-    margin-bottom: 20px;
-    text-align: center;
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: var(--color-text-muted);
+    line-height: 1.6;
 }
 
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-soft);
 }
 
 .auth-form input {
-    padding: 10px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 12px;
+    font-size: 15px;
+    background: var(--color-surface-soft);
+    color: var(--color-text);
+    transition: all 0.2s ease;
+}
+
+.auth-form input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.auth-form input::placeholder {
+    color: #94a3b8;
 }
 
 .auth-switch {
-    margin-top: 15px;
-    font-size: 14px;
+    margin: 22px 0 0;
     text-align: center;
+    font-size: 14px;
+    color: var(--color-text-muted);
 }
 
 .auth-switch a {
-    color: #2563eb;
+    color: var(--color-primary);
+    font-weight: 600;
     text-decoration: none;
-}*/
+}
 
+.auth-switch a:hover {
+    text-decoration: underline;
+}
 
 /* =========================================================
-   18. FORMS (CREATE / EDIT JOURNAL ETC.)
-   Shared form styling for logged-in pages
+   17. FORMS
    ========================================================= */
-
-.form-container {
-    max-width: 600px;
-    margin: 0 auto;
-}
 
 .form-card {
     max-width: 720px;
@@ -910,51 +911,91 @@ body {
 }
 
 .form-group label {
-    margin-bottom: 5px;
+    margin-bottom: 7px;
     font-size: 14px;
     font-weight: 600;
+    color: var(--color-text-soft);
 }
 
 .entry-form input,
-.entry-form textarea {
+.entry-form textarea,
+.checklist-form-card textarea,
+.procrastination-form-card input[type="text"],
+.procrastination-form-card input[type="number"],
+.procrastination-form-card textarea,
+.form-card .entry-form input[type="text"] {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
+    padding: 13px 14px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 12px;
+    background: var(--color-surface-soft);
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.6;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.entry-form input:focus,
+.entry-form textarea:focus,
+.checklist-form-card textarea:focus,
+.procrastination-form-card input[type="text"]:focus,
+.procrastination-form-card input[type="number"]:focus,
+.procrastination-form-card textarea:focus,
+.form-card .entry-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
 }
 
 .entry-form textarea {
     resize: vertical;
 }
 
+.entry-form input::placeholder,
+.entry-form textarea::placeholder,
+.checklist-form-card textarea::placeholder,
+.procrastination-form-card textarea::placeholder,
+.procrastination-form-card input::placeholder,
+.form-card .entry-form input[type="text"]::placeholder {
+    color: #94a3b8;
+}
 
 /* =========================================================
-   19. QUILL EDITOR
-   Rich text editor styling for journal forms
+   18. QUILL EDITOR
    ========================================================= */
 
 #editor {
     min-height: 220px;
     background: white;
-    border-radius: 6px;
+    border-radius: 12px;
+}
+
+.ql-toolbar.ql-snow {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-color: var(--color-border-strong);
 }
 
 .ql-container {
     min-height: 200px;
     font-size: 15px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-color: var(--color-border-strong);
 }
 
 .ql-editor {
     min-height: 180px;
 }
 
-
 /* =========================================================
-   20. ENTRY VIEW PAGE
-   Single journal entry detail page
+   19. ENTRY VIEW PAGE
    ========================================================= */
 
-/* ---------- Hero image ---------- */
 .entry-hero {
     position: relative;
     margin-bottom: 24px;
@@ -964,7 +1005,7 @@ body {
     width: 100%;
     height: 280px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 16px;
 }
 
 .entry-hero-overlay {
@@ -974,7 +1015,7 @@ body {
     flex-direction: column;
     justify-content: flex-end;
     padding: 24px;
-    border-radius: 12px;
+    border-radius: 16px;
     background: linear-gradient(
         to top,
         rgba(0, 0, 0, 0.75) 0%,
@@ -985,24 +1026,24 @@ body {
 
 .entry-title {
     font-size: 28px;
-    font-weight: 600;
+    font-weight: 700;
     color: white;
+    letter-spacing: -0.02em;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .entry-date {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.86);
 }
 
-/* ---------- Entry body ---------- */
 .entry-view {
     padding: 25px;
 }
 
 .entry-content-full {
-    line-height: 1.7;
-    color: #374151;
+    line-height: 1.8;
+    color: var(--color-text-soft);
 }
 
 .entry-footer {
@@ -1010,34 +1051,32 @@ body {
 }
 
 .entry-mood-badge {
+    display: inline-flex;
     padding: 6px 12px;
     font-size: 14px;
     color: #0369a1;
     background: #e0f2fe;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
-/* ---------- Entry actions ---------- */
 .entry-actions {
     margin-top: 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
 }
 
-.entry-actions-left {
-    display: flex;
-    gap: 10px;
-}
-
+.entry-actions-left,
 .right-actions {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .back-link {
     font-size: 14px;
-    color: #2563eb;
+    color: var(--color-primary);
     text-decoration: none;
 }
 
@@ -1045,25 +1084,8 @@ body {
     text-decoration: underline;
 }
 
-
 /* =========================================================
-   21. RESPONSIVE
-   Collapse dashboard to one column on smaller screens
-   ========================================================= */
-
-@media (max-width: 1100px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .dashboard-side {
-        order: -1;
-    }
-}
-
-/* =========================================================
-   22. JOURNAL TYPE INFO CARD + PROMPT BLOCKS
-   Used for gratitude / reflection entry rendering
+   20. JOURNAL TYPE INFO CARD + PROMPT BLOCKS
    ========================================================= */
 
 .entry-type-card {
@@ -1073,71 +1095,33 @@ body {
 .entry-type-description {
     font-size: 14px;
     line-height: 1.7;
-    color: #6b7280;
+    color: var(--color-text-muted);
 }
 
 .prompt-block {
     margin-bottom: 14px;
     padding: 16px;
-    background: #fafafa;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
 }
 
 .prompt-title {
     margin-bottom: 8px;
     font-size: 15px;
     font-weight: 600;
-    color: #111827;
+    color: var(--color-text);
 }
 
 .prompt-answer {
     line-height: 1.7;
-    color: #374151;
+    color: var(--color-text-soft);
 }
 
 /* =========================================================
-   23.SIDEBAR GROUPING / NAVIGATION
-   Adds headings + indented journal links
+   21. ALL ENTRIES PAGE / JOURNAL LIBRARY
    ========================================================= */
 
-/*.sidebar-section {
-    margin-bottom: 22px;
-}
-
-.sidebar-heading {
-    margin-bottom: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #94a3b8;
-}
-
-.sidebar-sub-link {
-    padding-left: 14px;
-    font-size: 14px;
-}
-
-.sidebar-muted {
-    display: block;
-    padding-left: 14px;
-    font-size: 13px;
-    color: #94a3b8;
-}
-
-.sidebar-footer {
-    margin-top: 30px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-}*/
-
-/* =========================================================
-   24. ALL ENTRIES PAGE / JOURNAL LIBRARY
-   Summary cards, filters, entry cards, pagination
-   ========================================================= */
-
-/* ----- Summary cards ----- */
 .entries-summary-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1147,28 +1131,30 @@ body {
 
 .summary-card {
     padding: 18px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
     gap: 6px;
+    box-shadow: var(--shadow-sm);
 }
 
 .summary-label {
-    font-size: 13px;
-    color: #6b7280;
+    font-size: 12px;
+    color: var(--color-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.08em;
+    font-weight: 600;
 }
 
 .summary-value {
-    font-size: 26px;
-    font-weight: 600;
-    color: #111827;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.03em;
 }
 
-/* ----- Filter pills ----- */
 .entries-filter-bar {
     display: flex;
     flex-wrap: wrap;
@@ -1181,17 +1167,17 @@ body {
     align-items: center;
     justify-content: center;
     padding: 8px 14px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: white;
-    border: 1px solid #e5e7eb;
-    color: #374151;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-soft);
     text-decoration: none;
     font-size: 14px;
-    transition: 0.18s ease;
+    transition: var(--transition-fast);
 }
 
 .filter-pill:hover {
-    background: #f8fafc;
+    background: var(--color-surface-soft);
 }
 
 .filter-pill-active {
@@ -1200,7 +1186,6 @@ body {
     border-color: #111827;
 }
 
-/* ----- Entry cards ----- */
 .entries-grid {
     display: flex;
     flex-direction: column;
@@ -1209,15 +1194,19 @@ body {
 
 .entry-library-card {
     padding: 18px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast);
 }
 
 .entry-library-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+    box-shadow: var(--shadow-md);
+    border-color: #dde5f0;
 }
 
 .entry-library-top {
@@ -1231,8 +1220,9 @@ body {
 .entry-library-title {
     font-size: 18px;
     font-weight: 600;
-    color: #111827;
+    color: var(--color-text);
     text-decoration: none;
+    letter-spacing: -0.01em;
 }
 
 .entry-library-title:hover {
@@ -1252,22 +1242,21 @@ body {
     justify-content: space-between;
     gap: 10px;
     font-size: 13px;
-    color: #6b7280;
+    color: var(--color-text-muted);
 }
 
 .entry-library-meta {
     white-space: nowrap;
 }
 
-/* ----- Type badges ----- */
 .entry-type-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 5px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .simple-badge {
@@ -1285,7 +1274,6 @@ body {
     color: #6d28d9;
 }
 
-/* ----- Pagination ----- */
 .pagination {
     margin-top: 24px;
     display: flex;
@@ -1296,16 +1284,16 @@ body {
 
 .pagination-link {
     padding: 8px 14px;
-    border-radius: 8px;
+    border-radius: 10px;
     background: white;
-    border: 1px solid #e5e7eb;
-    color: #111827;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
     text-decoration: none;
     font-size: 14px;
 }
 
 .pagination-link:hover {
-    background: #f8fafc;
+    background: var(--color-surface-soft);
 }
 
 .pagination-disabled {
@@ -1315,39 +1303,19 @@ body {
 
 .pagination-info {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--color-text-muted);
 }
 
-/* ----- Responsive ----- */
-@media (max-width: 900px) {
-    .entries-summary-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (max-width: 640px) {
-    .entries-summary-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .entry-library-top,
-    .entry-library-footer,
-    .pagination {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
-
-/* =========================================
-   25.AI INSIGHTS (Simple journal analysis)
-   ========================================= */
+/* =========================================================
+   22. AI INSIGHTS
+   ========================================================= */
 
 .ai-insights {
     margin-top: 24px;
     padding: 20px;
-    border-radius: 12px;
+    border-radius: 16px;
     background: #f8fafc;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border);
 }
 
 .ai-insights-header {
@@ -1355,6 +1323,7 @@ body {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+    gap: 12px;
 }
 
 .ai-insights-header h3 {
@@ -1365,10 +1334,10 @@ body {
 .ai-badge {
     font-size: 11px;
     padding: 4px 8px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: #e0e7ff;
     color: #4338ca;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .ai-block {
@@ -1378,14 +1347,14 @@ body {
 .ai-label {
     font-size: 13px;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--color-text-muted);
     margin-bottom: 4px;
 }
 
 .ai-tone {
     display: inline-block;
     padding: 5px 10px;
-    border-radius: 8px;
+    border-radius: 10px;
     background: #eef2ff;
     font-size: 13px;
 }
@@ -1394,8 +1363,8 @@ body {
     margin-top: 10px;
     padding: 12px;
     background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
 }
 
 .distortion-type {
@@ -1411,22 +1380,24 @@ body {
 
 .distortion-reason {
     font-size: 14px;
-    color: #374151;
+    color: var(--color-text-soft);
 }
 
 .ai-reframe {
     margin-top: 14px;
     padding: 14px;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #ecfdf5;
     border: 1px solid #bbf7d0;
 }
 
 /* =========================================================
-   26.MOOD & WELLBEING CHECKLIST
+   23. MOOD & WELLBEING CHECKLIST
    ========================================================= */
 
-.checklist-intro-card {
+.checklist-intro-card,
+.checklist-result-card,
+.checklist-breakdown-card {
     margin-bottom: 20px;
 }
 
@@ -1434,7 +1405,7 @@ body {
 .checklist-disclaimer-secondary {
     font-size: 14px;
     line-height: 1.7;
-    color: #6b7280;
+    color: var(--color-text-muted);
 }
 
 .checklist-scale-guide {
@@ -1447,9 +1418,9 @@ body {
 .checklist-scale-guide span {
     padding: 6px 10px;
     font-size: 13px;
-    border-radius: 999px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
     color: #475569;
 }
 
@@ -1459,7 +1430,7 @@ body {
 
 .checklist-question-block {
     padding: 18px 0;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border);
 }
 
 .checklist-question-block:last-of-type {
@@ -1469,7 +1440,7 @@ body {
 .checklist-question-text {
     margin-bottom: 12px;
     font-weight: 500;
-    color: #111827;
+    color: var(--color-text);
     line-height: 1.7;
 }
 
@@ -1496,7 +1467,7 @@ body {
     justify-content: center;
     min-width: 42px;
     height: 42px;
-    border-radius: 10px;
+    border-radius: 12px;
     border: 1px solid #d1d5db;
     background: #ffffff;
     color: #374151;
@@ -1511,12 +1482,7 @@ body {
 }
 
 .checklist-option span:hover {
-    background: #f8fafc;
-}
-
-.checklist-result-card,
-.checklist-breakdown-card {
-    margin-bottom: 20px;
+    background: var(--color-surface-soft);
 }
 
 .checklist-score-header {
@@ -1528,23 +1494,25 @@ body {
 }
 
 .checklist-score-label {
-    font-size: 13px;
-    color: #6b7280;
+    font-size: 12px;
+    color: var(--color-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.08em;
+    font-weight: 600;
 }
 
 .checklist-score-value {
-    font-size: 34px;
+    font-size: 36px;
     font-weight: 700;
-    color: #111827;
+    color: var(--color-text);
+    letter-spacing: -0.03em;
 }
 
 .checklist-status-badge {
     padding: 8px 12px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
 }
 
@@ -1576,13 +1544,13 @@ body {
 .checklist-result-message {
     margin-bottom: 16px;
     line-height: 1.7;
-    color: #374151;
+    color: var(--color-text-soft);
 }
 
 .checklist-help-box {
     margin-bottom: 14px;
     padding: 14px;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #fff7ed;
     border: 1px solid #fdba74;
     color: #9a3412;
@@ -1597,33 +1565,20 @@ body {
 
 .checklist-breakdown-item {
     padding: 14px;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #fafafa;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border);
 }
 
 .checklist-breakdown-question {
     margin-bottom: 6px;
-    color: #111827;
+    color: var(--color-text);
 }
 
 .checklist-breakdown-score {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--color-text-muted);
 }
-
-@media (max-width: 640px) {
-    .checklist-score-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .checklist-options {
-        gap: 8px;
-    }
-}
-
-/* ----- Checklist note + submit area ----- */
 
 .checklist-form-card .form-group {
     margin-top: 18px;
@@ -1634,56 +1589,22 @@ body {
     margin-bottom: 8px;
     font-size: 14px;
     font-weight: 600;
-    color: #111827;
+    color: var(--color-text);
 }
 
 .checklist-form-card textarea {
-    width: 100%;
     min-height: 110px;
-    padding: 14px 16px;
-    border: 1px solid #dbe3ee;
-    border-radius: 12px;
-    background: #f8fafc;
-    color: #0f172a;
-    font-size: 14px;
-    line-height: 1.6;
     resize: vertical;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
-
-.checklist-form-card textarea:focus {
-    outline: none;
-    border-color: #6366f1;
-    background: #ffffff;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
-}
-
-.checklist-form-card textarea::placeholder {
-    color: #94a3b8;
 }
 
 .checklist-form-card .btn-primary {
     margin-top: 18px;
     min-width: 160px;
     padding: 13px 18px;
-    border: none;
-    border-radius: 12px;
-    background: #6366f1;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
-
-.checklist-form-card .btn-primary:hover {
-    background: #5558e6;
-    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.18);
-    transform: translateY(-1px);
 }
 
 /* =========================================================
-   27.ANTI-PROCRASTINATION SHEET
+   24. ANTI-PROCRASTINATION SHEET
    ========================================================= */
 
 .procrastination-form-card {
@@ -1692,7 +1613,7 @@ body {
 
 .procrastination-section {
     padding: 6px 0 22px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border);
     margin-bottom: 22px;
 }
 
@@ -1703,37 +1624,9 @@ body {
 }
 
 .muted-inline {
-    color: #6b7280;
+    color: var(--color-text-muted);
     font-weight: 400;
     font-size: 13px;
-}
-
-.procrastination-form-card input[type="text"],
-.procrastination-form-card input[type="number"],
-.procrastination-form-card textarea {
-    width: 100%;
-    padding: 13px 14px;
-    border: 1px solid #dbe3ee;
-    border-radius: 12px;
-    background: #f8fafc;
-    color: #0f172a;
-    font-size: 14px;
-    line-height: 1.6;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
-
-.procrastination-form-card input[type="text"]:focus,
-.procrastination-form-card input[type="number"]:focus,
-.procrastination-form-card textarea:focus {
-    outline: none;
-    border-color: #6366f1;
-    background: #ffffff;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
-}
-
-.procrastination-form-card textarea::placeholder,
-.procrastination-form-card input::placeholder {
-    color: #94a3b8;
 }
 
 .score-grid {
@@ -1744,9 +1637,9 @@ body {
 
 .score-card {
     padding: 16px;
-    border-radius: 12px;
+    border-radius: 14px;
     background: #fafafa;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border);
 }
 
 .score-label {
@@ -1754,13 +1647,13 @@ body {
     margin-bottom: 6px;
     font-size: 14px;
     font-weight: 600;
-    color: #111827;
+    color: var(--color-text);
 }
 
 .score-scale {
     margin-bottom: 10px;
     font-size: 13px;
-    color: #6b7280;
+    color: var(--color-text-muted);
 }
 
 .procrastination-form-card input[type="number"] {
@@ -1775,8 +1668,6 @@ body {
     min-width: 150px;
 }
 
-/* View page */
-
 .procrastination-view-card {
     margin-bottom: 20px;
 }
@@ -1785,20 +1676,23 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
 }
 
 .procrastination-view-label {
-    font-size: 13px;
-    color: #6b7280;
+    font-size: 12px;
+    color: var(--color-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.08em;
+    font-weight: 600;
     margin-bottom: 6px;
 }
 
 .procrastination-task-title {
     font-size: 28px;
-    font-weight: 600;
-    color: #111827;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
 }
 
 .procrastination-comparison-grid {
@@ -1809,21 +1703,21 @@ body {
 
 .comparison-card {
     padding: 16px;
-    border-radius: 12px;
+    border-radius: 14px;
     background: #fafafa;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--color-border);
 }
 
 .comparison-label {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--color-text-muted);
     margin-bottom: 6px;
 }
 
 .comparison-value {
     font-size: 24px;
     font-weight: 700;
-    color: #111827;
+    color: var(--color-text);
 }
 
 .procrastination-step-highlight {
@@ -1831,21 +1725,8 @@ body {
     border: 1px solid #dbeafe;
 }
 
-@media (max-width: 900px) {
-    .procrastination-comparison-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (max-width: 640px) {
-    .score-grid,
-    .procrastination-comparison-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
 /* =========================================================
-   28. PROCRASTINATION SHEET TABLE REFACTOR
+   25. PROCRASTINATION SHEET TABLE REFACTOR
    ========================================================= */
 
 .procrastination-sheet-table-card {
@@ -1854,12 +1735,12 @@ body {
 
 .table-limit-note {
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     color: #92400e;
     background: #fef3c7;
     border: 1px solid #fde68a;
     padding: 6px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
 }
 
 .procrastination-table-wrap {
@@ -1875,29 +1756,30 @@ body {
 .procrastination-table th,
 .procrastination-table td {
     padding: 14px 12px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border);
     text-align: left;
     vertical-align: top;
     font-size: 14px;
 }
 
 .procrastination-table th {
-    font-size: 13px;
+    font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: #6b7280;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    font-weight: 700;
     background: #f8fafc;
 }
 
 .task-cell-title {
     font-weight: 600;
-    color: #111827;
+    color: var(--color-text);
     margin-bottom: 4px;
 }
 
 .task-cell-subtext {
     font-size: 13px;
-    color: #6b7280;
+    color: var(--color-text-muted);
     line-height: 1.5;
 }
 
@@ -1906,9 +1788,9 @@ body {
     align-items: center;
     justify-content: center;
     padding: 5px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .status-done {
@@ -1935,25 +1817,20 @@ body {
 
 .task-detail-block {
     padding: 12px;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
     background: white;
 }
 
 .task-detail-label {
     font-size: 13px;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--color-text-muted);
     margin-bottom: 6px;
 }
 
-@media (max-width: 900px) {
-    .task-detail-grid {
-        grid-template-columns: 1fr;
-    }
-}
 /* =========================================================
-   29. CREATE HABIT PAGE
+   26. CREATE HABIT PAGE
    ========================================================= */
 
 .habit-submit-btn {
@@ -1961,25 +1838,71 @@ body {
     min-width: 150px;
 }
 
-.form-card .entry-form input[type="text"] {
-    width: 100%;
-    padding: 13px 14px;
-    border: 1px solid #dbe3ee;
-    border-radius: 12px;
-    background: #f8fafc;
-    color: #0f172a;
-    font-size: 14px;
-    line-height: 1.6;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+/* =========================================================
+   27. RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-side {
+        order: -1;
+    }
 }
 
-.form-card .entry-form input[type="text"]:focus {
-    outline: none;
-    border-color: #6366f1;
-    background: #ffffff;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+@media (max-width: 900px) {
+    .entries-summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .procrastination-comparison-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .task-detail-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-.form-card .entry-form input[type="text"]::placeholder {
-    color: #94a3b8;
+@media (max-width: 640px) {
+    .main {
+        padding: 20px 16px;
+    }
+
+    .page-title,
+    .dashboard-greeting,
+    .auth-title,
+    .procrastination-task-title,
+    .entry-title {
+        font-size: 24px;
+    }
+
+    .entries-summary-grid,
+    .score-grid,
+    .procrastination-comparison-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .entry-library-top,
+    .entry-library-footer,
+    .pagination,
+    .checklist-score-header,
+    .entry-actions,
+    .procrastination-view-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .checklist-options {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 28px 22px;
+        border-radius: 16px;
+    }
 }
