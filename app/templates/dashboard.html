@@ -12,58 +12,37 @@
             <p class="dashboard-hero-text">
                 Here’s a calm overview of your journaling, mood, and habits so you can see how things are going at a glance.
             </p>
+
             <div class="dashboard-hero-meta">
                 <span class="dashboard-identity">{{ email }}</span>
                 <span class="dashboard-divider">•</span>
                 <span class="dashboard-trend-pill">{{ trend }}</span>
             </div>
         </div>
-
-        <div class="dashboard-hero-actions">
-            <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="btn-primary">
-                New Journal Entry
-            </a>
-            <a href="{{ url_for('habit.create_habit') }}" class="btn-secondary">
-                Create Habit
-            </a>
-        </div>
     </section>
 
-    <!-- STATS -->
-    <section class="stats-grid dashboard-stats-grid">
-        <div class="card stat-card card-dashboard">
+    <!-- COMPACT STATS -->
+    <section class="dashboard-mini-stats">
+        <div class="card stat-card card-dashboard dashboard-mini-stat">
             <span class="stat-label">Total Entries</span>
             <span class="stat-value">{{ total_entries }}</span>
             <p class="stat-support-text">Your journal library so far</p>
         </div>
 
-        <div class="card stat-card card-dashboard">
+        <div class="card stat-card card-dashboard dashboard-mini-stat">
             <span class="stat-label">Average Mood</span>
             <span class="stat-value">
                 {{ average_mood_score if average_mood_score is not none else '—' }}
             </span>
             <p class="stat-support-text">Based on your recorded entries</p>
         </div>
-
-        <div class="card stat-card stat-card-wide card-dashboard">
-            <span class="stat-label">Current Trend</span>
-            <span class="stat-value stat-value-small">{{ trend }}</span>
-            <p class="stat-support-text">A quick read on your recent direction</p>
-        </div>
     </section>
 
     <!-- MAIN GRID -->
-    <div class="dashboard-grid">
+    <div class="dashboard-grid dashboard-grid-lean">
 
         <!-- LEFT COLUMN -->
         <section class="dashboard-main">
-
-            <div class="card card-dashboard insight-card insight-card-featured">
-                <div class="section-header">
-                    <h3 class="card-title">🧠 Insight of the Moment</h3>
-                </div>
-                <p class="insight-text">{{ insights }}</p>
-            </div>
 
             <div class="card card-dashboard">
                 <div class="section-header">
@@ -115,10 +94,8 @@
                             <p class="entry-content">
                                 {% if entry.entry_type == "simple" %}
                                     {{ entry.content|striptags|truncate(180) }}
-
                                 {% elif entry.entry_type == "gratitude" %}
                                     {{ entry.structured_content.gratitude_1|truncate(180) }}
-
                                 {% elif entry.entry_type == "reflection" %}
                                     {{ entry.structured_content.went_well|truncate(180) }}
                                 {% endif %}
@@ -128,12 +105,16 @@
                         <div class="empty-state-box">
                             <h4 class="empty-state-title">No journal entries yet</h4>
                             <p class="empty-text">Start with a simple journal entry and your reflections will begin showing up here.</p>
-                            <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="btn-primary empty-state-btn">
-                                Write your first entry
-                            </a>
                         </div>
                     {% endfor %}
                 </div>
+            </div>
+
+            <div class="card card-dashboard insight-card insight-card-featured">
+                <div class="section-header">
+                    <h3 class="card-title">🧠 Insight of the Moment</h3>
+                </div>
+                <p class="insight-text">{{ insights }}</p>
             </div>
 
         </section>
@@ -141,56 +122,12 @@
         <!-- RIGHT COLUMN -->
         <aside class="dashboard-side">
 
-            <div class="card card-dashboard quick-actions-card">
-                <div class="section-header">
-                    <div>
-                        <h3 class="card-title">⚡ Quick Actions</h3>
-                        <p class="card-subtitle">Jump straight into the parts of Reflectly you use most.</p>
-                    </div>
-                </div>
-
-                <div class="quick-actions-grid">
-                    <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="quick-action-tile">
-                        <span class="quick-action-icon">✍️</span>
-                        <span class="quick-action-text">
-                            <strong>Simple Journal</strong>
-                            <small>Write freely</small>
-                        </span>
-                    </a>
-
-                    <a href="{{ url_for('journal.create_new_entry', entry_type='gratitude') }}" class="quick-action-tile">
-                        <span class="quick-action-icon">🙏</span>
-                        <span class="quick-action-text">
-                            <strong>Gratitude</strong>
-                            <small>Capture positives</small>
-                        </span>
-                    </a>
-
-                    <a href="{{ url_for('tools.mood_checklist') }}" class="quick-action-tile">
-                        <span class="quick-action-icon">😊</span>
-                        <span class="quick-action-text">
-                            <strong>Mood Check-In</strong>
-                            <small>Track how you feel</small>
-                        </span>
-                    </a>
-
-                    <a href="{{ url_for('tools.anti_procrastination') }}" class="quick-action-tile">
-                        <span class="quick-action-icon">🎯</span>
-                        <span class="quick-action-text">
-                            <strong>Focus Tool</strong>
-                            <small>Beat avoidance</small>
-                        </span>
-                    </a>
-                </div>
-            </div>
-
             <div class="card card-dashboard habit-panel habit-panel-enhanced">
                 <div class="section-header">
                     <div>
                         <h3 class="card-title">🎯 Habit Tracker</h3>
                         <p class="card-subtitle">Keep momentum by checking off today’s habits.</p>
                     </div>
-                    <a href="{{ url_for('habit.create_habit') }}" class="section-link">New habit</a>
                 </div>
 
                 <div class="habit-list">
@@ -241,10 +178,7 @@
                     {% else %}
                         <div class="empty-state-box compact-empty-state">
                             <h4 class="empty-state-title">No habits yet</h4>
-                            <p class="empty-text">Create your first habit and start building consistency one day at a time.</p>
-                            <a href="{{ url_for('habit.create_habit') }}" class="btn-primary empty-state-btn">
-                                Create first habit
-                            </a>
+                            <p class="empty-text">Create your first habit from the sidebar and start building consistency one day at a time.</p>
                         </div>
                     {% endfor %}
                 </div>
