@@ -514,17 +514,7 @@ select {
    11. INSIGHT CARD
    ========================================================= */
 
-.insight-card {
-    padding: 22px;
-    background:
-        linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
-}
 
-.insight-text {
-    font-size: 15px;
-    line-height: 1.75;
-    color: var(--color-text-soft);
-}
 
 /* =========================================================
    12. STATS CARDS
@@ -2042,11 +2032,6 @@ select {
     white-space: nowrap;
 }
 
-.insight-card-featured {
-    background:
-        radial-gradient(circle at top right, rgba(99, 102, 241, 0.06), transparent 28%),
-        linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
-}
 
 .habit-panel-enhanced {
     max-height: none;
