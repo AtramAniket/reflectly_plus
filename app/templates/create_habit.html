@@ -1,31 +1,275 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="centered-container">
-    <div class="page-header">
-        <h1 class="page-title">Create Habit</h1>
-        <p class="page-subtitle">
-            Add a habit you want to track consistently over time.
-        </p>
+
+<div class="habits-v5">
+
+    <div class="habits-header">
+        <div>
+            <h1 class="page-title">Habits</h1>
+            <p class="page-subtitle">
+                Stay focused with a smaller set of habits that you can actually keep.
+            </p>
+        </div>
     </div>
 
-    <div class="card form-card">
-        <form method="POST" class="entry-form">
-            <div class="form-group">
-                <label for="name">Habit name</label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Example: Read for 20 minutes"
-                    required
-                >
+    <section class="habits-stats-strip">
+        <div class="habit-stat-chip">
+            <div class="habit-stat-icon-wrap">
+                <span class="habit-stat-icon">🎯</span>
+            </div>
+            <div class="habit-stat-copy">
+                <small>Active habits</small>
+                <strong>{{ habit_count }} / {{ max_habits }}</strong>
+                {% if at_limit %}
+                    <span class="habit-stat-note">Limit reached</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="habit-stat-chip">
+            <div class="habit-stat-icon-wrap">
+                <span class="habit-stat-icon">✅</span>
+            </div>
+            <div class="habit-stat-copy">
+                <small>Completed today</small>
+                <strong>{{ completed_today_count }}</strong>
+            </div>
+        </div>
+
+        <div class="habit-stat-chip">
+            <div class="habit-stat-icon-wrap">
+                <span class="habit-stat-icon">🔥</span>
+            </div>
+            <div class="habit-stat-copy">
+                <small>Best current streak</small>
+                <strong>{{ current_best_streak }}</strong>
+            </div>
+        </div>
+
+        <div class="habit-stat-chip">
+            <div class="habit-stat-icon-wrap">
+                <span class="habit-stat-icon">🏆</span>
+            </div>
+            <div class="habit-stat-copy">
+                <small>Longest streak</small>
+                <strong>{{ longest_streak_overall }}</strong>
+            </div>
+        </div>
+    </section>
+    
+    <div class="habits-workspace-v5">
+
+        <!-- LEFT -->
+        <section class="habits-column habits-column-left">
+            <div class="habits-panel-heading habits-panel-heading-stacked">
+                <h3>Your habits</h3>
+                <p class="muted">Select one to inspect its calendar on the right.</p>
             </div>
 
-            <button type="submit" class="btn-primary habit-submit-btn">
-                Create Habit
-            </button>
-        </form>
+            <div class="habit-card-list">
+
+                {% if not at_limit %}
+                    <div class="habit-card habit-card-create">
+                        <div class="habit-card-main">
+                            <div class="habit-card-title-row">
+                                <span class="habit-card-title">Add Habit</span>
+                                <span class="habit-card-helper">Up to {{ max_habits }}</span>
+                            </div>
+
+                            <form method="POST" class="habit-inline-form">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Read for 20 minutes"
+                                    required
+                                >
+                                <button type="submit" class="btn-primary habit-inline-submit">
+                                    Create
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% for habit in habits %}
+                    {% set current_streak = habit_streaks.get(habit.id, 0) %}
+                    {% set best_streak = habit_best_streaks.get(habit.id, 0) %}
+                    {% set completed_today = habit.id in today_logs %}
+                    {% set is_selected = selected_habit and selected_habit.id == habit.id %}
+
+                    <div class="habit-card {% if is_selected %}is-selected{% endif %}">
+                        <a
+                            href="{{ url_for('habit.create_habit', habit_id=habit.id, year=selected_year, month=selected_month) }}"
+                            class="habit-card-main"
+                        >
+                            <div class="habit-card-title-row">
+                                <span class="habit-card-title">{{ habit.name }}</span>
+                            </div>
+
+                            <div class="habit-card-meta">
+                                <span>🔥 {{ current_streak }} current</span>
+                                <span>·</span>
+                                <span>🏆 {{ best_streak }} best</span>
+                            </div>
+                        </a>
+
+                        <div class="habit-card-actions">
+                            {% if completed_today %}
+                                <span class="habit-chip-status is-done">Done</span>
+                            {% else %}
+                                <a href="{{ url_for('habit.complete_habit', habit_id=habit.id) }}" class="habit-chip-status is-action">
+                                    Mark done
+                                </a>
+                            {% endif %}
+
+                            <details class="habit-archive-menu">
+                                <summary title="Remove habit">✕</summary>
+
+                                <form method="POST" action="{{ url_for('habit.archive_habit', habit_id=habit.id) }}" class="habit-archive-popover">
+                                    <label for="archive_reason_{{ habit.id }}">Why remove it?</label>
+                                    <select id="archive_reason_{{ habit.id }}" name="archive_reason" required>
+                                        <option value="">Select a reason</option>
+                                        {% for reason in archive_reason_options %}
+                                            <option value="{{ reason }}">{{ reason }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label for="archive_note_{{ habit.id }}">Note (optional)</label>
+                                    <textarea
+                                        id="archive_note_{{ habit.id }}"
+                                        name="archive_note"
+                                        rows="3"
+                                        placeholder="Anything you want to remember about removing this habit"></textarea>
+
+                                    <button type="submit" class="btn-danger habit-archive-submit">
+                                        Remove habit
+                                    </button>
+                                </form>
+                            </details>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% if archived_habits %}
+                    <section class="archived-habits-section">
+                        <details>
+                            <summary>Removed habits ({{ archived_habits|length }})</summary>
+
+                            <div class="archived-habit-list">
+                                {% for habit in archived_habits %}
+                                    <div class="archived-habit-item">
+                                        <div>
+                                            <strong>{{ habit.name }}</strong>
+                                            <p class="muted">
+                                                {{ habit.archived_reason or 'No reason provided' }}
+                                                {% if habit.archived_at %}
+                                                    · {{ habit.archived_at.strftime('%d %b %Y') }}
+                                                {% endif %}
+                                            </p>
+                                            {% if habit.archived_note %}
+                                                <p class="archived-note">{{ habit.archived_note }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </details>
+                    </section>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- RIGHT -->
+        <section class="habits-column habits-column-right">
+            <div class="habits-panel-heading habits-panel-heading-calendar">
+                {% if selected_habit %}
+                    <div>
+                        <h3>{{ selected_habit.name }}</h3>
+                        <p class="muted">{{ month_label }}</p>
+                    </div>
+                {% else %}
+                    <div>
+                        <h3>Habit Calendar</h3>
+                        <p class="muted">Track monthly consistency here.</p>
+                    </div>
+                {% endif %}
+
+                {% if selected_habit %}
+                    <div class="habit-calendar-nav">
+                        <a href="{{ url_for('habit.create_habit', habit_id=selected_habit.id, year=prev_year, month=prev_month) }}" class="btn-secondary">
+                            ← Prev
+                        </a>
+                        <a href="{{ url_for('habit.create_habit', habit_id=selected_habit.id, year=next_year, month=next_month) }}" class="btn-secondary">
+                            Next →
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <section class="habit-calendar-shell">
+                <div class="habit-calendar-legend">
+                    <span><span class="legend-dot legend-done"></span>Done</span>
+                    <span><span class="legend-dot legend-missed"></span>Missed</span>
+                    <span><span class="legend-dot legend-before"></span>Before start</span>
+                </div>
+
+                <div class="habit-calendar-weekdays">
+                    <span>Mon</span>
+                    <span>Tue</span>
+                    <span>Wed</span>
+                    <span>Thu</span>
+                    <span>Fri</span>
+                    <span>Sat</span>
+                    <span>Sun</span>
+                </div>
+
+                {% if selected_habit %}
+                    <div class="habit-calendar-month compact-month">
+                        {% for week in calendar_weeks %}
+                            {% for day in week %}
+                                <div
+                                    class="habit-calendar-cell compact-cell
+                                    {% if not day.is_current_month %}is-outside-month{% endif %}
+                                    {% if day.is_before_creation %}is-before-creation{% endif %}
+                                    {% if day.is_completed %}is-completed{% endif %}
+                                    {% if day.is_missed %}is-missed{% endif %}
+                                    {% if day.is_future %}is-future{% endif %}
+                                    {% if day.is_today %}is-today{% endif %}"
+                                    title="{{ day.date.strftime('%d %b %Y') }}"
+                                >
+                                    <div class="habit-calendar-cell-top">
+                                        <span class="habit-calendar-date">{{ day.day_number }}</span>
+                                    </div>
+
+                                    <div class="habit-calendar-cell-body">
+                                        {% if day.label %}
+                                            <span class="habit-calendar-label">{{ day.label }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="habit-calendar-month compact-month is-empty-calendar">
+                        {% for _ in range(35) %}
+                            <div class="habit-calendar-cell compact-cell is-before-creation"></div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="habit-calendar-overlay">
+                        <div class="habit-calendar-overlay-card">
+                            <h4>Add a habit to track</h4>
+                            <p class="muted">Your monthly consistency calendar will appear here once you create a habit.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </section>
+        </section>
+
     </div>
+
 </div>
+
 {% endblock %}
