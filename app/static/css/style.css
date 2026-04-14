@@ -20,7 +20,6 @@
     --color-bg: #f3f6fb;
     --color-surface: #ffffff;
     --color-surface-soft: #f8fafc;
-    --color-surface-muted: #f8fafc;
     --color-border: #e5e7eb;
     --color-border-strong: #dbe3ee;
 
@@ -46,7 +45,6 @@
     --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.10);
 
     --transition-fast: 0.18s ease;
-    --transition-med: 0.24s ease;
 }
 
 * {
@@ -114,7 +112,7 @@ select {
     background: #1f2937;
     color: #f8fafc;
     font-size: 14px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 .sidebar-title {
@@ -213,7 +211,7 @@ select {
 }
 
 /* =========================================================
-   3. GENERIC CONTAINERS
+   3. GENERIC CONTAINERS + TYPOGRAPHY
    ========================================================= */
 
 .centered-container {
@@ -230,10 +228,6 @@ select {
     max-width: 600px;
     margin: 0 auto;
 }
-
-/* =========================================================
-   4. TYPOGRAPHY
-   ========================================================= */
 
 .page-header {
     margin-bottom: 20px;
@@ -267,13 +261,14 @@ select {
     margin-bottom: 10px;
 }
 
-.empty-text {
-    font-size: 14px;
+.empty-text,
+.muted {
+    font-size: 13px;
     color: var(--color-text-muted);
 }
 
 /* =========================================================
-   5. CARD SYSTEM
+   4. CARD SYSTEM
    ========================================================= */
 
 .card {
@@ -299,7 +294,7 @@ select {
 }
 
 /* =========================================================
-   6. FLASH MESSAGES
+   5. FLASH MESSAGES
    ========================================================= */
 
 .flash-container {
@@ -315,11 +310,9 @@ select {
     font-size: 14px;
     font-weight: 500;
     box-shadow: var(--shadow-sm);
-
     opacity: 1;
     max-height: 60px;
     overflow: hidden;
-
     transition:
         opacity .35s ease,
         transform .35s ease,
@@ -363,7 +356,7 @@ select {
 }
 
 /* =========================================================
-   7. LINKS + BUTTONS
+   6. BUTTONS + FORM ELEMENTS
    ========================================================= */
 
 .btn-link {
@@ -436,12 +429,74 @@ select {
     transform: translateY(-1px);
 }
 
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.6;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #94a3b8;
+}
+
+textarea {
+    resize: vertical;
+}
+
 /* =========================================================
-   8. DASHBOARD HEADER
+   7. DASHBOARD
    ========================================================= */
 
-.dashboard-header {
-    margin-bottom: 20px;
+.dashboard-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-hero {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 28px;
+    background:
+        radial-gradient(circle at top right, rgba(99, 102, 241, 0.08), transparent 30%),
+        linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+}
+
+.dashboard-kicker {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6366f1;
+}
+
+.dashboard-hero-copy {
+    max-width: 760px;
 }
 
 .dashboard-greeting {
@@ -453,18 +508,60 @@ select {
     margin-bottom: 4px;
 }
 
-.dashboard-identity {
-    font-size: 15px;
+.dashboard-hero-text,
+.stat-support-text,
+.card-subtitle {
+    font-size: 13px;
     color: var(--color-text-muted);
+    line-height: 1.6;
 }
 
-/* =========================================================
-   9. DASHBOARD LAYOUT
-   ========================================================= */
+.dashboard-hero-text {
+    margin-top: 10px;
+    max-width: 720px;
+    font-size: 15px;
+    line-height: 1.75;
+    color: #475569;
+}
 
-.dashboard-grid {
+.dashboard-hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.dashboard-divider {
+    color: #cbd5e1;
+}
+
+.dashboard-trend-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.dashboard-mini-stats {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(320px, 380px);
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.dashboard-mini-stat {
+    margin-bottom: 0;
+    min-height: 136px;
+}
+
+.dashboard-grid,
+.dashboard-grid-lean {
+    display: grid;
+    grid-template-columns: minmax(0, 1.9fr) minmax(300px, 0.95fr);
     gap: 20px;
     align-items: start;
 }
@@ -474,51 +571,6 @@ select {
     display: flex;
     flex-direction: column;
 }
-
-.dashboard {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-}
-
-.main-column,
-.side-column {
-    display: flex;
-    flex-direction: column;
-}
-
-/* =========================================================
-   10. SECTION HEADERS
-   ========================================================= */
-
-.section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.section-link {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-primary);
-    text-decoration: none;
-}
-
-.section-link:hover {
-    text-decoration: underline;
-}
-
-/* =========================================================
-   11. INSIGHT CARD
-   ========================================================= */
-
-
-
-/* =========================================================
-   12. STATS CARDS
-   ========================================================= */
 
 .stats-grid {
     display: grid;
@@ -561,13 +613,152 @@ select {
     line-height: 1.45;
 }
 
-/* =========================================================
-   13. HABIT TRACKER
-   ========================================================= */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
 
-.habit-panel {
-    max-height: 520px;
-    overflow: auto;
+.section-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.section-link:hover {
+    text-decoration: underline;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+}
+
+.chart-container-large {
+    height: 300px;
+}
+
+.chart-container canvas {
+    max-height: 100%;
+}
+
+.entry-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.entry-list-enhanced {
+    gap: 12px;
+}
+
+.entry-item {
+    padding: 15px;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.entry-item:hover {
+    border-color: #d9e1ed;
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+}
+
+.entry-item-enhanced {
+    padding: 18px;
+}
+
+.entry-item-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.entry-item-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.entry-title-link {
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+}
+
+.entry-title-link:hover {
+    text-decoration: underline;
+}
+
+.entry-type-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.entry-content {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #475569;
+}
+
+.entry-meta {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.entry-meta-pill {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.entry-type-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.simple-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.gratitude-badge {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.reflection-badge {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+.habit-panel-enhanced {
+    max-height: none;
+    position: sticky;
+    top: 28px;
 }
 
 .habit-list {
@@ -593,11 +784,21 @@ select {
     transform: translateY(-1px);
 }
 
+.habit-item-enhanced {
+    gap: 12px;
+}
+
 .habit-top-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+}
+
+.habit-title-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .habit-name {
@@ -612,10 +813,6 @@ select {
     color: var(--color-text-muted);
 }
 
-.habit-action {
-    margin-top: 5px;
-}
-
 .habit-badge {
     display: inline-flex;
     align-items: center;
@@ -627,11 +824,6 @@ select {
     text-decoration: none;
     white-space: nowrap;
     transition: background var(--transition-fast), color var(--transition-fast);
-}
-
-.done {
-    color: var(--color-success);
-    font-weight: 500;
 }
 
 .done-badge {
@@ -648,75 +840,58 @@ select {
     background: #e0e7ff;
 }
 
-/* =========================================================
-   14. DASHBOARD JOURNAL ENTRY PREVIEWS
-   ========================================================= */
-
-.entry-list {
+.habit-progress-row {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 10px;
+    margin-top: 12px;
 }
 
-.entry-item {
-    padding: 15px;
-    border: 1px solid var(--color-border);
-    border-radius: 14px;
-    background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
-    transition:
-        border-color var(--transition-fast),
-        box-shadow var(--transition-fast),
-        transform var(--transition-fast);
-}
-
-.entry-item:hover {
-    border-color: #d9e1ed;
-    box-shadow: var(--shadow-sm);
-    transform: translateY(-1px);
-}
-
-.entry-title-link {
-    font-weight: 600;
-    color: var(--color-text);
-    text-decoration: none;
-    letter-spacing: -0.01em;
-}
-
-.entry-title-link:hover {
-    text-decoration: underline;
-}
-
-.entry-content {
-    margin-top: 8px;
-    font-size: 14px;
-    line-height: 1.7;
-    color: #475569;
-}
-
-.entry-meta {
-    display: inline-block;
-    margin-top: 8px;
-    font-size: 13px;
-    color: var(--color-text-muted);
-}
-
-/* =========================================================
-   15. CHART AREA
-   ========================================================= */
-
-.chart-container {
-    position: relative;
-    width: 100%;
-    height: 260px;
+.habit-progress-track {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: #e5e7eb;
     overflow: hidden;
 }
 
-.chart-container canvas {
-    max-height: 100%;
+.habit-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%);
+}
+
+.habit-progress-fill-complete {
+    background: linear-gradient(90deg, #34d399 0%, #10b981 100%);
+}
+
+.habit-progress-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.empty-state-box {
+    padding: 22px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 16px;
+    background: #f8fafc;
+}
+
+.compact-empty-state {
+    padding: 18px;
+}
+
+.empty-state-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 6px;
 }
 
 /* =========================================================
-   16. AUTH PAGES
+   8. AUTH PAGES
    ========================================================= */
 
 .auth-body {
@@ -880,110 +1055,7 @@ select {
 }
 
 /* =========================================================
-   17. FORMS
-   ========================================================= */
-
-.form-card {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 25px;
-}
-
-.entry-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    margin-bottom: 7px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-text-soft);
-}
-
-.entry-form input,
-.entry-form textarea,
-.checklist-form-card textarea,
-.procrastination-form-card input[type="text"],
-.procrastination-form-card input[type="number"],
-.procrastination-form-card textarea,
-.form-card .entry-form input[type="text"] {
-    width: 100%;
-    padding: 13px 14px;
-    border: 1px solid var(--color-border-strong);
-    border-radius: 12px;
-    background: var(--color-surface-soft);
-    color: var(--color-text);
-    font-size: 14px;
-    line-height: 1.6;
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-}
-
-.entry-form input:focus,
-.entry-form textarea:focus,
-.checklist-form-card textarea:focus,
-.procrastination-form-card input[type="text"]:focus,
-.procrastination-form-card input[type="number"]:focus,
-.procrastination-form-card textarea:focus,
-.form-card .entry-form input[type="text"]:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    background: #ffffff;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
-}
-
-.entry-form textarea {
-    resize: vertical;
-}
-
-.entry-form input::placeholder,
-.entry-form textarea::placeholder,
-.checklist-form-card textarea::placeholder,
-.procrastination-form-card textarea::placeholder,
-.procrastination-form-card input::placeholder,
-.form-card .entry-form input[type="text"]::placeholder {
-    color: #94a3b8;
-}
-
-/* =========================================================
-   18. QUILL EDITOR
-   ========================================================= */
-
-#editor {
-    min-height: 220px;
-    background: white;
-    border-radius: 12px;
-}
-
-.ql-toolbar.ql-snow {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    border-color: var(--color-border-strong);
-}
-
-.ql-container {
-    min-height: 200px;
-    font-size: 15px;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    border-color: var(--color-border-strong);
-}
-
-.ql-editor {
-    min-height: 180px;
-}
-
-/* =========================================================
-   19. ENTRY VIEW PAGE
+   9. ENTRY / JOURNAL / LIBRARY
    ========================================================= */
 
 .entry-hero {
@@ -1074,10 +1146,6 @@ select {
     text-decoration: underline;
 }
 
-/* =========================================================
-   20. JOURNAL TYPE INFO CARD + PROMPT BLOCKS
-   ========================================================= */
-
 .entry-type-card {
     margin-bottom: 20px;
 }
@@ -1107,10 +1175,6 @@ select {
     line-height: 1.7;
     color: var(--color-text-soft);
 }
-
-/* =========================================================
-   21. ALL ENTRIES PAGE / JOURNAL LIBRARY
-   ========================================================= */
 
 .entries-summary-grid {
     display: grid;
@@ -1239,31 +1303,6 @@ select {
     white-space: nowrap;
 }
 
-.entry-type-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px 10px;
-    border-radius: var(--radius-pill);
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.simple-badge {
-    background: #e0f2fe;
-    color: #0369a1;
-}
-
-.gratitude-badge {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.reflection-badge {
-    background: #ede9fe;
-    color: #6d28d9;
-}
-
 .pagination {
     margin-top: 24px;
     display: flex;
@@ -1297,7 +1336,7 @@ select {
 }
 
 /* =========================================================
-   22. AI INSIGHTS
+   10. AI / CHECKLIST / PROCRASTINATION
    ========================================================= */
 
 .ai-insights {
@@ -1380,10 +1419,6 @@ select {
     background: #ecfdf5;
     border: 1px solid #bbf7d0;
 }
-
-/* =========================================================
-   23. MOOD & WELLBEING CHECKLIST
-   ========================================================= */
 
 .checklist-intro-card,
 .checklist-result-card,
@@ -1570,33 +1605,6 @@ select {
     color: var(--color-text-muted);
 }
 
-.checklist-form-card .form-group {
-    margin-top: 18px;
-}
-
-.checklist-form-card .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-text);
-}
-
-.checklist-form-card textarea {
-    min-height: 110px;
-    resize: vertical;
-}
-
-.checklist-form-card .btn-primary {
-    margin-top: 18px;
-    min-width: 160px;
-    padding: 13px 18px;
-}
-
-/* =========================================================
-   24. ANTI-PROCRASTINATION SHEET
-   ========================================================= */
-
 .procrastination-form-card {
     padding: 24px;
 }
@@ -1715,10 +1723,6 @@ select {
     border: 1px solid #dbeafe;
 }
 
-/* =========================================================
-   25. PROCRASTINATION SHEET TABLE REFACTOR
-   ========================================================= */
-
 .procrastination-sheet-table-card {
     overflow: hidden;
 }
@@ -1820,33 +1824,548 @@ select {
 }
 
 /* =========================================================
-   26. CREATE HABIT PAGE
+   11. HABITS PAGE
    ========================================================= */
 
-.habit-submit-btn {
-    align-self: flex-start;
-    min-width: 150px;
+.habits-v5 {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.habits-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.habits-stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.habit-stat-chip {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    align-items: start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    min-height: 96px;
+}
+
+.habit-stat-icon-wrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 2px;
+}
+
+.habit-stat-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.habit-stat-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.habit-stat-copy small {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1.3;
+}
+
+.habit-stat-copy strong {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-text);
+}
+
+.habit-stat-note {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin-top: 4px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid #fde68a;
+}
+
+.habits-workspace-v5 {
+    display: grid;
+    grid-template-columns: minmax(320px, 410px) minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.habits-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.habits-panel-heading {
+    min-height: 58px;
+}
+
+.habits-panel-heading-stacked {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+}
+
+.habits-panel-heading-stacked h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.2;
+}
+
+.habits-panel-heading-calendar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.habits-panel-heading-calendar h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.2;
+}
+
+.habit-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.habit-card {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.habit-card:hover {
+    border-color: #dbe3ee;
+    box-shadow: var(--shadow-sm);
+}
+
+.habit-card.is-selected {
+    border-color: #c7d2fe;
+    background: linear-gradient(180deg, #ffffff 0%, #fafaff 100%);
+    box-shadow: 0 8px 18px rgba(99, 102, 241, 0.06);
+}
+
+.habit-card-main {
+    flex: 1;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.habit-card-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.habit-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.35;
+}
+
+.habit-card-helper {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+.habit-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.habit-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    position: relative;
+    min-height: 32px;
+}
+
+.habit-chip-status {
+    padding: 7px 11px;
+    border-radius: 999px;
+    font-size: 13px;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.habit-chip-status.is-done {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.habit-chip-status.is-action {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.habit-chip-status.is-action:hover {
+    background: #e0e7ff;
+}
+
+.habit-card-create {
+    border-style: dashed;
+    border-color: #c7d2fe;
+    background: linear-gradient(180deg, #ffffff 0%, #fafaff 100%);
+}
+
+.habit-inline-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+    width: 100%;
+}
+
+.habit-inline-form input,
+.habit-inline-form button {
+    width: 100%;
+}
+
+.habit-inline-submit {
+    min-height: 44px;
+}
+
+.habit-archive-menu {
+    position: relative;
+}
+
+.habit-archive-menu summary {
+    list-style: none;
+    cursor: pointer;
+    color: #94a3b8;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 8px;
+    user-select: none;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.habit-archive-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.habit-archive-menu summary:hover {
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.habit-archive-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 20;
+    width: 280px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.habit-archive-popover label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.habit-archive-submit {
+    min-height: 40px;
+    margin-top: 4px;
+}
+
+.habit-calendar-shell {
+    position: relative;
+    padding: 16px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    min-height: 530px;
+}
+
+.habit-calendar-nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.habit-calendar-legend {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.legend-done {
+    background: #6366f1;
+}
+
+.legend-missed {
+    background: #fdba74;
+}
+
+.legend-before {
+    background: #e2e8f0;
+}
+
+.habit-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.habit-calendar-weekdays span {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+.habit-calendar-month {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.habit-calendar-cell {
+    min-height: 78px;
+    border-radius: 14px;
+    padding: 8px;
+    border: 1.5px solid #dbe3ee;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: 0.18s ease;
+}
+
+.habit-calendar-cell-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.habit-calendar-date {
+    font-size: 12px;
+    font-weight: 700;
+    color: #334155;
+}
+
+.habit-calendar-cell-body {
+    display: flex;
+    align-items: flex-end;
+    min-height: 28px;
+}
+
+.habit-calendar-label {
+    display: inline-block;
+    max-width: 100%;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.25;
+    word-break: break-word;
+}
+
+.habit-calendar-cell.is-completed {
+    background: linear-gradient(180deg, #6366f1 0%, #5b5fe8 100%);
+    border-color: #6366f1;
+}
+
+.habit-calendar-cell.is-completed .habit-calendar-date,
+.habit-calendar-cell.is-completed .habit-calendar-label {
+    color: #ffffff;
+}
+
+.habit-calendar-cell.is-missed {
+    background: #fff7ed;
+    border-color: #fdba74;
+}
+
+.habit-calendar-cell.is-missed .habit-calendar-label {
+    color: #c2410c;
+}
+
+.habit-calendar-cell.is-before-creation {
+    background: #f8fafc;
+    border-style: dashed;
+    border-color: #e2e8f0;
+    opacity: 0.55;
+}
+
+.habit-calendar-cell.is-outside-month {
+    opacity: 0.35;
+}
+
+.habit-calendar-cell.is-future {
+    background: #f8fafc;
+}
+
+.habit-calendar-cell.is-today {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.is-empty-calendar {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.habit-calendar-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    pointer-events: none;
+}
+
+.habit-calendar-overlay-card {
+    max-width: 280px;
+    text-align: center;
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+}
+
+.habit-calendar-overlay-card h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 6px;
+}
+
+.archived-habits-section details {
+    border-top: 1px solid var(--color-border);
+    padding-top: 18px;
+}
+
+.archived-habits-section summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #334155;
+}
+
+.archived-habit-list {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.archived-habit-item {
+    padding: 14px;
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+}
+
+.archived-note {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.6;
 }
 
 /* =========================================================
-   27. RESPONSIVE
+   12. RESPONSIVE
    ========================================================= */
 
-@media (max-width: 1100px) {
-    .dashboard-grid {
+@media (max-width: 1200px) {
+    .habits-workspace-v5,
+    .dashboard-grid,
+    .dashboard-grid-lean {
         grid-template-columns: 1fr;
     }
 
-    .dashboard-side {
-        order: -1;
+    .habit-panel-enhanced {
+        position: static;
+        top: auto;
     }
 }
 
-@media (max-width: 900px) {
-    .entries-summary-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
+@media (max-width: 1100px) {
+    .habits-stats-strip,
+    .entries-summary-grid,
     .procrastination-comparison-grid {
         grid-template-columns: 1fr 1fr;
     }
@@ -1856,7 +2375,57 @@ select {
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 700px) {
+    .dashboard-mini-stats,
+    .habits-stats-strip,
+    .entries-summary-grid,
+    .score-grid,
+    .procrastination-comparison-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .entry-item-top,
+    .habit-top-row,
+    .habit-progress-row,
+    .habit-card,
+    .habit-calendar-nav,
+    .habits-panel-heading-calendar,
+    .entry-library-top,
+    .entry-library-footer,
+    .pagination,
+    .checklist-score-header,
+    .entry-actions,
+    .procrastination-view-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .habit-card-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .habit-calendar-weekdays,
+    .habit-calendar-month {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .habit-archive-popover {
+        position: static;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .chart-container-large {
+        height: 260px;
+    }
+
+    .checklist-options {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
     .main {
         padding: 20px 16px;
     }
@@ -1869,260 +2438,8 @@ select {
         font-size: 24px;
     }
 
-    .entries-summary-grid,
-    .score-grid,
-    .procrastination-comparison-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .entry-library-top,
-    .entry-library-footer,
-    .pagination,
-    .checklist-score-header,
-    .entry-actions,
-    .procrastination-view-top {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .checklist-options {
-        gap: 8px;
-    }
-}
-
-@media (max-width: 480px) {
     .auth-card {
         padding: 28px 22px;
         border-radius: 16px;
-    }
-}
-
-/* =========================================================
-   28. DASHBOARD REDESIGN - LEAN VERSION
-   ========================================================= */
-
-.dashboard-shell {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.dashboard-hero {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 28px;
-    background:
-        radial-gradient(circle at top right, rgba(99, 102, 241, 0.08), transparent 30%),
-        linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
-}
-
-.dashboard-kicker {
-    display: inline-block;
-    margin-bottom: 10px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #6366f1;
-}
-
-.dashboard-hero-copy {
-    max-width: 760px;
-}
-
-.dashboard-hero-text {
-    margin-top: 10px;
-    max-width: 720px;
-    font-size: 15px;
-    line-height: 1.75;
-    color: #475569;
-}
-
-.dashboard-hero-meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 16px;
-    flex-wrap: wrap;
-}
-
-.dashboard-divider {
-    color: #cbd5e1;
-}
-
-.dashboard-trend-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: #eef2ff;
-    color: #4f46e5;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.dashboard-mini-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-}
-
-.dashboard-mini-stat {
-    margin-bottom: 0;
-    min-height: 136px;
-}
-
-.dashboard-grid-lean {
-    grid-template-columns: minmax(0, 1.9fr) minmax(300px, 0.95fr);
-    align-items: start;
-}
-
-.stat-support-text {
-    margin-top: 4px;
-    font-size: 13px;
-    color: #64748b;
-    line-height: 1.5;
-}
-
-.card-subtitle {
-    margin-top: 2px;
-    font-size: 13px;
-    color: #64748b;
-    line-height: 1.6;
-}
-
-.chart-container-large {
-    height: 300px;
-}
-
-.entry-list-enhanced {
-    gap: 12px;
-}
-
-.entry-item-enhanced {
-    padding: 18px;
-}
-
-.entry-item-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 14px;
-}
-
-.entry-item-heading {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.entry-type-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.entry-meta-pill {
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    white-space: nowrap;
-}
-
-
-.habit-panel-enhanced {
-    max-height: none;
-    position: sticky;
-    top: 28px;
-}
-
-.habit-item-enhanced {
-    gap: 12px;
-}
-
-.habit-title-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.habit-progress-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 12px;
-}
-
-.habit-progress-track {
-    flex: 1;
-    height: 8px;
-    border-radius: 999px;
-    background: #e5e7eb;
-    overflow: hidden;
-}
-
-.habit-progress-fill {
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%);
-}
-
-.habit-progress-fill-complete {
-    background: linear-gradient(90deg, #34d399 0%, #10b981 100%);
-}
-
-.habit-progress-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #64748b;
-    white-space: nowrap;
-}
-
-.empty-state-box {
-    padding: 22px;
-    border: 1px dashed #cbd5e1;
-    border-radius: 16px;
-    background: #f8fafc;
-}
-
-.compact-empty-state {
-    padding: 18px;
-}
-
-.empty-state-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 6px;
-}
-
-@media (max-width: 1100px) {
-    .dashboard-grid-lean {
-        grid-template-columns: 1fr;
-    }
-
-    .habit-panel-enhanced {
-        position: static;
-        top: auto;
-    }
-}
-
-@media (max-width: 700px) {
-    .dashboard-mini-stats {
-        grid-template-columns: 1fr;
-    }
-
-    .entry-item-top,
-    .habit-top-row,
-    .habit-progress-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .chart-container-large {
-        height: 260px;
     }
 }
