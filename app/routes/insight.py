@@ -9,4 +9,4 @@ insight = Blueprint("insights", __name__)
 @login_required
 def insights():
     insight = get_or_generate_weekly_insight(current_user)
-    return render_template("insights.html", insight=insight)
+    return render_template("weekly_insights/insights.html", insight=insight)
