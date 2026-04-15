@@ -17,6 +17,9 @@ class User(UserMixin, db.Model):
     password_hash: Mapped[str] = mapped_column(String(100), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
+    # Adding timezone field for user to generate insights
+    timezone: Mapped[str] = mapped_column(String(64), nullable=False, default='UTC')
+
     # Relationship with JournalEntry
     entries: Mapped[list['JournalEntry']] = relationship('JournalEntry', back_populates='user', cascade='all, delete-orphan')
 
