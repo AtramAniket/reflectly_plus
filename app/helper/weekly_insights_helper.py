@@ -8,7 +8,7 @@ from typing import Any, Optional
 from sqlalchemy import and_
 
 from app.extensions import db
-from app.models import WeeklyInsight
+from app.models.weekly_insight import WeeklyInsight
 
 # Replace these imports with your real models
 # from app.models import JournalEntry, MoodEntry, Habit, HabitLog, ProcrastinationSheet, ProcrastinationTask
