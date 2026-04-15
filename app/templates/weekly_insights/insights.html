@@ -1,5 +1,280 @@
 {% extends "base.html" %}
 
+{% block title %}Insights{% endblock %}
+
 {% block content %}
-{{ insight }}
+<div style="max-width: 1200px; margin: 0 auto; padding: 2rem 1.25rem 3rem;">
+
+    <!-- Header -->
+    <div style="margin-bottom: 1.75rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+            <div>
+                <h1 style="margin: 0; font-size: 2rem; font-weight: 700; color: #1f2937;">
+                    Weekly Insights
+                </h1>
+                <p style="margin: 0.5rem 0 0; font-size: 0.98rem; color: #6b7280; line-height: 1.6;">
+                    A weekly reflection built from your journal activity, mood check-ins, habits, and procrastination patterns.
+                </p>
+            </div>
+
+            <div style="display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.75rem 1rem; border-radius: 14px; background: #f9fafb; border: 1px solid #e5e7eb;">
+                <div style="font-size: 0.85rem; color: #6b7280;">
+                    {{ insight.week_start.strftime('%b %d') }} – {{ insight.week_end.strftime('%b %d, %Y') }}
+                </div>
+
+                {% if insight.sufficiency_level == "rich" %}
+                    <span style="padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; background: #dcfce7; color: #166534;">
+                        Strong signals
+                    </span>
+                {% elif insight.sufficiency_level == "moderate" %}
+                    <span style="padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; background: #dbeafe; color: #1d4ed8;">
+                        Emerging patterns
+                    </span>
+                {% elif insight.sufficiency_level == "basic" %}
+                    <span style="padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; background: #fef3c7; color: #92400e;">
+                        Limited patterns
+                    </span>
+                {% else %}
+                    <span style="padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; background: #fee2e2; color: #991b1b;">
+                        Not enough data
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Reflection Summary -->
+    <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; border-radius: 24px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06); margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <div>
+                <h2 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #111827;">
+                    Reflection Summary
+                </h2>
+                <p style="margin: 0.35rem 0 0; color: #6b7280; font-size: 0.92rem;">
+                    A calm overview of how this week looked across your activity.
+                </p>
+            </div>
+
+            {% if insight.generated_at %}
+                <span style="font-size: 0.8rem; color: #6b7280; background: #f3f4f6; border: 1px solid #e5e7eb; padding: 0.35rem 0.65rem; border-radius: 999px;">
+                    Generated
+                </span>
+            {% else %}
+                <span style="font-size: 0.8rem; color: #6b7280; background: #f3f4f6; border: 1px solid #e5e7eb; padding: 0.35rem 0.65rem; border-radius: 999px;">
+                    Awaiting stronger signal
+                </span>
+            {% endif %}
+        </div>
+
+        <div style="font-size: 1rem; line-height: 1.8; color: #374151; background: rgba(255,255,255,0.78); border: 1px solid #eef2f7; border-radius: 18px; padding: 1.15rem 1.15rem;">
+            {{ insight.summary }}
+        </div>
+
+        {% if insight.contradictions %}
+        <div style="margin-top: 1rem; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 18px; padding: 1rem 1.1rem;">
+            <h3 style="margin: 0 0 0.45rem; font-size: 0.96rem; font-weight: 700; color: #9a3412;">
+                Mixed Signals
+            </h3>
+            <p style="margin: 0; color: #7c2d12; font-size: 0.94rem; line-height: 1.7;">
+                {{ insight.contradictions }}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Stat Cards -->
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 20px; padding: 1.15rem;">
+            <div style="font-size: 0.82rem; color: #6b7280; margin-bottom: 0.45rem;">Journal Entries</div>
+            <div style="font-size: 1.7rem; font-weight: 700; color: #111827;">{{ insight.signals_used.journal_count or 0 }}</div>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 20px; padding: 1.15rem;">
+            <div style="font-size: 0.82rem; color: #6b7280; margin-bottom: 0.45rem;">Mood Check-ins</div>
+            <div style="font-size: 1.7rem; font-weight: 700; color: #111827;">{{ insight.signals_used.mood_entries or 0 }}</div>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 20px; padding: 1.15rem;">
+            <div style="font-size: 0.82rem; color: #6b7280; margin-bottom: 0.45rem;">Active Days</div>
+            <div style="font-size: 1.7rem; font-weight: 700; color: #111827;">{{ insight.signals_used.active_days or 0 }}</div>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 20px; padding: 1.15rem;">
+            <div style="font-size: 0.82rem; color: #6b7280; margin-bottom: 0.45rem;">Habit Logs</div>
+            <div style="font-size: 1.7rem; font-weight: 700; color: #111827;">{{ insight.signals_used.habit_completed_logs or 0 }}</div>
+        </div>
+    </div>
+
+    <!-- Two-column section -->
+    <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;">
+
+        <!-- Weekly Data Snapshot -->
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 24px; padding: 1.4rem;">
+            <h2 style="margin: 0 0 1rem; font-size: 1.1rem; font-weight: 700; color: #111827;">
+                Weekly Snapshot
+            </h2>
+
+            <div style="display: grid; gap: 0.9rem;">
+                <div style="padding: 1rem; border: 1px solid #eef2f7; background: #f8fafc; border-radius: 16px;">
+                    <div style="font-size: 0.84rem; color: #6b7280; margin-bottom: 0.35rem;">Journal Type Mix</div>
+                    <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+                        <span style="padding: 0.45rem 0.7rem; border-radius: 999px; background: #e0f2fe; color: #075985; font-size: 0.84rem;">
+                            Simple: {{ insight.structured_context.journal.types.simple }}
+                        </span>
+                        <span style="padding: 0.45rem 0.7rem; border-radius: 999px; background: #ede9fe; color: #5b21b6; font-size: 0.84rem;">
+                            Gratitude: {{ insight.structured_context.journal.types.gratitude }}
+                        </span>
+                        <span style="padding: 0.45rem 0.7rem; border-radius: 999px; background: #dcfce7; color: #166534; font-size: 0.84rem;">
+                            Reflection: {{ insight.structured_context.journal.types.reflection }}
+                        </span>
+                    </div>
+                </div>
+
+                <div style="padding: 1rem; border: 1px solid #eef2f7; background: #f8fafc; border-radius: 16px;">
+                    <div style="font-size: 0.84rem; color: #6b7280; margin-bottom: 0.35rem;">Mood Summary</div>
+                    <div style="font-size: 0.95rem; color: #111827; line-height: 1.7;">
+                        <strong>Average:</strong>
+                        {{ insight.structured_context.mood.avg_score if insight.structured_context.mood.avg_score is not none else "—" }}
+                        <span style="color: #9ca3af;">&nbsp;|&nbsp;</span>
+                        <strong>Trend:</strong>
+                        {{ insight.structured_context.mood.trend|capitalize }}
+                    </div>
+                </div>
+
+                <div style="padding: 1rem; border: 1px solid #eef2f7; background: #f8fafc; border-radius: 16px;">
+                    <div style="font-size: 0.84rem; color: #6b7280; margin-bottom: 0.45rem;">Recurring Themes</div>
+
+                    {% if insight.structured_context.journal.top_keywords %}
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.55rem;">
+                            {% for keyword in insight.structured_context.journal.top_keywords %}
+                                <span style="padding: 0.4rem 0.7rem; border-radius: 999px; background: #f3f4f6; color: #374151; font-size: 0.82rem;">
+                                    {{ keyword }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p style="margin: 0; color: #9ca3af; font-size: 0.9rem;">
+                            No recurring themes available yet.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Patterns -->
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 24px; padding: 1.4rem;">
+            <h2 style="margin: 0 0 1rem; font-size: 1.1rem; font-weight: 700; color: #111827;">
+                Cross-Signal Patterns
+            </h2>
+
+            {% if insight.patterns %}
+                <div style="display: grid; gap: 0.8rem;">
+                    {% for pattern in insight.patterns %}
+                        <div style="padding: 0.95rem 1rem; border-radius: 16px; background: #f8fafc; border: 1px solid #eef2f7; color: #374151; line-height: 1.7; font-size: 0.94rem;">
+                            {{ pattern }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="padding: 1rem; border-radius: 16px; background: #f9fafb; border: 1px dashed #d1d5db; color: #6b7280; font-size: 0.94rem; line-height: 1.7;">
+                    Not enough connected activity yet to surface meaningful cross-patterns.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Visual placeholders -->
+    <div style="margin-bottom: 1.5rem;">
+        <h2 style="margin: 0 0 1rem; font-size: 1.15rem; font-weight: 700; color: #111827;">
+            Visual Insights
+        </h2>
+
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem;">
+            <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 22px; padding: 1.2rem; min-height: 220px;">
+                <div style="font-size: 0.95rem; font-weight: 700; color: #111827; margin-bottom: 0.35rem;">Mood Trend</div>
+                <div style="font-size: 0.85rem; color: #6b7280; margin-bottom: 1rem;">Chart placeholder</div>
+                <div style="height: 130px; border-radius: 16px; background: repeating-linear-gradient(
+                    to top,
+                    #f8fafc,
+                    #f8fafc 18px,
+                    #eef2f7 18px,
+                    #eef2f7 19px
+                ); display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 0.9rem;">
+                    Mood chart goes here
+                </div>
+            </div>
+
+            <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 22px; padding: 1.2rem; min-height: 220px;">
+                <div style="font-size: 0.95rem; font-weight: 700; color: #111827; margin-bottom: 0.35rem;">Journal Distribution</div>
+                <div style="font-size: 0.85rem; color: #6b7280; margin-bottom: 1rem;">Donut or pie placeholder</div>
+                <div style="height: 130px; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 110px; height: 110px; border-radius: 50%; background:
+                        conic-gradient(#38bdf8 0% 34%, #8b5cf6 34% 67%, #22c55e 67% 100%);
+                        position: relative;">
+                        <div style="position: absolute; inset: 22px; border-radius: 50%; background: #ffffff;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 22px; padding: 1.2rem; min-height: 220px;">
+                <div style="font-size: 0.95rem; font-weight: 700; color: #111827; margin-bottom: 0.35rem;">Habit Consistency</div>
+                <div style="font-size: 0.85rem; color: #6b7280; margin-bottom: 1rem;">Bar chart placeholder</div>
+                <div style="display: flex; align-items: end; gap: 0.55rem; height: 130px; padding-top: 0.5rem;">
+                    <div style="flex: 1; height: 38%; background: #dbeafe; border-radius: 10px 10px 6px 6px;"></div>
+                    <div style="flex: 1; height: 60%; background: #bfdbfe; border-radius: 10px 10px 6px 6px;"></div>
+                    <div style="flex: 1; height: 25%; background: #93c5fd; border-radius: 10px 10px 6px 6px;"></div>
+                    <div style="flex: 1; height: 76%; background: #60a5fa; border-radius: 10px 10px 6px 6px;"></div>
+                    <div style="flex: 1; height: 48%; background: #3b82f6; border-radius: 10px 10px 6px 6px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thinking patterns and suggestions -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 24px; padding: 1.4rem;">
+            <h2 style="margin: 0 0 1rem; font-size: 1.1rem; font-weight: 700; color: #111827;">
+                Thinking Patterns
+            </h2>
+
+            {% if insight.structured_context.journal.distortions %}
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for distortion, count in insight.structured_context.journal.distortions.items() %}
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1rem; border-radius: 16px; background: #f8fafc; border: 1px solid #eef2f7;">
+                            <span style="color: #374151; font-size: 0.94rem;">{{ distortion|replace('_', ' ')|title }}</span>
+                            <span style="padding: 0.28rem 0.6rem; border-radius: 999px; background: #e5e7eb; color: #374151; font-size: 0.78rem; font-weight: 700;">
+                                {{ count }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="padding: 1rem; border-radius: 16px; background: #f9fafb; border: 1px dashed #d1d5db; color: #6b7280; font-size: 0.94rem; line-height: 1.7;">
+                    Not enough detected thinking-pattern data yet for this week.
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 24px; padding: 1.4rem;">
+            <h2 style="margin: 0 0 1rem; font-size: 1.1rem; font-weight: 700; color: #111827;">
+                Gentle Suggestions
+            </h2>
+
+            {% if insight.suggestions %}
+                <div style="display: grid; gap: 0.8rem;">
+                    {% for suggestion in insight.suggestions %}
+                        <div style="padding: 0.95rem 1rem; border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; line-height: 1.7; font-size: 0.94rem;">
+                            {{ suggestion }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="padding: 1rem; border-radius: 16px; background: #f9fafb; border: 1px dashed #d1d5db; color: #6b7280; font-size: 0.94rem; line-height: 1.7;">
+                    Suggestions will appear once there is enough consistent weekly signal to reflect on.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
