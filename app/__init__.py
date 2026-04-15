@@ -21,6 +21,7 @@ def create_app():
     from .models.habit import Habit
     from .models.habit_log import HabitLog
     from .models.journal import JournalEntry
+    from .models.weekly_insight import WeeklyInsight
     from .models.mood_checklist import MoodChecklistResult
     from .models.journal_ai_analysis import JournalAIAnalysis
     from .models.procrastination_sheet import ProcrastinationSheet
