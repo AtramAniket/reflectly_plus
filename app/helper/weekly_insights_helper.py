@@ -5,7 +5,9 @@ from sqlalchemy import and_
 from statistics import mean
 from typing import Any, Optional
 from collections import Counter, defaultdict
-from datetime import date, datetime, timedelta
+
+from zoneinfo import ZoneInfo
+from datetime import date, datetime, time, timedelta, timezone
 
 from app.extensions import db
 from app.models.habit import Habit
@@ -68,7 +70,7 @@ def get_week_datetime_range_for_user(
 # Main Entry Point
 # ---------------------------------------------------------------------------
 
-def get_or_generate_weekly_insight(user, target_date: Optional[date] = None) -> dict[str, Any]:
+def get_or_generate_weekly_insight(user, target_date: Optional[date] = None, force_refresh=False) -> dict[str, Any]:
     """
     Main entry point for the Insights page.
 
@@ -88,8 +90,12 @@ def get_or_generate_weekly_insight(user, target_date: Optional[date] = None) -> 
         week_start=week_start,
     ).first()
 
-    if existing_insight:
+    if existing_insight and not force_refresh:
         return build_insight_response(existing_insight)
+
+    if existing_insight and force_refresh:
+        db.session.delete(existing_insight)
+        db.session.commit()
 
     context = build_weekly_context(
         user=user,
@@ -296,7 +302,7 @@ def save_insufficient_insight(
     contradiction_flag: bool,
     sufficiency: dict[str, Any],
 ) -> WeeklyInshigt:
-    insight = WeeklyInshigt(
+    insight = WeeklyInsight(
         user_id=user.id,
         week_start=week_start,
         week_end=week_end,
@@ -459,7 +465,7 @@ def aggregate_mood_data(user, week_start: date, week_end: date) -> dict[str, Any
     entry_dates: set[str] = set()
 
     for mood_entry in mood_entries:
-        score = getattr(mood_entry, "score", None)
+        score = getattr(mood_entry, "total_score", None)
         if score is not None:
             scores.append(float(score))
 
