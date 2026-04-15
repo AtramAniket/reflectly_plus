@@ -34,6 +34,9 @@ class User(UserMixin, db.Model):
         order_by="desc(ProcrastinationSheet.created_at)"
     )
 
+    # Relationship wirh WeeklyInsight
+    weekly_insights: Mapped[list["WeeklyInsight"]] = relationship("WeeklyInsight", back_populates="user", cascade="all, delete-orphan", lazy=True)
+
     def set_password(self, raw_password_text) -> None:
 
         self.password_hash = generate_password_hash(raw_password_text, method="pbkdf2:sha256:600000", salt_length=8)
