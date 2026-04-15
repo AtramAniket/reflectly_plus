@@ -15,6 +15,7 @@ def create_app():
     from .routes.routes import main
     from .routes.habit import habit
     from .routes.tools import tools
+    from .routes.insight import insight
     from .routes.journal import journal
 
     from .models.user import User
@@ -31,6 +32,7 @@ def create_app():
     app.register_blueprint(habit)
     app.register_blueprint(tools)
     app.register_blueprint(journal)
+    app.register_blueprint(insight)
 
     @login_manager.user_loader
     def load_user(user_id):
