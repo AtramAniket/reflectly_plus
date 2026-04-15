@@ -8,5 +8,5 @@ insight = Blueprint("insights", __name__)
 @insight.route("/insights")
 @login_required
 def insights():
-    insight = get_or_generate_weekly_insight(current_user)
+    insight = get_or_generate_weekly_insight(current_user, force_refresh=True)
     return render_template("weekly_insights/insights.html", insight=insight)
