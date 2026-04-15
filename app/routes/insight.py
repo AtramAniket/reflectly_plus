@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 from flask_login import current_user, login_required
 
-from app.helpers.weekly_insights_helper import get_or_generate_weekly_insight
+from app.helper.weekly_insights_helper import get_or_generate_weekly_insight
 
 insight = Blueprint("insights", __name__)
 
