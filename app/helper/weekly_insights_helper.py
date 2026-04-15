@@ -1,18 +1,72 @@
 from __future__ import annotations
 
-from collections import Counter, defaultdict
-from datetime import date, datetime, timedelta
-from statistics import mean
-from typing import Any, Optional
-
 from sqlalchemy import and_
 
+from statistics import mean
+from typing import Any, Optional
+from collections import Counter, defaultdict
+from datetime import date, datetime, timedelta
+
 from app.extensions import db
+from app.models.habit import Habit
+from app.models.habit_log import HabitLog
+from app.models.journal import JournalEntry
 from app.models.weekly_insight import WeeklyInsight
+from app.models.mood_checklist import MoodChecklistResult
+from app.models.procrastination_sheet import ProcrastinationSheet
 
-# Replace these imports with your real models
-# from app.models import JournalEntry, MoodEntry, Habit, HabitLog, ProcrastinationSheet, ProcrastinationTask
 
+
+# ---------------------------------------------------------------------------
+# Timezone helpers
+# ---------------------------------------------------------------------------
+
+
+def get_user_timezone(user) -> ZoneInfo:
+    """
+    Returns the user's timezone.
+    Falls back to UTC if timezone is missing.
+    """
+    timezone_name = getattr(user, "timezone", None) or "UTC"
+    return ZoneInfo(timezone_name)
+
+
+def get_week_range_for_user(user, target_date: Optional[date] = None) -> tuple[date, date]:
+    """
+    Returns Monday-Sunday based on the user's local timezone.
+    """
+    user_timezone = get_user_timezone(user)
+
+    if target_date is None:
+        local_today = datetime.now(user_timezone).date()
+    else:
+        local_today = target_date
+
+    week_start = local_today - timedelta(days=local_today.weekday())
+    week_end = week_start + timedelta(days=6)
+    return week_start, week_end
+
+
+def get_week_datetime_range_for_user(
+    week_start: date,
+    week_end: date,
+    user_timezone: ZoneInfo,
+) -> tuple[datetime, datetime]:
+    """
+    Builds the user's local week boundary and converts it to UTC.
+    End is exclusive.
+    """
+    local_start = datetime.combine(week_start, time.min, tzinfo=user_timezone)
+    local_end = datetime.combine(week_end + timedelta(days=1), time.min, tzinfo=user_timezone)
+
+    utc_start = local_start.astimezone(timezone.utc)
+    utc_end = local_end.astimezone(timezone.utc)
+
+    return utc_start, utc_end
+
+# ---------------------------------------------------------------------------
+# Main Entry Point
+# ---------------------------------------------------------------------------
 
 def get_or_generate_weekly_insight(user, target_date: Optional[date] = None) -> dict[str, Any]:
     """
@@ -27,7 +81,7 @@ def get_or_generate_weekly_insight(user, target_date: Optional[date] = None) -> 
     6. Otherwise generate AI summary and save it
     7. Return normalized payload for route/template use
     """
-    week_start, week_end = get_week_range(target_date)
+    week_start, week_end = get_week_range_for_user(user, target_date)
 
     existing_insight = WeeklyInsight.query.filter_by(
         user_id=user.id,
@@ -37,14 +91,19 @@ def get_or_generate_weekly_insight(user, target_date: Optional[date] = None) -> 
     if existing_insight:
         return build_insight_response(existing_insight)
 
-    context = build_weekly_context(user_id=user.id, week_start=week_start, week_end=week_end)
+    context = build_weekly_context(
+        user=user,
+        week_start=week_start,
+        week_end=week_end,
+    )
+
     sufficiency = check_insight_sufficiency(context)
     contradiction_flag = detect_contradictions(context)
     cross_signal_patterns = build_cross_signal_patterns(context)
 
     if sufficiency["level"] == "insufficient":
         saved_insight = save_insufficient_insight(
-            user_id=user.id,
+            user=user,
             week_start=week_start,
             week_end=week_end,
             context=context,
@@ -61,7 +120,7 @@ def get_or_generate_weekly_insight(user, target_date: Optional[date] = None) -> 
     )
 
     saved_insight = save_generated_insight(
-        user_id=user.id,
+        user=user,
         week_start=week_start,
         week_end=week_end,
         context=context,
@@ -84,24 +143,20 @@ def get_week_range(target_date: Optional[date] = None) -> tuple[date, date]:
     return week_start, week_end
 
 
-def build_weekly_context(user_id: int, week_start: date, week_end: date) -> dict[str, Any]:
+def build_weekly_context(user: int, week_start: date, week_end: date) -> dict[str, Any]:
     """
     Builds the full structured weekly context used for both local UI and AI generation.
     """
-    journal_data = aggregate_journal_data(user_id=user_id, week_start=week_start, week_end=week_end)
-    mood_data = aggregate_mood_data(user_id=user_id, week_start=week_start, week_end=week_end)
-    habits_data = aggregate_habit_data(user_id=user_id, week_start=week_start, week_end=week_end)
-    procrastination_data = aggregate_procrastination_data(
-        user_id=user_id,
-        week_start=week_start,
-        week_end=week_end,
-    )
+    journal_data = aggregate_journal_data(user, week_start, week_end)
+    mood_data = aggregate_mood_data(user, week_start, week_end)
+    habits_data = aggregate_habit_data(user, week_start, week_end)
+    procrastination_data = aggregate_procrastination_data(user, week_start, week_end)
 
     active_days = calculate_active_days(
         journal_dates=journal_data["entry_dates"],
         mood_dates=mood_data["entry_dates"],
         habit_dates=habits_data["log_dates"],
-        procrastination_dates=procrastination_data["task_dates"],
+        procrastination_dates=procrastination_data["sheet_dates"],
     )
 
     return {
@@ -129,7 +184,7 @@ def build_weekly_context(user_id: int, week_start: date, week_end: date) -> dict
             "completion_rate": habits_data["completion_rate"],
         },
         "procrastination": {
-            "tasks": procrastination_data["tasks"],
+            "sheets": procrastination_data["sheets"],
             "completed": procrastination_data["completed"],
             "completion_rate": procrastination_data["completion_rate"],
         },
@@ -141,9 +196,6 @@ def build_weekly_context(user_id: int, week_start: date, week_end: date) -> dict
 
 
 def check_insight_sufficiency(context: dict[str, Any]) -> dict[str, Any]:
-    """
-    Conservative gating so the AI is only called when signal is meaningful enough.
-    """
     journal_count = context["journal"]["count"]
     mood_count = context["mood"]["entries"]
     habit_logs = context["habits"]["completed_logs"]
@@ -179,79 +231,73 @@ def check_insight_sufficiency(context: dict[str, Any]) -> dict[str, Any]:
 
 
 def detect_contradictions(context: dict[str, Any]) -> bool:
-    """
-    Very simple first-pass contradiction detection.
-    """
     tone_distribution = context["journal"].get("tone_distribution", {})
     mood_variance = context["mood"].get("variance") or 0
     mood_trend = context["mood"].get("trend")
+    gratitude_count = context["journal"].get("types", {}).get("gratitude", 0)
 
     positive_count = tone_distribution.get("positive", 0)
     negative_count = tone_distribution.get("negative", 0)
 
     mixed_journal_tone = positive_count > 0 and negative_count > 0
-    volatile_mood = mood_variance >= 2.5
-    unstable_direction = mood_trend == "mixed"
+    volatile_mood = mood_variance >= 3
+    mixed_mood_direction = mood_trend == "mixed"
+    gratitude_with_negative_tone = gratitude_count > 0 and negative_count > 0
 
-    return mixed_journal_tone or volatile_mood or unstable_direction
+    return any([
+        mixed_journal_tone,
+        volatile_mood,
+        mixed_mood_direction,
+        gratitude_with_negative_tone,
+    ])
 
 
 def build_cross_signal_patterns(context: dict[str, Any]) -> list[str]:
-    """
-    Rule-based observations. These complement the AI output and can also be
-    shown even when the AI is skipped.
-    """
     patterns: list[str] = []
 
     mood_avg = context["mood"].get("avg_score")
     mood_trend = context["mood"].get("trend")
-    habit_rate = context["habits"].get("completion_rate")
     gratitude_count = context["journal"].get("types", {}).get("gratitude", 0)
     reflection_count = context["journal"].get("types", {}).get("reflection", 0)
     distortions = context["journal"].get("distortions", {})
-    procrastination_total = context["procrastination"].get("tasks", 0)
-    procrastination_completed = context["procrastination"].get("completed", 0)
+    journal_count = context["journal"].get("count", 0)
+    habit_rate = context["habits"].get("completion_rate")
+    procrastination_rate = context["procrastination"].get("completion_rate")
 
-    if mood_avg is not None and habit_rate is not None:
-        if mood_avg >= 7 and habit_rate >= 0.6:
-            patterns.append("Higher mood and stronger habit follow-through appeared together this week.")
-        elif mood_avg <= 5 and habit_rate < 0.4:
-            patterns.append("Lower mood and weaker habit consistency appeared in the same week.")
+    if journal_count >= 3 and mood_trend == "upward":
+        patterns.append("Mood scores improved alongside regular journaling activity this week.")
 
     if gratitude_count >= 2 and mood_avg is not None and mood_avg >= 6:
-        patterns.append("Gratitude journaling showed up during relatively steadier mood periods.")
+        patterns.append("Gratitude entries appeared during relatively steadier mood periods.")
 
     if reflection_count >= 2 and distortions:
-        patterns.append("Reflection entries surfaced recurring thinking patterns worth watching over time.")
+        patterns.append("Reflection entries surfaced recurring thinking patterns worth noticing over time.")
 
-    if procrastination_total > 0:
-        completion_rate = procrastination_completed / procrastination_total
-        if completion_rate < 0.5:
-            patterns.append("Task follow-through in the procrastination tracker felt uneven this week.")
-        elif completion_rate >= 0.75:
-            patterns.append("Task follow-through was relatively steady in the procrastination tracker.")
+    if mood_trend == "downward" and journal_count >= 2:
+        patterns.append("Mood dipped across the week while journaling continued, which may point to a mixed period rather than one clear pattern.")
 
-    if mood_trend == "upward":
-        patterns.append("Mood scores trended upward across the week.")
-    elif mood_trend == "downward":
-        patterns.append("Mood scores trended downward across the week.")
+    if habit_rate is not None and mood_avg is not None:
+        if habit_rate >= 0.6 and mood_avg >= 7:
+            patterns.append("Higher mood and stronger habit consistency appeared together this week.")
+        elif habit_rate < 0.4 and mood_avg <= 5:
+            patterns.append("Lower mood and weaker habit consistency appeared in the same week.")
+
+    if procrastination_rate is not None and procrastination_rate < 0.5:
+        patterns.append("Follow-through in the procrastination tool felt uneven this week.")
 
     return dedupe_preserve_order(patterns)
 
 
 def save_insufficient_insight(
-    user_id: int,
+    user,
     week_start: date,
     week_end: date,
     context: dict[str, Any],
     contradiction_flag: bool,
     sufficiency: dict[str, Any],
-) -> WeeklyInsight:
-    """
-    Save a non-generated weekly insight so the page still has a consistent record.
-    """
-    insight = WeeklyInsight(
-        user_id=user_id,
+) -> WeeklyInshigt:
+    insight = WeeklyInshigt(
+        user_id=user.id,
         week_start=week_start,
         week_end=week_end,
         summary=None,
@@ -271,7 +317,7 @@ def save_insufficient_insight(
 
 
 def save_generated_insight(
-    user_id: int,
+    user,
     week_start: date,
     week_end: date,
     context: dict[str, Any],
@@ -279,16 +325,13 @@ def save_generated_insight(
     contradiction_flag: bool,
     cross_signal_patterns: list[str],
     ai_output: dict[str, Any],
-) -> WeeklyInsight:
-    """
-    Save the AI-generated weekly insight.
-    """
+) -> WeeklyInshigt:
     merged_patterns = dedupe_preserve_order(
         (ai_output.get("patterns") or []) + cross_signal_patterns
     )
 
-    insight = WeeklyInsight(
-        user_id=user_id,
+    insight = WeeklyInshigt(
+        user_id=user.id,
         week_start=week_start,
         week_end=week_end,
         summary=ai_output.get("summary"),
@@ -300,22 +343,26 @@ def save_generated_insight(
         contradiction_flag=contradiction_flag,
         signals_used=build_signals_used(context),
         structured_context=context,
-        generated_at=datetime.utcnow(),
+        generated_at=datetime.now(timezone.utc),
     )
     db.session.add(insight)
     db.session.commit()
     return insight
 
 
-def build_insight_response(insight: WeeklyInsight) -> dict[str, Any]:
-    """
-    Normalize DB row into template-friendly payload.
-    """
+def build_insight_response(insight: WeeklyInshigt) -> dict[str, Any]:
+    summary = insight.summary
+    if not summary and insight.sufficiency_level == "insufficient":
+        summary = (
+            "There is not enough activity this week to generate a meaningful reflection yet. "
+            "More entries across different days can help create a clearer picture over time."
+        )
+
     return {
         "id": insight.id,
         "week_start": insight.week_start,
         "week_end": insight.week_end,
-        "summary": insight.summary,
+        "summary": summary,
         "patterns": insight.patterns or [],
         "contradictions": insight.contradictions,
         "suggestions": insight.suggestions or [],
@@ -330,23 +377,23 @@ def build_insight_response(insight: WeeklyInsight) -> dict[str, Any]:
 
 # ---------------------------------------------------------------------------
 # Aggregation helpers
-# Replace placeholder queries with your real models/fields.
 # ---------------------------------------------------------------------------
 
-def aggregate_journal_data(user_id: int, week_start: date, week_end: date) -> dict[str, Any]:
-    """
-    Replace with your real journal query logic.
+def aggregate_journal_data(user: int, week_start: date, week_end: date) -> dict[str, Any]:
 
-    Expected output fields:
-    - count
-    - types
-    - avg_length
-    - tone_distribution
-    - distortions
-    - top_keywords
-    - entry_dates
-    """
-    entries = []  # Replace with JournalEntry query
+    user_timezone = get_user_timezone(user)
+    start_dt, end_dt = get_week_datetime_range_for_user(week_start, week_end, user_timezone)
+
+    entries = (
+        JournalEntry.query
+        .filter(
+            JournalEntry.user_id == user.id,
+            JournalEntry.created_at >= start_dt,
+            JournalEntry.created_at < end_dt,
+        )
+        .order_by(JournalEntry.created_at.asc())
+        .all()
+    )
 
     type_counts: dict[str, int] = {
         "simple": 0,
@@ -360,7 +407,7 @@ def aggregate_journal_data(user_id: int, week_start: date, week_end: date) -> di
     entry_dates: set[str] = set()
 
     for entry in entries:
-        entry_type = getattr(entry, "entry_type", "simple") or "simple"
+        entry_type = (getattr(entry, "entry_type", "simple") or "simple").strip().lower()
         type_counts[entry_type] = type_counts.get(entry_type, 0) + 1
 
         content = (getattr(entry, "content", "") or "").strip()
@@ -368,20 +415,19 @@ def aggregate_journal_data(user_id: int, week_start: date, week_end: date) -> di
             keywords.extend(extract_simple_keywords(content))
             word_counts.append(len(content.split()))
 
-        created_at = getattr(entry, "created_at", None)
-        if created_at:
-            entry_dates.add(created_at.date().isoformat())
+        if entry.created_at:
+            entry_dates.add(entry.created_at.date().isoformat())
 
-        # Replace with your actual analysis access pattern
-        analysis = getattr(entry, "analysis", None)
-        if analysis:
-            tone = getattr(analysis, "tone", None)
-            if tone:
-                tone_distribution[tone] += 1
+        tone = getattr(entry, "tone", None)
+        if tone:
+            tone_distribution[str(tone).strip().lower()] += 1
 
-            distortion_list = getattr(analysis, "distortions", None) or []
-            for distortion in distortion_list:
-                distortions[distortion] += 1
+        distortion_list = getattr(entry, "cognitive_distortions", None) or []
+        for distortion in distortion_list:
+            distortions[str(distortion).strip().lower()] += 1
+
+        # If your AI analysis is stored on a related object instead,
+        # replace the tone/distortion logic above with that relationship.
 
     return {
         "count": len(entries),
@@ -394,11 +440,20 @@ def aggregate_journal_data(user_id: int, week_start: date, week_end: date) -> di
     }
 
 
-def aggregate_mood_data(user_id: int, week_start: date, week_end: date) -> dict[str, Any]:
-    """
-    Replace with your real mood query logic.
-    """
-    mood_entries = []  # Replace with MoodEntry query
+def aggregate_mood_data(user, week_start: date, week_end: date) -> dict[str, Any]:
+    user_timezone = get_user_timezone(user)
+    start_dt, end_dt = get_week_datetime_range_for_user(week_start, week_end, user_timezone)
+
+    mood_entries = (
+        MoodChecklistResult.query
+        .filter(
+            MoodChecklistResult.user_id == user.id,
+            MoodChecklistResult.created_at >= start_dt,
+            MoodChecklistResult.created_at < end_dt,
+        )
+        .order_by(MoodChecklistResult.created_at.asc())
+        .all()
+    )
 
     scores: list[float] = []
     entry_dates: set[str] = set()
@@ -408,9 +463,8 @@ def aggregate_mood_data(user_id: int, week_start: date, week_end: date) -> dict[
         if score is not None:
             scores.append(float(score))
 
-        created_at = getattr(mood_entry, "created_at", None)
-        if created_at:
-            entry_dates.add(created_at.date().isoformat())
+        if mood_entry.created_at:
+            entry_dates.add(mood_entry.created_at.date().isoformat())
 
     return {
         "entries": len(mood_entries),
@@ -423,19 +477,40 @@ def aggregate_mood_data(user_id: int, week_start: date, week_end: date) -> dict[
     }
 
 
-def aggregate_habit_data(user_id: int, week_start: date, week_end: date) -> dict[str, Any]:
-    """
-    Replace with your real habit and habit log query logic.
-    """
-    active_habits = []  # Replace with Habit query
-    completed_logs = []  # Replace with HabitLog query
+def aggregate_habit_data(user, week_start: date, week_end: date) -> dict[str, Any]:
+    user_timezone = get_user_timezone(user)
+    start_dt, end_dt = get_week_datetime_range_for_user(week_start, week_end, user_timezone)
+
+    active_habits = (
+        Habit.query
+        .filter(
+            Habit.user_id == user.id,
+            getattr(Habit, "is_archived", False) == False if hasattr(Habit, "is_archived") else True,
+        )
+        .all()
+    )
+
+    active_habit_ids = [habit.id for habit in active_habits]
+
+    if active_habit_ids:
+        completed_logs = (
+            HabitLog.query
+            .filter(
+                HabitLog.habit_id.in_(active_habit_ids),
+                HabitLog.created_at >= start_dt,
+                HabitLog.created_at < end_dt,
+            )
+            .all()
+        )
+    else:
+        completed_logs = []
 
     log_dates: set[str] = set()
 
     for log in completed_logs:
-        completed_at = getattr(log, "completed_at", None) or getattr(log, "created_at", None)
-        if completed_at:
-            log_dates.add(completed_at.date().isoformat())
+        log_dt = getattr(log, "completed_at", None) or getattr(log, "created_at", None)
+        if log_dt:
+            log_dates.add(log_dt.date().isoformat())
 
     expected_logs = len(active_habits) * 7 if active_habits else 0
     completion_rate = round(len(completed_logs) / expected_logs, 2) if expected_logs > 0 else 0
@@ -447,31 +522,38 @@ def aggregate_habit_data(user_id: int, week_start: date, week_end: date) -> dict
         "log_dates": log_dates,
     }
 
+def aggregate_procrastination_data(user, week_start: date, week_end: date) -> dict[str, Any]:
+    user_timezone = get_user_timezone(user)
+    start_dt, end_dt = get_week_datetime_range_for_user(week_start, week_end, user_timezone)
 
-def aggregate_procrastination_data(user_id: int, week_start: date, week_end: date) -> dict[str, Any]:
-    """
-    Replace with your real procrastination task query logic.
-    """
-    tasks = []  # Replace with ProcrastinationTask query
+    sheets = (
+        ProcrastinationSheet.query
+        .filter(
+            ProcrastinationSheet.user_id == user.id,
+            ProcrastinationSheet.created_at >= start_dt,
+            ProcrastinationSheet.created_at < end_dt,
+        )
+        .order_by(ProcrastinationSheet.created_at.asc())
+        .all()
+    )
 
     completed_count = 0
-    task_dates: set[str] = set()
+    sheet_dates: set[str] = set()
 
-    for task in tasks:
-        if getattr(task, "is_completed", False):
+    for sheet in sheets:
+        if getattr(sheet, "is_completed", False):
             completed_count += 1
 
-        task_date = getattr(task, "created_at", None)
-        if task_date:
-            task_dates.add(task_date.date().isoformat())
+        if sheet.created_at:
+            sheet_dates.add(sheet.created_at.date().isoformat())
 
-    completion_rate = round(completed_count / len(tasks), 2) if tasks else 0
+    completion_rate = round(completed_count / len(sheets), 2) if sheets else 0
 
     return {
-        "tasks": len(tasks),
+        "sheets": len(sheets),
         "completed": completed_count,
         "completion_rate": completion_rate,
-        "task_dates": task_dates,
+        "sheet_dates": sheet_dates,
     }
 
 
@@ -486,11 +568,6 @@ def generate_ai_weekly_insight(
     contradiction_flag: bool,
     cross_signal_patterns: list[str],
 ) -> dict[str, Any]:
-    """
-    Placeholder AI generator.
-
-    Replace with your real OpenAI integration later.
-    """
     summary = build_fallback_summary(context, contradiction_flag)
 
     contradictions = None
@@ -534,7 +611,7 @@ def build_signals_used(context: dict[str, Any]) -> dict[str, int]:
         "mood_entries": context["mood"]["entries"],
         "habit_active": context["habits"]["active"],
         "habit_completed_logs": context["habits"]["completed_logs"],
-        "procrastination_tasks": context["procrastination"]["tasks"],
+        "procrastination_sheets": context["procrastination"]["sheets"],
         "procrastination_completed": context["procrastination"]["completed"],
         "active_days": context["activity"]["active_days"],
     }
@@ -545,9 +622,10 @@ def extract_simple_keywords(text: str) -> list[str]:
         return []
 
     stop_words = {
-        "the", "and", "is", "in", "it", "to", "of", "a", "i", "was", "for", "on",
-        "that", "with", "my", "this", "had", "are", "but", "have", "just", "been",
-        "from", "they", "them", "then", "into", "about", "your", "their", "felt",
+        "the", "and", "is", "in", "it", "to", "of", "a", "i", "was",
+        "for", "on", "that", "with", "my", "this", "had", "are", "but",
+        "have", "just", "been", "from", "they", "them", "then", "into",
+        "about", "your", "their", "felt",
     }
 
     cleaned_words = []
@@ -577,17 +655,17 @@ def determine_mood_trend(scores: list[float]) -> str:
     if len(scores) < 2:
         return "insufficient"
 
-    deltas = [scores[i] - scores[i - 1] for i in range(1, len(scores))]
-    positives = sum(1 for delta in deltas if delta > 0)
-    negatives = sum(1 for delta in deltas if delta < 0)
+    first_score = scores[0]
+    last_score = scores[-1]
+    delta = last_score - first_score
 
-    if positives > 0 and negatives > 0:
-        return "mixed"
-    if scores[-1] > scores[0]:
+    if abs(delta) < 0.5:
+        return "stable"
+    if delta >= 0.5:
         return "upward"
-    if scores[-1] < scores[0]:
+    if delta <= -0.5:
         return "downward"
-    return "stable"
+    return "mixed"
 
 
 def build_fallback_summary(context: dict[str, Any], contradiction_flag: bool) -> str:
@@ -609,7 +687,6 @@ def build_fallback_summary(context: dict[str, Any], contradiction_flag: bool) ->
         f"signal for a light weekly reflection, while some patterns may still become clearer "
         f"with continued use over time."
     )
-
 
 def build_gentle_suggestions(context: dict[str, Any]) -> list[str]:
     suggestions: list[str] = []
