@@ -301,7 +301,7 @@ def save_insufficient_insight(
     context: dict[str, Any],
     contradiction_flag: bool,
     sufficiency: dict[str, Any],
-) -> WeeklyInshigt:
+) -> WeeklyInsight:
     insight = WeeklyInsight(
         user_id=user.id,
         week_start=week_start,
@@ -331,12 +331,12 @@ def save_generated_insight(
     contradiction_flag: bool,
     cross_signal_patterns: list[str],
     ai_output: dict[str, Any],
-) -> WeeklyInshigt:
+) -> WeeklyInsight:
     merged_patterns = dedupe_preserve_order(
         (ai_output.get("patterns") or []) + cross_signal_patterns
     )
 
-    insight = WeeklyInshigt(
+    insight = WeeklyInsight(
         user_id=user.id,
         week_start=week_start,
         week_end=week_end,
@@ -356,7 +356,7 @@ def save_generated_insight(
     return insight
 
 
-def build_insight_response(insight: WeeklyInshigt) -> dict[str, Any]:
+def build_insight_response(insight: WeeklyInsight) -> dict[str, Any]:
     summary = insight.summary
     if not summary and insight.sufficiency_level == "insufficient":
         summary = (
