@@ -1,0 +1,526 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Demo{% endblock %}
+
+{% block content %}
+<div style="max-width: 1240px; margin: 0 auto; padding: 2rem 1.25rem 3rem;">
+
+    <!-- Hero -->
+    <section style="
+        display: grid;
+        grid-template-columns: 1.2fr 0.95fr;
+        gap: 1.25rem;
+        margin-bottom: 1.5rem;
+        align-items: stretch;
+    ">
+        <div style="
+            position: relative;
+            overflow: hidden;
+            border-radius: 30px;
+            padding: 2rem;
+            background: linear-gradient(135deg, #fff7ed 0%, #fefce8 45%, #ecfccb 100%);
+            border: 1px solid #fde7c7;
+            min-height: 320px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+        ">
+            <div style="position: relative; z-index: 2; max-width: 520px;">
+                <div style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    padding: 0.5rem 0.8rem;
+                    border-radius: 999px;
+                    background: rgba(255,255,255,0.75);
+                    border: 1px solid rgba(255,255,255,0.8);
+                    font-size: 0.82rem;
+                    font-weight: 700;
+                    color: #7c2d12;
+                    margin-bottom: 1rem;
+                ">
+                    ✨ Your cozy productivity corner
+                </div>
+
+                <h1 style="
+                    margin: 0;
+                    font-size: 2.5rem;
+                    line-height: 1.08;
+                    font-weight: 800;
+                    color: #1f2937;
+                    letter-spacing: -0.03em;
+                ">
+                    Welcome back, your week is taking shape 🌿
+                </h1>
+
+                <p style="
+                    margin: 1rem 0 0;
+                    font-size: 1rem;
+                    line-height: 1.85;
+                    color: #4b5563;
+                    max-width: 500px;
+                ">
+                    Journaling, mood tracking, habits, and reflections all live here together —
+                    not as noise, but as a gentle map of how things are going.
+                </p>
+
+                <div style="
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 0.75rem;
+                    margin-top: 1.35rem;
+                ">
+                    <div style="
+                        padding: 0.9rem 1rem;
+                        border-radius: 18px;
+                        background: rgba(255,255,255,0.8);
+                        border: 1px solid rgba(255,255,255,0.85);
+                        min-width: 130px;
+                    ">
+                        <div style="font-size: 0.82rem; color: #6b7280; margin-bottom: 0.35rem;">Mood</div>
+                        <div style="font-size: 1.2rem; font-weight: 800; color: #111827;">13.0 😊</div>
+                    </div>
+
+                    <div style="
+                        padding: 0.9rem 1rem;
+                        border-radius: 18px;
+                        background: rgba(255,255,255,0.8);
+                        border: 1px solid rgba(255,255,255,0.85);
+                        min-width: 130px;
+                    ">
+                        <div style="font-size: 0.82rem; color: #6b7280; margin-bottom: 0.35rem;">Entries</div>
+                        <div style="font-size: 1.2rem; font-weight: 800; color: #111827;">7 📓</div>
+                    </div>
+
+                    <div style="
+                        padding: 0.9rem 1rem;
+                        border-radius: 18px;
+                        background: rgba(255,255,255,0.8);
+                        border: 1px solid rgba(255,255,255,0.85);
+                        min-width: 130px;
+                    ">
+                        <div style="font-size: 0.82rem; color: #6b7280; margin-bottom: 0.35rem;">Habits</div>
+                        <div style="font-size: 1.2rem; font-weight: 800; color: #111827;">4/5 🌱</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decorative blobs -->
+            <div style="
+                position: absolute;
+                right: -40px;
+                top: -30px;
+                width: 220px;
+                height: 220px;
+                border-radius: 50%;
+                background: rgba(253, 224, 71, 0.22);
+                z-index: 1;
+            "></div>
+            <div style="
+                position: absolute;
+                right: 120px;
+                bottom: -60px;
+                width: 180px;
+                height: 180px;
+                border-radius: 50%;
+                background: rgba(74, 222, 128, 0.18);
+                z-index: 1;
+            "></div>
+        </div>
+
+        <!-- Illustration-style side card -->
+        <div style="
+            position: relative;
+            overflow: hidden;
+            border-radius: 30px;
+            min-height: 320px;
+            background: linear-gradient(160deg, #d9f99d 0%, #86efac 40%, #6ee7b7 100%);
+            border: 1px solid #bbf7d0;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+            padding: 1.5rem;
+        ">
+            <div style="
+                position: absolute;
+                inset: 0;
+                background:
+                    radial-gradient(circle at 20% 25%, rgba(255,255,255,0.65), transparent 18%),
+                    radial-gradient(circle at 80% 18%, rgba(255,255,255,0.45), transparent 14%);
+                opacity: 0.9;
+            "></div>
+
+            <div style="position: relative; z-index: 2; height: 100%;">
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1rem;
+                ">
+                    <div>
+                        <p style="
+                            margin: 0 0 0.25rem;
+                            font-size: 0.75rem;
+                            text-transform: uppercase;
+                            letter-spacing: 0.08em;
+                            font-weight: 700;
+                            color: #166534;
+                        ">Daily energy</p>
+                        <h2 style="
+                            margin: 0;
+                            font-size: 1.2rem;
+                            font-weight: 800;
+                            color: #14532d;
+                        ">Little steps still count 🌼</h2>
+                    </div>
+                    <div style="font-size: 1.8rem;">🪴</div>
+                </div>
+
+                <div style="
+                    margin-top: 1.25rem;
+                    display: grid;
+                    gap: 0.9rem;
+                ">
+                    <div style="
+                        background: rgba(255,255,255,0.55);
+                        border: 1px solid rgba(255,255,255,0.7);
+                        border-radius: 18px;
+                        padding: 1rem;
+                        color: #14532d;
+                    ">
+                        <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem;">This week’s vibe</div>
+                        <div style="font-size: 0.95rem; line-height: 1.7;">
+                            Soft momentum, light reflection, and room to keep building.
+                        </div>
+                    </div>
+
+                    <div style="
+                        display: flex;
+                        gap: 0.8rem;
+                    ">
+                        <div style="
+                            flex: 1;
+                            background: rgba(255,255,255,0.58);
+                            border: 1px solid rgba(255,255,255,0.72);
+                            border-radius: 18px;
+                            padding: 1rem;
+                            text-align: center;
+                        ">
+                            <div style="font-size: 1.4rem;">☀️</div>
+                            <div style="font-size: 0.8rem; color: #166534; margin-top: 0.35rem;">Good days</div>
+                        </div>
+
+                        <div style="
+                            flex: 1;
+                            background: rgba(255,255,255,0.58);
+                            border: 1px solid rgba(255,255,255,0.72);
+                            border-radius: 18px;
+                            padding: 1rem;
+                            text-align: center;
+                        ">
+                            <div style="font-size: 1.4rem;">🌧️</div>
+                            <div style="font-size: 0.8rem; color: #166534; margin-top: 0.35rem;">Heavy days</div>
+                        </div>
+
+                        <div style="
+                            flex: 1;
+                            background: rgba(255,255,255,0.58);
+                            border: 1px solid rgba(255,255,255,0.72);
+                            border-radius: 18px;
+                            padding: 1rem;
+                            text-align: center;
+                        ">
+                            <div style="font-size: 1.4rem;">🌈</div>
+                            <div style="font-size: 0.8rem; color: #166534; margin-top: 0.35rem;">Balance</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick action strip -->
+    <section style="
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.9rem;
+        margin-bottom: 1.5rem;
+    ">
+        <a href="#" style="
+            text-decoration: none;
+            color: #1f2937;
+            padding: 0.95rem 1.1rem;
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+            font-weight: 700;
+        ">✍️ Write journal</a>
+
+        <a href="#" style="
+            text-decoration: none;
+            color: #1f2937;
+            padding: 0.95rem 1.1rem;
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+            font-weight: 700;
+        ">😊 Log mood</a>
+
+        <a href="#" style="
+            text-decoration: none;
+            color: #1f2937;
+            padding: 0.95rem 1.1rem;
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+            font-weight: 700;
+        ">🌱 Update habits</a>
+
+        <a href="#" style="
+            text-decoration: none;
+            color: #1f2937;
+            padding: 0.95rem 1.1rem;
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+            font-weight: 700;
+        ">🧠 Weekly insights</a>
+    </section>
+
+    <!-- Main content -->
+    <section style="
+        display: grid;
+        grid-template-columns: 1.25fr 0.95fr;
+        gap: 1.25rem;
+        margin-bottom: 1.5rem;
+    ">
+        <!-- Left -->
+        <div style="display: grid; gap: 1.2rem;">
+            <div style="
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 26px;
+                padding: 1.4rem;
+                box-shadow: 0 14px 28px rgba(15, 23, 42, 0.05);
+            ">
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                ">
+                    <div>
+                        <p style="
+                            margin: 0 0 0.25rem;
+                            font-size: 0.75rem;
+                            text-transform: uppercase;
+                            letter-spacing: 0.08em;
+                            font-weight: 700;
+                            color: #94a3b8;
+                        ">Today’s overview</p>
+                        <h2 style="
+                            margin: 0;
+                            font-size: 1.2rem;
+                            font-weight: 800;
+                            color: #111827;
+                        ">Your dashboard story 📚</h2>
+                    </div>
+                    <div style="font-size: 1.5rem;">🌸</div>
+                </div>
+
+                <div style="
+                    display: grid;
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                    gap: 0.85rem;
+                ">
+                    <div style="
+                        border-radius: 20px;
+                        background: #eff6ff;
+                        padding: 1rem;
+                    ">
+                        <div style="font-size: 1.3rem;">📓</div>
+                        <div style="margin-top: 0.45rem; font-size: 0.82rem; color: #6b7280;">Entries</div>
+                        <div style="font-size: 1.4rem; font-weight: 800; color: #1e3a8a;">12</div>
+                    </div>
+
+                    <div style="
+                        border-radius: 20px;
+                        background: #f5f3ff;
+                        padding: 1rem;
+                    ">
+                        <div style="font-size: 1.3rem;">😊</div>
+                        <div style="margin-top: 0.45rem; font-size: 0.82rem; color: #6b7280;">Mood avg</div>
+                        <div style="font-size: 1.4rem; font-weight: 800; color: #6d28d9;">13</div>
+                    </div>
+
+                    <div style="
+                        border-radius: 20px;
+                        background: #f0fdf4;
+                        padding: 1rem;
+                    ">
+                        <div style="font-size: 1.3rem;">🌱</div>
+                        <div style="margin-top: 0.45rem; font-size: 0.82rem; color: #6b7280;">Habits</div>
+                        <div style="font-size: 1.4rem; font-weight: 800; color: #166534;">4/5</div>
+                    </div>
+
+                    <div style="
+                        border-radius: 20px;
+                        background: #fff7ed;
+                        padding: 1rem;
+                    ">
+                        <div style="font-size: 1.3rem;">⏳</div>
+                        <div style="margin-top: 0.45rem; font-size: 0.82rem; color: #6b7280;">Sheets</div>
+                        <div style="font-size: 1.4rem; font-weight: 800; color: #c2410c;">3</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 26px;
+                padding: 1.4rem;
+                box-shadow: 0 14px 28px rgba(15, 23, 42, 0.05);
+            ">
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1rem;
+                ">
+                    <div>
+                        <p style="
+                            margin: 0 0 0.25rem;
+                            font-size: 0.75rem;
+                            text-transform: uppercase;
+                            letter-spacing: 0.08em;
+                            font-weight: 700;
+                            color: #94a3b8;
+                        ">Weekly reflection</p>
+                        <h2 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: #111827;">
+                            This week felt steadier than last week 💫
+                        </h2>
+                    </div>
+                    <div style="font-size: 1.5rem;">🧠</div>
+                </div>
+
+                <div style="
+                    padding: 1rem 1.05rem;
+                    border-radius: 20px;
+                    background: #f8fafc;
+                    border: 1px solid #edf2f7;
+                    color: #374151;
+                    line-height: 1.8;
+                ">
+                    You showed up in small but meaningful ways. Your journaling was more consistent,
+                    your mood check-ins gave a clearer emotional picture, and your habit flow felt
+                    less fragmented. Nothing dramatic — just steadier, softer momentum.
+                </div>
+            </div>
+        </div>
+
+        <!-- Right -->
+        <div style="display: grid; gap: 1.2rem;">
+            <div style="
+                background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+                border: 1px solid #e5e7eb;
+                border-radius: 26px;
+                padding: 1.35rem;
+                box-shadow: 0 14px 28px rgba(15, 23, 42, 0.05);
+            ">
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1rem;
+                ">
+                    <div>
+                        <p style="
+                            margin: 0 0 0.25rem;
+                            font-size: 0.75rem;
+                            text-transform: uppercase;
+                            letter-spacing: 0.08em;
+                            font-weight: 700;
+                            color: #94a3b8;
+                        ">Patterns</p>
+                        <h2 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #111827;">
+                            Quick signals 🔎
+                        </h2>
+                    </div>
+                    <div style="font-size: 1.4rem;">🌿</div>
+                </div>
+
+                <div style="display: grid; gap: 0.8rem;">
+                    <div style="
+                        padding: 0.95rem 1rem;
+                        border-radius: 18px;
+                        background: #eff6ff;
+                        color: #1e3a8a;
+                    ">📘 Reflection entries appeared on your calmer days.</div>
+
+                    <div style="
+                        padding: 0.95rem 1rem;
+                        border-radius: 18px;
+                        background: #f0fdf4;
+                        color: #166534;
+                    ">🌱 Better habit follow-through seemed to align with better mood days.</div>
+
+                    <div style="
+                        padding: 0.95rem 1rem;
+                        border-radius: 18px;
+                        background: #fff7ed;
+                        color: #c2410c;
+                    ">⏳ Task avoidance still showed up on lower-energy days.</div>
+                </div>
+            </div>
+
+            <div style="
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 26px;
+                padding: 1.35rem;
+                box-shadow: 0 14px 28px rgba(15, 23, 42, 0.05);
+            ">
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1rem;
+                ">
+                    <div>
+                        <p style="
+                            margin: 0 0 0.25rem;
+                            font-size: 0.75rem;
+                            text-transform: uppercase;
+                            letter-spacing: 0.08em;
+                            font-weight: 700;
+                            color: #94a3b8;
+                        ">Gentle prompts</p>
+                        <h2 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #111827;">
+                            Small next steps 🌼
+                        </h2>
+                    </div>
+                    <div style="font-size: 1.4rem;">🫶</div>
+                </div>
+
+                <div style="display: grid; gap: 0.8rem;">
+                    <div style="
+                        padding: 0.95rem 1rem;
+                        border-radius: 18px;
+                        background: #fefce8;
+                        color: #854d0e;
+                    ">✨ Try one gratitude entry on a day that feels emotionally heavy.</div>
+
+                    <div style="
+                        padding: 0.95rem 1rem;
+                        border-radius: 18px;
+                        background: #fdf4ff;
+                        color: #86198f;
+                    ">💭 Notice whether low-energy days affect both mood and habit completion.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
