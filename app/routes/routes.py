@@ -109,6 +109,10 @@ def dashboard():
         active_logs = [log for log in habit.logs if log.completed]
         habit_streaks[habit.id] = calculate_streaks(active_logs)
 
+    # Current active habits
+
+    active_habits_count = Habit.query.filter_by(user_id=current_user.id, is_archived=False).order_by(Habit.id.desc()).all()
+
     #  Get imgaes for dahboard using mapper
     dashboad_scene = build_scene_payload(score = avg_mood_score, seed_value=f'dashboard-{current_user.id}')
 
@@ -126,5 +130,6 @@ def dashboard():
         habits=habits,
         today_logs=today_logs,
         habit_streaks=habit_streaks,
-        dashboard_scene=dashboad_scene
+        dashboard_scene=dashboad_scene,
+        active_habits_count=len(active_habits_count)
     )
