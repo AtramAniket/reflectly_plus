@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,9 @@
     <title>Reflectly</title>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Quill -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -29,7 +31,8 @@
 
         <div class="sidebar-section">
             <p class="sidebar-heading">Overview</p>
-            <a href="{{ url_for('main.dashboard') }}" class="sidebar-link">
+            <a href="{{ url_for('main.dashboard') }}"
+               class="sidebar-link {% if request.endpoint == 'main.dashboard' %}is-active{% endif %}">
                 <span class="sidebar-icon" data-lucide="layout-dashboard"></span>
                 <span>Dashboard</span>
             </a>
@@ -38,22 +41,26 @@
         <div class="sidebar-section">
             <p class="sidebar-heading">Journal</p>
 
-            <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="sidebar-link sidebar-sub-link">
+            <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}"
+               class="sidebar-link sidebar-sub-link {% if request.endpoint == 'journal.create_new_entry' and request.view_args and request.view_args.get('entry_type') == 'simple' %}is-active{% endif %}">
                 <span class="sidebar-icon" data-lucide="pen-square"></span>
                 <span>Simple Journal</span>
             </a>
 
-            <a href="{{ url_for('journal.create_new_entry', entry_type='gratitude') }}" class="sidebar-link sidebar-sub-link">
+            <a href="{{ url_for('journal.create_new_entry', entry_type='gratitude') }}"
+               class="sidebar-link sidebar-sub-link {% if request.endpoint == 'journal.create_new_entry' and request.view_args and request.view_args.get('entry_type') == 'gratitude' %}is-active{% endif %}">
                 <span class="sidebar-icon" data-lucide="heart-handshake"></span>
                 <span>Gratitude Journal</span>
             </a>
 
-            <a href="{{ url_for('journal.create_new_entry', entry_type='reflection') }}" class="sidebar-link sidebar-sub-link">
+            <a href="{{ url_for('journal.create_new_entry', entry_type='reflection') }}"
+               class="sidebar-link sidebar-sub-link {% if request.endpoint == 'journal.create_new_entry' and request.view_args and request.view_args.get('entry_type') == 'reflection' %}is-active{% endif %}">
                 <span class="sidebar-icon" data-lucide="sparkles"></span>
                 <span>Daily Reflection</span>
             </a>
 
-            <a href="{{ url_for('journal.view_all_entries') }}" class="sidebar-link sidebar-sub-link">
+            <a href="{{ url_for('journal.view_all_entries') }}"
+               class="sidebar-link sidebar-sub-link {% if request.endpoint == 'journal.view_all_entries' %}is-active{% endif %}">
                 <span class="sidebar-icon" data-lucide="book-open-text"></span>
                 <span>All Entries</span>
             </a>
@@ -62,7 +69,8 @@
         <div class="sidebar-section">
             <p class="sidebar-heading">Habits</p>
 
-            <a href="{{ url_for('habit.create_habit') }}" class="sidebar-link sidebar-sub-link">
+            <a href="{{ url_for('habit.create_habit') }}"
+               class="sidebar-link sidebar-sub-link {% if request.endpoint == 'habit.create_habit' %}is-active{% endif %}">
                 <span class="sidebar-icon" data-lucide="badge-check"></span>
                 <span>Habits</span>
             </a>
@@ -71,32 +79,33 @@
         <div class="sidebar-section">
             <p class="sidebar-heading">Tools</p>
 
-            <a href="{{ url_for('tools.mood_checklist') }}" class="sidebar-link">
+            <a href="{{ url_for('tools.mood_checklist') }}"
+               class="sidebar-link {% if request.endpoint == 'tools.mood_checklist' %}is-active{% endif %}">
                 <span class="sidebar-icon" data-lucide="brain"></span>
                 <span>Mood Check-In</span>
             </a>
 
-            <a href="{{ url_for('tools.anti_procrastination') }}" class="sidebar-link">
+            <a href="{{ url_for('tools.anti_procrastination') }}"
+               class="sidebar-link {% if request.endpoint == 'tools.anti_procrastination' %}is-active{% endif %}">
                 <span class="sidebar-icon" data-lucide="clipboard-pen-line"></span>
                 <span>Anti-Procrastination</span>
             </a>
-
         </div>
 
         <div class="sidebar-section">
             <p class="sidebar-heading">History</p>
 
-            <a href="{{ url_for('insights.home') }}" class="sidebar-link">
+            <a href="{{ url_for('insights.home') }}"
+               class="sidebar-link {% if request.endpoint == 'insights.home' %}is-active{% endif %}">
                 <span class="sidebar-icon" data-lucide="wand-sparkles"></span>
                 <span>Insights</span>
             </a>
 
-
-            <a href="{{ url_for('main.logs') }}" class="sidebar-link">
+            <a href="{{ url_for('main.logs') }}"
+               class="sidebar-link {% if request.endpoint == 'main.logs' %}is-active{% endif %}">
                 <span class="sidebar-icon" data-lucide="history"></span>
                 <span>Logs</span>
             </a>
-
         </div>
 
         <div class="sidebar-footer">
@@ -128,6 +137,7 @@
     <script>
         lucide.createIcons();
     </script>
+
     <script>
         setTimeout(() => {
             document.querySelectorAll('.flash').forEach(flash => {
@@ -135,6 +145,5 @@
             });
         }, 3000);
     </script>
-
 </body>
 </html>
