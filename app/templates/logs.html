@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Logs{% endblock %}
+
+{% block content %}
+<div class="logs-page">
+    <div class="logs-shell">
+
+        <section class="logs-hero">
+            <div class="logs-hero__content">
+                <p class="logs-eyebrow">History hub</p>
+                <h1 class="logs-title">Logs</h1>
+                <p class="logs-subtitle">
+                    Review your past check-ins and procrastination work from one place.
+                    This page brings your tracking history together in a cleaner, simpler way.
+                </p>
+            </div>
+        </section>
+
+        <section class="logs-grid">
+
+            <a href="{{ url_for('main.checkin_history') }}" class="logs-card logs-card--mood">
+                <div class="logs-card__top">
+                    <div class="logs-card__icon">😊</div>
+                    <span class="logs-card__pill">Mood</span>
+                </div>
+
+                <div class="logs-card__body">
+                    <h2>Mood Check-ins</h2>
+                    <p>
+                        Look back at your past mood entries, notice patterns over time,
+                        and revisit how your emotional check-ins have changed.
+                    </p>
+                </div>
+
+                <div class="logs-card__footer">
+                    <span>Open mood history</span>
+                    <span class="logs-card__arrow">→</span>
+                </div>
+            </a>
+
+            <a href="{{ url_for('main.sheet_history') }}" class="logs-card logs-card--sheet">
+                <div class="logs-card__top">
+                    <div class="logs-card__icon">🧾</div>
+                    <span class="logs-card__pill">Sheets</span>
+                </div>
+
+                <div class="logs-card__body">
+                    <h2>Procrastination Sheets</h2>
+                    <p>
+                        Review your completed sheets, revisit task patterns,
+                        and track how your anti-procrastination sessions have evolved.
+                    </p>
+                </div>
+
+                <div class="logs-card__footer">
+                    <span>Open sheet history</span>
+                    <span class="logs-card__arrow">→</span>
+                </div>
+            </a>
+
+        </section>
+
+        <section class="logs-note">
+            <div class="logs-note__icon">🌿</div>
+            <div class="logs-note__content">
+                <h3>Why this page exists</h3>
+                <p>
+                    Instead of scattering your history across multiple sidebar links,
+                    Logs gives those records a single home. It keeps navigation lighter
+                    and makes the app feel more cohesive.
+                </p>
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}
