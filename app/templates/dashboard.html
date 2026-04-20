@@ -5,19 +5,86 @@
 <div class="dashboard-shell">
 
     <!-- HERO -->
-    <section class="dashboard-hero card card-dashboard">
-        <div class="dashboard-hero-copy">
-            <p class="dashboard-kicker">Reflectly Dashboard</p>
-            <h1 class="dashboard-greeting">Welcome back 👋</h1>
-            <p class="dashboard-hero-text">
-                Here’s a calm overview of your journaling, mood, and habits so you can see how things are going at a glance.
+    <section class="dashboard-hero">
+        <div class="dashboard-hero__content">
+            <div class="dashboard-hero__badge">✨ Welcome back to Reflectly</div>
+
+            <h1 class="dashboard-hero__title">
+                Your week is taking shape, one small step at a time 🌿
+            </h1>
+
+            <p class="dashboard-hero__subtitle">
+                Track your thoughts, mood, habits, and progress from one calm place.
+                Reflectly is here to help you notice patterns without making things feel overwhelming.
             </p>
 
-            <div class="dashboard-hero-meta">
-                <span class="dashboard-identity">{{ email }}</span>
-                <span class="dashboard-divider">•</span>
-                <span class="dashboard-trend-pill">{{ trend }}</span>
+            <div class="dashboard-hero__stats">
+                <div class="dashboard-hero-stat">
+                    <span class="dashboard-hero-stat__label">Mood average</span>
+                    <strong class="dashboard-hero-stat__value">
+                        {% if average_mood_score is not none %}
+                            {{ average_mood_score }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div class="dashboard-hero-stat">
+                    <span class="dashboard-hero-stat__label">Journal entries</span>
+                    <strong class="dashboard-hero-stat__value">
+                        {{ total_entries if total_entries is defined else 0 }}
+                    </strong>
+                </div>
+
+                <div class="dashboard-hero-stat">
+                    <span class="dashboard-hero-stat__label">Active habits</span>
+                    <strong class="dashboard-hero-stat__value">
+                        {{ active_habits_count if active_habits_count is defined else 0 }}
+                    </strong>
+                </div>
             </div>
+        </div>
+
+        <div class="dashboard-hero__visual">
+            {% if dashboard_scene and dashboard_scene.has_image %}
+                <div class="dashboard-hero-art dashboard-hero-art--image">
+                    <img
+                        src="{{ dashboard_scene.image_url }}"
+                        alt="{{ dashboard_scene.alt }}"
+                        class="dashboard-hero-art__image"
+                    >
+                    <div class="dashboard-hero-art__overlay">
+                        <span class="dashboard-hero-art__pill">
+                            {{ dashboard_scene.bucket|capitalize }} mood scene
+                        </span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="dashboard-hero-art dashboard-hero-art--fallback">
+                    <div class="dashboard-hero-art__fallback-inner">
+                        <div class="dashboard-hero-art__emoji-row">
+                            <span>☁️</span>
+                            <span>🌿</span>
+                            <span>✨</span>
+                        </div>
+
+                        <h3 class="dashboard-hero-art__fallback-title">
+                            Illustration space ready
+                        </h3>
+
+                        <p class="dashboard-hero-art__fallback-text">
+                            Your mood-based hero art will appear here once images are added to the
+                            static mood folders. Until then, this layout stays polished and ready.
+                        </p>
+
+                        <div class="dashboard-hero-art__fallback-tag">
+                            Current bucket:
+                            <strong>{{ dashboard_scene.bucket|capitalize if dashboard_scene else "Calm" }}</strong>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </section>
 
