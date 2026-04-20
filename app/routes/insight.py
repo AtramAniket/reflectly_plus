@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 from flask_login import current_user, login_required
 from flask import Blueprint, render_template, request
 
-from app.helper.weekly_insights_helper import get_or_generate_weekly_insight,get_user_timezone,get_week_range_for_user
+from app.helper.weekly_insights_helper import get_or_generate_weekly_insight, get_user_timezone,get_week_range_for_user
+from app.helper.illustrations_helper import build_scene_payload
 
 insight = Blueprint("insights", __name__)
 
@@ -25,6 +26,13 @@ def home():
     next_week_start = None
     if insight["week_start"] < current_week_start:
         next_week_start = (insight["week_start"] + timedelta(days=7)).isoformat()
+
+    #  Build scene based on average mood score
+    avg_mood_score = insight["structured_context"]["mood"]["avg_score"]
+    insight_scene = build_scene_payload(
+        score=avg_mood_score,
+        seed_value=f"insight-{current_user.id}-{insight['week_start']}"
+    )
 
     return render_template(
         "weekly_insights/insights.html",

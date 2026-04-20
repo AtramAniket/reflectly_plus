@@ -7,6 +7,7 @@ from app.models.habit import Habit
 from app.models.habit_log import HabitLog
 from app.models.journal import JournalEntry
 from app.services.ai_insights import generate_insight
+from app.helper.illustrations_helper import build_scene_payload
 
 main = Blueprint("main", __name__)
 
@@ -108,6 +109,9 @@ def dashboard():
         active_logs = [log for log in habit.logs if log.completed]
         habit_streaks[habit.id] = calculate_streaks(active_logs)
 
+    #  Get imgaes for dahboard using mapper
+    dashboad_scene = build_scene_payload(score = avg_mood_score, seed_value=f'dashboard-{current_user.id}')
+
     return render_template(
         'dashboard.html',
         email=current_user.email,
@@ -121,5 +125,6 @@ def dashboard():
         insights=insights,
         habits=habits,
         today_logs=today_logs,
-        habit_streaks=habit_streaks
+        habit_streaks=habit_streaks,
+        dashboard_scene=dashboad_scene
     )
