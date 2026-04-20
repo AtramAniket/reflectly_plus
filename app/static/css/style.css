@@ -3418,3 +3418,291 @@ textarea {
         font-size: 1.2rem;
     }
 }
+
+/* =========================
+   DASHBOARD HERO
+========================= */
+
+.dashboard-hero {
+    display: grid;
+    grid-template-columns: 1.25fr 0.95fr;
+    gap: 1.25rem;
+    align-items: stretch;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-hero__content,
+.dashboard-hero__visual {
+    min-width: 0;
+}
+
+.dashboard-hero__content {
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #fff8ed 0%, #fefce8 45%, #ecfccb 100%);
+    border: 1px solid #f3e6c7;
+    box-shadow: 0 20px 42px rgba(15, 23, 42, 0.07);
+}
+
+.dashboard-hero__content::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -40px;
+    width: 220px;
+    height: 220px;
+    border-radius: 999px;
+    background: rgba(253, 224, 71, 0.18);
+    pointer-events: none;
+}
+
+.dashboard-hero__content::after {
+    content: "";
+    position: absolute;
+    bottom: -70px;
+    right: 120px;
+    width: 180px;
+    height: 180px;
+    border-radius: 999px;
+    background: rgba(74, 222, 128, 0.16);
+    pointer-events: none;
+}
+
+.dashboard-hero__badge {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    color: #7c2d12;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.dashboard-hero__title {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    max-width: 580px;
+    font-size: 2.45rem;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    color: #1f2937;
+}
+
+.dashboard-hero__subtitle {
+    position: relative;
+    z-index: 1;
+    margin: 1rem 0 0;
+    max-width: 560px;
+    font-size: 1rem;
+    line-height: 1.9;
+    color: #4b5563;
+}
+
+.dashboard-hero__stats {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 1.4rem;
+}
+
+.dashboard-hero-stat {
+    min-width: 145px;
+    padding: 0.95rem 1rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
+}
+
+.dashboard-hero-stat__label {
+    display: block;
+    margin-bottom: 0.38rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #6b7280;
+}
+
+.dashboard-hero-stat__value {
+    font-size: 1.28rem;
+    line-height: 1;
+    font-weight: 800;
+    color: #111827;
+}
+
+.dashboard-hero__visual {
+    min-height: 100%;
+}
+
+.dashboard-hero-art {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    min-height: 340px;
+    border-radius: 30px;
+    border: 1px solid #dbe4ea;
+    box-shadow: 0 20px 42px rgba(15, 23, 42, 0.08);
+}
+
+.dashboard-hero-art--image {
+    background: #f8fafc;
+}
+
+.dashboard-hero-art__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 340px;
+    object-fit: cover;
+}
+
+.dashboard-hero-art__overlay {
+    position: absolute;
+    inset: auto 1rem 1rem 1rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.dashboard-hero-art__pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.72);
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    backdrop-filter: blur(8px);
+}
+
+.dashboard-hero-art--fallback {
+    background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.7), transparent 25%),
+        linear-gradient(145deg, #dcfce7 0%, #bbf7d0 35%, #d9f99d 100%);
+}
+
+.dashboard-hero-art--fallback::before {
+    content: "";
+    position: absolute;
+    top: -28px;
+    right: -28px;
+    width: 150px;
+    height: 150px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.24);
+}
+
+.dashboard-hero-art--fallback::after {
+    content: "";
+    position: absolute;
+    bottom: -44px;
+    left: -28px;
+    width: 160px;
+    height: 160px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.18);
+}
+
+.dashboard-hero-art__fallback-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    min-height: 340px;
+    padding: 1.5rem;
+}
+
+.dashboard-hero-art__emoji-row {
+    display: flex;
+    gap: 0.55rem;
+    font-size: 1.35rem;
+    margin-bottom: 0.9rem;
+}
+
+.dashboard-hero-art__fallback-title {
+    margin: 0 0 0.55rem;
+    font-size: 1.25rem;
+    line-height: 1.3;
+    font-weight: 800;
+    color: #14532d;
+}
+
+.dashboard-hero-art__fallback-text {
+    margin: 0;
+    max-width: 430px;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #166534;
+}
+
+.dashboard-hero-art__fallback-tag {
+    margin-top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    width: fit-content;
+    padding: 0.5rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    font-size: 0.8rem;
+    color: #166534;
+}
+
+/* Responsive */
+
+@media (max-width: 1080px) {
+    .dashboard-hero {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .dashboard-hero__content,
+    .dashboard-hero-art {
+        border-radius: 22px;
+    }
+
+    .dashboard-hero__content {
+        padding: 1.2rem;
+    }
+
+    .dashboard-hero__title {
+        font-size: 1.9rem;
+    }
+
+    .dashboard-hero__subtitle {
+        font-size: 0.95rem;
+    }
+
+    .dashboard-hero__stats {
+        gap: 0.7rem;
+    }
+
+    .dashboard-hero-stat {
+        min-width: calc(50% - 0.35rem);
+        flex: 1 1 calc(50% - 0.35rem);
+    }
+
+    .dashboard-hero-art,
+    .dashboard-hero-art__image,
+    .dashboard-hero-art__fallback-inner {
+        min-height: 260px;
+    }
+
+    .dashboard-hero-art__fallback-inner {
+        padding: 1.1rem;
+    }
+}
