@@ -76,20 +76,27 @@
                 <span>Mood Check-In</span>
             </a>
 
-            <a href="{{ url_for('tools.mood_checklist_history') }}" class="sidebar-link sidebar-sub-link">
-                <span class="sidebar-icon" data-lucide="history"></span>
-                <span>Check-In History</span>
-            </a>
-
             <a href="{{ url_for('tools.anti_procrastination') }}" class="sidebar-link">
                 <span class="sidebar-icon" data-lucide="clipboard-pen-line"></span>
                 <span>Anti-Procrastination</span>
             </a>
 
-            <a href="{{ url_for('tools.procrastination_sheet_history') }}" class="sidebar-link sidebar-sub-link">
-                <span class="sidebar-icon" data-lucide="table-properties"></span>
-                <span>Sheet History</span>
+        </div>
+
+        <div class="sidebar-section">
+            <p class="sidebar-heading">History</p>
+
+            <a href="{{ url_for('insights.home') }}" class="sidebar-link">
+                <span class="sidebar-icon" data-lucide="wand-sparkles"></span>
+                <span>Insights</span>
             </a>
+
+
+            <a href="{{ url_for('main.logs') }}" class="sidebar-link">
+                <span class="sidebar-icon" data-lucide="history"></span>
+                <span>Logs</span>
+            </a>
+
         </div>
 
         <div class="sidebar-footer">
