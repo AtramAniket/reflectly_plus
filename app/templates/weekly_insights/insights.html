@@ -21,7 +21,7 @@
         <section class="insights-week-nav">
             <a
                 class="insights-week-nav__button"
-                href="{{ url_for('insights.insights', week_start=prev_week_start) if prev_week_start else '#' }}"
+                href="{{ url_for('insights.home', week_start=prev_week_start) if prev_week_start else '#' }}"
             >
                 ← Previous week
             </a>
@@ -46,7 +46,7 @@
 
             <a
                 class="insights-week-nav__button {% if not next_week_start %}insights-week-nav__button--disabled{% endif %}"
-                href="{{ url_for('insights.insights', week_start=next_week_start) if next_week_start else '#' }}"
+                href="{{ url_for('insights.home', week_start=next_week_start) if next_week_start else '#' }}"
             >
                 Next week →
             </a>
