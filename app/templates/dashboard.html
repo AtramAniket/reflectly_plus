@@ -4,26 +4,29 @@
 
 <div class="dashboard-shell">
 
-    <!-- HERO -->
     <section class="dashboard-hero">
         <div class="dashboard-hero__content">
             <div class="dashboard-hero__badge">✨ Welcome back to Reflectly</div>
 
             <h1 class="dashboard-hero__title">
-                Your week is taking shape, one small step at a time 🌿
+                Welcome back,
+                {{ (email.split('@')[0].split('.')[0] | title) if email else 'Friend' }}!
             </h1>
 
+            <p class="dashboard-hero__eyebrow">
+                Here’s a look at your week <span class="accent-leaf">🌿</span>
+            </p>
+
             <p class="dashboard-hero__subtitle">
-                Track your thoughts, mood, habits, and progress from one calm place.
-                Reflectly is here to help you notice patterns without making things feel overwhelming.
+                Tracking your mood, habits, and reflections in one cozy spot.
             </p>
 
             <div class="dashboard-hero__stats">
                 <div class="dashboard-hero-stat">
-                    <span class="dashboard-hero-stat__label">Mood average</span>
+                    <span class="dashboard-hero-stat__label">Average Mood</span>
                     <strong class="dashboard-hero-stat__value">
                         {% if average_mood_score is not none %}
-                            {{ average_mood_score }}
+                            {{ average_mood_score }} 🙂
                         {% else %}
                             —
                         {% endif %}
@@ -31,18 +34,40 @@
                 </div>
 
                 <div class="dashboard-hero-stat">
-                    <span class="dashboard-hero-stat__label">Journal entries</span>
+                    <span class="dashboard-hero-stat__label">Entries This Week</span>
                     <strong class="dashboard-hero-stat__value">
-                        {{ total_entries if total_entries is defined else 0 }}
+                        {{ total_entries if total_entries is defined else 0 }} 📕
                     </strong>
                 </div>
 
                 <div class="dashboard-hero-stat">
-                    <span class="dashboard-hero-stat__label">Active habits</span>
+                    <span class="dashboard-hero-stat__label">Habits Completed</span>
                     <strong class="dashboard-hero-stat__value">
-                        {{ active_habits_count if active_habits_count is defined else 0 }}
+                        {{ active_habits_count if active_habits_count is defined else 0 }}/5 🌿
                     </strong>
                 </div>
+            </div>
+
+            <div class="dashboard-hero__actions">
+                <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}" class="dashboard-action-pill">
+                    <span class="dashboard-action-pill__icon">📝</span>
+                    <span>Write Journal</span>
+                </a>
+
+                <a href="{{ url_for('tools.mood_checklist') }}" class="dashboard-action-pill">
+                    <span class="dashboard-action-pill__icon">😊</span>
+                    <span>Log Mood</span>
+                </a>
+
+                <a href="{{ url_for('habit.create_habit') }}" class="dashboard-action-pill">
+                    <span class="dashboard-action-pill__icon">🌱</span>
+                    <span>Track Habits</span>
+                </a>
+
+                <a href="{{ url_for('insights.home') }}" class="dashboard-action-pill">
+                    <span class="dashboard-action-pill__icon">💬</span>
+                    <span>View Insights</span>
+                </a>
             </div>
         </div>
 
@@ -63,19 +88,15 @@
             {% else %}
                 <div class="dashboard-hero-art dashboard-hero-art--fallback">
                     <div class="dashboard-hero-art__fallback-inner">
-                        <div class="dashboard-hero-art__emoji-row">
-                            <span>☁️</span>
-                            <span>🌿</span>
-                            <span>✨</span>
-                        </div>
+                        <div class="dashboard-hero-art__eyebrow">Find your flow</div>
 
                         <h3 class="dashboard-hero-art__fallback-title">
-                            Illustration space ready
+                            Gentle progress matters.
                         </h3>
 
                         <p class="dashboard-hero-art__fallback-text">
-                            Your mood-based hero art will appear here once images are added to the
-                            static mood folders. Until then, this layout stays polished and ready.
+                            Your mood-based scene will appear here once your illustration set is connected.
+                            Until then, this area keeps the dashboard warm and cohesive.
                         </p>
 
                         <div class="dashboard-hero-art__fallback-tag">
@@ -88,247 +109,161 @@
         </div>
     </section>
 
-    <!-- COMPACT STATS -->
-    <section class="dashboard-mini-stats">
-        <div class="card stat-card card-dashboard dashboard-mini-stat">
-            <span class="stat-label">Total Entries</span>
-            <span class="stat-value">{{ total_entries }}</span>
-            <p class="stat-support-text">Your journal library so far</p>
-        </div>
+    <div class="dashboard-story-grid">
+        <section class="dashboard-feature-card dashboard-reflection-card">
+            <div class="dashboard-reflection-card__art"></div>
 
-        <div class="card stat-card card-dashboard dashboard-mini-stat">
-            <span class="stat-label">Average Mood</span>
-            <span class="stat-value">
-                {{ average_mood_score if average_mood_score is not none else '—' }}
-            </span>
-            <p class="stat-support-text">Based on your recorded entries</p>
-        </div>
-    </section>
+            <div class="dashboard-feature-card__inner">
+                <p class="dashboard-feature-card__eyebrow">✨ Weekly Reflection</p>
+                <h2 class="dashboard-feature-card__title">A gentle snapshot of your week</h2>
 
-    <!-- MAIN GRID -->
-    <div class="dashboard-grid dashboard-grid-lean">
-
-        <!-- LEFT COLUMN -->
-        <section class="dashboard-main">
-
-            <div class="card card-dashboard">
-                <div class="section-header">
-                    <div>
-                        <h3 class="card-title">📈 Mood Over Time</h3>
-                        <p class="card-subtitle">A visual snapshot of how your mood scores have moved recently.</p>
-                    </div>
-                </div>
-
-                <div class="chart-container chart-container-large">
-                    <canvas id="moodChart"></canvas>
-                </div>
-            </div>
-
-            <div class="card card-dashboard">
-                <div class="section-header">
-                    <div>
-                        <h3 class="card-title">📝 Recent Journal Entries</h3>
-                        <p class="card-subtitle">Your latest reflections, gratitude notes, and daily check-ins.</p>
-                    </div>
-                    <a href="{{ url_for('journal.view_all_entries') }}" class="section-link">View all</a>
-                </div>
-
-                <div class="entry-list entry-list-enhanced">
-                    {% for entry in journal_entries %}
-                        <article class="entry-item entry-item-enhanced">
-                            <div class="entry-item-top">
-                                <div class="entry-item-heading">
-                                    <a href="{{ url_for('journal.view_entry', entry_id=entry.id) }}" class="entry-title-link">
-                                        {{ entry.title }}
-                                    </a>
-
-                                    <div class="entry-type-row">
-                                        {% if entry.entry_type == "simple" %}
-                                            <span class="entry-type-badge simple-badge">Simple</span>
-                                        {% elif entry.entry_type == "gratitude" %}
-                                            <span class="entry-type-badge gratitude-badge">Gratitude</span>
-                                        {% elif entry.entry_type == "reflection" %}
-                                            <span class="entry-type-badge reflection-badge">Reflection</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <span class="entry-meta entry-meta-pill">
-                                    Mood: {{ entry.mood_score if entry.mood_score is not none else '—' }}
-                                </span>
-                            </div>
-
-                            <p class="entry-content">
-                                {% if entry.entry_type == "simple" %}
-                                    {{ entry.content|striptags|truncate(180) }}
-                                {% elif entry.entry_type == "gratitude" %}
-                                    {{ entry.structured_content.gratitude_1|truncate(180) }}
-                                {% elif entry.entry_type == "reflection" %}
-                                    {{ entry.structured_content.went_well|truncate(180) }}
-                                {% endif %}
-                            </p>
-                        </article>
+                <div class="dashboard-feature-card__script">
+                    {% if average_mood_score is not none and average_mood_score >= 7 %}
+                        This week felt brighter.
+                    {% elif average_mood_score is not none and average_mood_score >= 4 %}
+                        This week felt a bit steadier.
                     {% else %}
-                        <div class="empty-state-box">
-                            <h4 class="empty-state-title">No journal entries yet</h4>
-                            <p class="empty-text">Start with a simple journal entry and your reflections will begin showing up here.</p>
-                        </div>
-                    {% endfor %}
+                        This week felt a little heavier.
+                    {% endif %}
                 </div>
-            </div>
 
+                <p class="dashboard-feature-card__text">
+                    {% if total_entries and total_entries > 0 %}
+                        Your entries are beginning to create a clearer story. Small reflections,
+                        mood check-ins, and habit progress are starting to show how your week has moved.
+                    {% else %}
+                        You have a fresh space here to begin noticing patterns, thoughts, and small wins as they build over time.
+                    {% endif %}
+                </p>
+
+                <div class="dashboard-feature-card__meta">
+                    <span class="dashboard-soft-chip">📔 {{ total_entries if total_entries is defined else 0 }} entries</span>
+                    <span class="dashboard-soft-chip">🌿 {{ active_habits_count if active_habits_count is defined else 0 }} habits active</span>
+                </div>
+
+                <a href="{{ url_for('insights.home') }}" class="dashboard-feature-card__cta">
+                    <span>Read More</span>
+                    <span>›</span>
+                </a>
+            </div>
         </section>
 
-        <!-- RIGHT COLUMN -->
-        <aside class="dashboard-side">
+        <section class="dashboard-feature-card dashboard-insights-card">
+            <div class="dashboard-feature-card__inner">
+                <p class="dashboard-feature-card__eyebrow">🌿 Patterns & Insights</p>
+                <h2 class="dashboard-feature-card__title">Noticed Trends</h2>
 
-            <div class="card card-dashboard habit-panel habit-panel-enhanced">
-                <div class="section-header">
-                    <div>
-                        <h3 class="card-title">🎯 Habit Tracker</h3>
-                        <p class="card-subtitle">Keep momentum by checking off today’s habits.</p>
+                <div class="dashboard-pattern-list">
+                    <div class="dashboard-pattern-item">
+                        <span class="dashboard-pattern-icon">📘</span>
+                        <span>
+                            {% if total_entries and total_entries >= 3 %}
+                                Reflection days are starting to build consistency.
+                            {% else %}
+                                Your journaling rhythm is still taking shape.
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="dashboard-pattern-item">
+                        <span class="dashboard-pattern-icon">🌱</span>
+                        <span>
+                            {% if active_habits_count and active_habits_count > 0 %}
+                                Habit momentum is beginning to connect with your week.
+                            {% else %}
+                                Adding one habit could create a stronger weekly anchor.
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="dashboard-pattern-item">
+                        <span class="dashboard-pattern-icon">⏳</span>
+                        <span>
+                            Your dashboard is ready to surface stronger insights as more check-ins are added.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="dashboard-lower-grid">
+        <section class="dashboard-overview-card">
+            <div class="dashboard-section-heading">
+                <div class="dashboard-section-heading__title">🌿 Today’s Overview</div>
+                <div class="dashboard-section-heading__sub">A soft summary of what’s active right now.</div>
+            </div>
+
+            <div class="dashboard-mini-overview">
+                <div class="dashboard-mini-overview__card">
+                    <div class="dashboard-mini-overview__top">📕 <span>Entries</span></div>
+                    <div class="dashboard-mini-overview__value">{{ total_entries if total_entries is defined else 0 }}</div>
+                    <div class="dashboard-mini-overview__label">journals</div>
+                </div>
+
+                <div class="dashboard-mini-overview__card">
+                    <div class="dashboard-mini-overview__top">🙂 <span>Mood</span></div>
+                    <div class="dashboard-mini-overview__value">
+                        {% if average_mood_score is not none %}
+                            {{ average_mood_score }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </div>
+                    <div class="dashboard-mini-overview__label">average</div>
+                </div>
+
+                <div class="dashboard-mini-overview__card">
+                    <div class="dashboard-mini-overview__top">🌿 <span>Habits</span></div>
+                    <div class="dashboard-mini-overview__value">{{ active_habits_count if active_habits_count is defined else 0 }}/5</div>
+                    <div class="dashboard-mini-overview__label">active</div>
+                </div>
+
+                <div class="dashboard-mini-overview__card">
+                    <div class="dashboard-mini-overview__top">💬 <span>Insights</span></div>
+                    <div class="dashboard-mini-overview__value">
+                        {% if total_entries and total_entries > 0 %}
+                            Ready
+                        {% else %}
+                            Waiting
+                        {% endif %}
+                    </div>
+                    <div class="dashboard-mini-overview__label">status</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-suggestions-card">
+            <div class="dashboard-section-heading">
+                <div class="dashboard-section-heading__title">🌼 Gentle Suggestions</div>
+                <div class="dashboard-section-heading__sub">Small next steps based on your current flow.</div>
+            </div>
+
+            <div class="dashboard-suggestion-list">
+                <div class="dashboard-suggestion-item">
+                    <div class="dashboard-suggestion-item__icon">🌻</div>
+                    <div class="dashboard-suggestion-item__text">
+                        Write a short gratitude note if the week has felt heavy.
                     </div>
                 </div>
 
-                <div class="habit-list">
-                    {% for habit in habits %}
-                        {% set streak = habit_streaks.get(habit.id, 0) %}
-                        {% set completed_today = habit.id in today_logs %}
+                <div class="dashboard-suggestion-item">
+                    <div class="dashboard-suggestion-item__icon">🫧</div>
+                    <div class="dashboard-suggestion-item__text">
+                        Notice whether your energy changes around journaling days.
+                    </div>
+                </div>
 
-                        <div class="habit-item habit-item-enhanced">
-                            <div class="habit-top-row">
-                                <div class="habit-title-stack">
-                                    <div class="habit-name">{{ habit.name }}</div>
-                                    <div class="habit-meta">
-                                        {% if streak > 0 %}
-                                            🔥 {{ streak }} day streak
-                                        {% else %}
-                                            Start your streak today 💪
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                {% if completed_today %}
-                                    <span class="habit-badge done-badge">Done today</span>
-                                {% else %}
-                                    <a href="{{ url_for('habit.complete_habit', habit_id=habit.id) }}" class="habit-badge action-badge">
-                                        Mark done
-                                    </a>
-                                {% endif %}
-                            </div>
-
-                            <div class="habit-progress-row">
-                                <div class="habit-progress-track">
-                                    <div
-                                        class="habit-progress-fill {% if completed_today %}habit-progress-fill-complete{% endif %}"
-                                        style="width: {% if completed_today %}100%{% elif streak > 0 %}65%{% else %}24%{% endif %};">
-                                    </div>
-                                </div>
-                                <span class="habit-progress-label">
-                                    {% if completed_today %}
-                                        Completed
-                                    {% elif streak > 0 %}
-                                        In progress
-                                    {% else %}
-                                        Just getting started
-                                    {% endif %}
-                                </span>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="empty-state-box compact-empty-state">
-                            <h4 class="empty-state-title">No habits yet</h4>
-                            <p class="empty-text">Create your first habit from the sidebar and start building consistency one day at a time.</p>
-                        </div>
-                    {% endfor %}
+                <div class="dashboard-suggestion-item">
+                    <div class="dashboard-suggestion-item__icon">🌱</div>
+                    <div class="dashboard-suggestion-item__text">
+                        Keep one habit small enough that it feels easy to repeat tomorrow.
+                    </div>
                 </div>
             </div>
-
-        </aside>
-
+        </section>
     </div>
+
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const labels = {{ dates | tojson }};
-    const data = {{ moods | tojson }};
-
-    const ctx = document.getElementById('moodChart').getContext('2d');
-
-    const gradient = ctx.createLinearGradient(0, 0, 0, 260);
-    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.22)');
-    gradient.addColorStop(1, 'rgba(99, 102, 241, 0.02)');
-
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Mood Score',
-                data: data,
-                borderColor: '#6366f1',
-                backgroundColor: gradient,
-                borderWidth: 2.5,
-                pointRadius: 3,
-                pointHoverRadius: 5,
-                pointBackgroundColor: '#6366f1',
-                pointBorderWidth: 0,
-                tension: 0.35,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                intersect: false,
-                mode: 'index'
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    displayColors: false,
-                    backgroundColor: '#111827',
-                    titleColor: '#ffffff',
-                    bodyColor: '#e5e7eb',
-                    padding: 12,
-                    cornerRadius: 10
-                }
-            },
-            scales: {
-                y: {
-                    min: 0,
-                    max: 10,
-                    ticks: {
-                        stepSize: 2,
-                        color: '#64748b',
-                        font: {
-                            size: 12
-                        }
-                    },
-                    grid: {
-                        color: 'rgba(148, 163, 184, 0.16)',
-                        drawBorder: false
-                    }
-                },
-                x: {
-                    ticks: {
-                        color: '#64748b',
-                        font: {
-                            size: 12
-                        }
-                    },
-                    grid: {
-                        display: false,
-                        drawBorder: false
-                    }
-                }
-            }
-        }
-    });
-</script>
 
 {% endblock %}
