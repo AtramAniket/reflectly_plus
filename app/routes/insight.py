@@ -8,7 +8,7 @@ insight = Blueprint("insights", __name__)
 
 @insight.route("/insights")
 @login_required
-def insights():
+def home():
     week_start_param = request.args.get("week_start")
     target_date = None
 
