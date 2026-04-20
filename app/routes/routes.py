@@ -36,6 +36,10 @@ def home():
         return redirect(url_for('main.dashboard'))
     return redirect(url_for('auth.login'))
 
+@main.route("/logs")
+@login_required
+def logs():
+    return render_template("logs.html")
 
 @main.route("/dashboard")
 @login_required
