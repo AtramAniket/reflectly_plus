@@ -1,0 +1,357 @@
+/* =========================================================
+   ANTI-PROCRASTINATION PAGES
+   ========================================================= */
+
+.centered-container {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.reading-container {
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+/* =========================================================
+   SHARED INTRO / FORM CARDS
+   ========================================================= */
+
+.procrastination-form-card,
+.procrastination-view-card,
+.procrastination-sheet-table-card {
+    margin-bottom: 18px;
+}
+
+.procrastination-section {
+    padding: 6px 0 22px;
+    border-bottom: 1px solid #eee3d4;
+    margin-bottom: 22px;
+}
+
+.procrastination-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 8px;
+}
+
+.procrastination-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+/* =========================================================
+   COMPARISON / SCORE BLOCKS
+   ========================================================= */
+
+.procrastination-comparison-grid,
+.score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.comparison-card,
+.score-card,
+.task-detail-block {
+    padding: 14px;
+    border-radius: 16px;
+    background: #fbf7f2;
+    border: 1px solid #eadfce;
+}
+
+.comparison-label,
+.score-scale,
+.muted-inline,
+.task-detail-label,
+.task-cell-subtext,
+.table-limit-note,
+.procrastination-view-label {
+    color: var(--color-text-soft);
+}
+
+.comparison-label,
+.score-scale,
+.task-detail-label,
+.table-limit-note,
+.procrastination-view-label {
+    font-size: 13px;
+    line-height: 1.7;
+    font-weight: 700;
+}
+
+.comparison-value {
+    margin-top: 4px;
+    font-size: 28px;
+    line-height: 1.1;
+    font-weight: 900;
+    color: var(--color-text-strong);
+    letter-spacing: -0.03em;
+}
+
+.score-label {
+    display: inline-block;
+    margin-bottom: 6px;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--color-text-strong);
+}
+
+/* =========================================================
+   VIEW HEADER
+   ========================================================= */
+
+.procrastination-view-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.procrastination-view-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.procrastination-task-title {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--color-text-strong);
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.procrastination-table-wrap {
+    overflow-x: auto;
+}
+
+.procrastination-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+}
+
+.procrastination-table th,
+.procrastination-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #eee3d4;
+    text-align: left;
+    vertical-align: top;
+    font-size: 14px;
+}
+
+.procrastination-table th {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    font-weight: 800;
+    background: #fbf7f2;
+}
+
+.task-cell-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--color-text-strong);
+    margin-bottom: 4px;
+}
+
+.task-cell-subtext {
+    font-size: 13px;
+    line-height: 1.7;
+    font-weight: 700;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.status-done {
+    background: #eef8ee;
+    color: #6f936f;
+}
+
+.status-pending {
+    background: #edf4fb;
+    color: #6f86ad;
+}
+
+.task-detail-row td {
+    color: var(--color-text-soft);
+}
+
+.task-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    padding: 12px 0 4px;
+}
+
+.task-detail-label {
+    margin-bottom: 4px;
+}
+
+.task-detail-block p {
+    font-size: 14px;
+    line-height: 1.82;
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+/* =========================================================
+   SUMMARY CARDS
+   ========================================================= */
+
+.entries-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.summary-card {
+    padding: 18px;
+    background: rgba(255,255,255,0.88);
+    border: 1px solid #eadfce;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: var(--shadow-xs);
+}
+
+.summary-label {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+}
+
+.summary-value {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--color-text-strong);
+    letter-spacing: -0.03em;
+}
+
+/* =========================================================
+   HISTORY LIST
+   ========================================================= */
+
+.entries-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.entry-library-card {
+    padding: 18px;
+    background: rgba(255,255,255,0.90);
+    border: 1px solid #eadfce;
+    border-radius: 22px;
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.entry-library-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+    border-color: #e0d3c1;
+}
+
+.entry-library-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 10px;
+}
+
+.entry-library-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-text-strong);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+}
+
+.entry-library-title:hover {
+    text-decoration: underline;
+}
+
+.entry-library-preview {
+    font-size: 15px;
+    line-height: 1.82;
+    color: var(--color-text-soft);
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.entry-library-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.entry-library-meta {
+    white-space: nowrap;
+    font-weight: 800;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .entries-summary-grid,
+    .procrastination-comparison-grid,
+    .score-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .task-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .entries-summary-grid,
+    .procrastination-comparison-grid,
+    .score-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .entry-library-top,
+    .entry-library-footer,
+    .entry-actions,
+    .entry-actions-left,
+    .procrastination-view-top,
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .procrastination-table {
+        min-width: 620px;
+    }
+}
