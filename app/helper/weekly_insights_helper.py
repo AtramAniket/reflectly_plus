@@ -1,41 +1,44 @@
 from __future__ import annotations
 
-from sqlalchemy import and_
-
+from collections import Counter, defaultdict
+from datetime import date, datetime, time, timedelta, timezone
 from statistics import mean
 from typing import Any, Optional
-from collections import Counter, defaultdict
-
 from zoneinfo import ZoneInfo
-from datetime import date, datetime, time, timedelta, timezone
 
 from app.extensions import db
 from app.models.habit import Habit
 from app.models.habit_log import HabitLog
 from app.models.journal import JournalEntry
-from app.models.weekly_insight import WeeklyInsight
 from app.models.mood_checklist import MoodChecklistResult
 from app.models.procrastination_sheet import ProcrastinationSheet
-
+from app.models.weekly_insight import WeeklyInsight
+from app.services.weekly_insight_service import generate_weekly_insight_payload
 
 
 # ---------------------------------------------------------------------------
 # Timezone helpers
 # ---------------------------------------------------------------------------
 
-
 def get_user_timezone(user) -> ZoneInfo:
     """
-    Returns the user's timezone.
-    Falls back to UTC if timezone is missing.
+    Return the user's timezone.
+
+    Falls back to UTC when the user has no timezone stored.
     """
     timezone_name = getattr(user, "timezone", None) or "UTC"
     return ZoneInfo(timezone_name)
 
 
-def get_week_range_for_user(user, target_date: Optional[date] = None) -> tuple[date, date]:
+def get_week_range_for_user(
+    user,
+    target_date: Optional[date] = None,
+) -> tuple[date, date]:
     """
-    Returns Monday-Sunday based on the user's local timezone.
+    Return the Monday-Sunday week range for the user in their local timezone.
+
+    If target_date is provided, it is treated as already representing the
+    relevant local date.
     """
     user_timezone = get_user_timezone(user)
 
@@ -55,33 +58,44 @@ def get_week_datetime_range_for_user(
     user_timezone: ZoneInfo,
 ) -> tuple[datetime, datetime]:
     """
-    Builds the user's local week boundary and converts it to UTC.
-    End is exclusive.
+    Build an inclusive-exclusive datetime range for the user's local week.
+
+    The returned datetimes are converted to UTC so they can be safely used
+    against timezone-aware timestamps stored in the database.
     """
     local_start = datetime.combine(week_start, time.min, tzinfo=user_timezone)
-    local_end = datetime.combine(week_end + timedelta(days=1), time.min, tzinfo=user_timezone)
+    local_end = datetime.combine(
+        week_end + timedelta(days=1),
+        time.min,
+        tzinfo=user_timezone,
+    )
 
     utc_start = local_start.astimezone(timezone.utc)
     utc_end = local_end.astimezone(timezone.utc)
 
     return utc_start, utc_end
 
+
 # ---------------------------------------------------------------------------
-# Main Entry Point
+# Main entry point
 # ---------------------------------------------------------------------------
 
-def get_or_generate_weekly_insight(user, target_date: Optional[date] = None, force_refresh=False) -> dict[str, Any]:
+def get_or_generate_weekly_insight(
+    user,
+    target_date: Optional[date] = None,
+    force_refresh: bool = False,
+) -> dict[str, Any]:
     """
-    Main entry point for the Insights page.
+    Return the weekly insight payload for a user, generating and saving it if needed.
 
     Flow:
-    1. Compute week range
-    2. Return cached insight if it already exists
+    1. Resolve the user's local week range
+    2. Return cached insight if it exists and refresh is not forced
     3. Build structured weekly context
-    4. Run sufficiency + contradiction checks
-    5. Save fallback if insufficient data
-    6. Otherwise generate AI summary and save it
-    7. Return normalized payload for route/template use
+    4. Evaluate sufficiency + contradictions + cross-signal patterns
+    5. Save a restrained fallback insight if signal is insufficient
+    6. Otherwise call the weekly insight service and save the generated insight
+    7. Return a normalized response for route/template use
     """
     week_start, week_end = get_week_range_for_user(user, target_date)
 
@@ -115,10 +129,11 @@ def get_or_generate_weekly_insight(user, target_date: Optional[date] = None, for
             context=context,
             contradiction_flag=contradiction_flag,
             sufficiency=sufficiency,
+            cross_signal_patterns=cross_signal_patterns,
         )
         return build_insight_response(saved_insight)
 
-    ai_output = generate_ai_weekly_insight(
+    ai_output = generate_weekly_insight_payload(
         context=context,
         sufficiency=sufficiency,
         contradiction_flag=contradiction_flag,
@@ -139,19 +154,20 @@ def get_or_generate_weekly_insight(user, target_date: Optional[date] = None, for
     return build_insight_response(saved_insight)
 
 
-def get_week_range(target_date: Optional[date] = None) -> tuple[date, date]:
-    """
-    Returns Monday-Sunday for the given date.
-    """
-    target_date = target_date or date.today()
-    week_start = target_date - timedelta(days=target_date.weekday())
-    week_end = week_start + timedelta(days=6)
-    return week_start, week_end
+# ---------------------------------------------------------------------------
+# Weekly context construction
+# ---------------------------------------------------------------------------
 
-
-def build_weekly_context(user: int, week_start: date, week_end: date) -> dict[str, Any]:
+def build_weekly_context(
+    user,
+    week_start: date,
+    week_end: date,
+) -> dict[str, Any]:
     """
-    Builds the full structured weekly context used for both local UI and AI generation.
+    Build the structured weekly context used by both the UI and the AI service.
+
+    This context intentionally focuses on behavioral signals rather than any
+    personal identity or speculative life context.
     """
     journal_data = aggregate_journal_data(user, week_start, week_end)
     mood_data = aggregate_mood_data(user, week_start, week_end)
@@ -202,6 +218,19 @@ def build_weekly_context(user: int, week_start: date, week_end: date) -> dict[st
 
 
 def check_insight_sufficiency(context: dict[str, Any]) -> dict[str, Any]:
+    """
+    Evaluate whether the current week has enough signal for a meaningful reflection.
+
+    UI-facing levels:
+    - insufficient
+    - building
+    - strong
+
+    Internal confidence stays:
+    - low
+    - medium
+    - high
+    """
     journal_count = context["journal"]["count"]
     mood_count = context["mood"]["entries"]
     habit_logs = context["habits"]["completed_logs"]
@@ -215,17 +244,17 @@ def check_insight_sufficiency(context: dict[str, Any]) -> dict[str, Any]:
     reasons: list[str] = []
 
     if journal_count >= 3 or mood_count >= 4 or total_actions >= 5:
-        level = "basic"
+        level = "building"
         confidence = "low"
         reasons.append("Minimum weekly activity threshold met.")
 
     if journal_count >= 4 and mood_count >= 4 and active_days >= 3:
-        level = "moderate"
+        level = "building"
         confidence = "medium"
         reasons.append("Multi-day journaling and mood activity available.")
 
     if journal_count >= 5 and mood_count >= 5 and active_days >= 4:
-        level = "rich"
+        level = "strong"
         confidence = "high"
         reasons.append("Strong cross-feature weekly signal available.")
 
@@ -233,10 +262,18 @@ def check_insight_sufficiency(context: dict[str, Any]) -> dict[str, Any]:
         "level": level,
         "confidence": confidence,
         "reasons": reasons,
+        "label": get_signal_strength_label(level),
+        "confidence_note": build_confidence_note(level, confidence),
     }
 
 
 def detect_contradictions(context: dict[str, Any]) -> bool:
+    """
+    Detect whether the week's signals look mixed or internally inconsistent.
+
+    This is intentionally light-touch and should only flag visible signal tension,
+    not infer any deeper psychological conclusion.
+    """
     tone_distribution = context["journal"].get("tone_distribution", {})
     mood_variance = context["mood"].get("variance") or 0
     mood_trend = context["mood"].get("trend")
@@ -250,15 +287,23 @@ def detect_contradictions(context: dict[str, Any]) -> bool:
     mixed_mood_direction = mood_trend == "mixed"
     gratitude_with_negative_tone = gratitude_count > 0 and negative_count > 0
 
-    return any([
-        mixed_journal_tone,
-        volatile_mood,
-        mixed_mood_direction,
-        gratitude_with_negative_tone,
-    ])
+    return any(
+        [
+            mixed_journal_tone,
+            volatile_mood,
+            mixed_mood_direction,
+            gratitude_with_negative_tone,
+        ]
+    )
 
 
 def build_cross_signal_patterns(context: dict[str, Any]) -> list[str]:
+    """
+    Build lightweight cross-feature observations directly from structured data.
+
+    These are deterministic observations from the backend and can be merged with
+    AI-generated observations later.
+    """
     patterns: list[str] = []
 
     mood_avg = context["mood"].get("avg_score")
@@ -271,28 +316,46 @@ def build_cross_signal_patterns(context: dict[str, Any]) -> list[str]:
     procrastination_rate = context["procrastination"].get("completion_rate")
 
     if journal_count >= 3 and mood_trend == "upward":
-        patterns.append("Mood scores improved alongside regular journaling activity this week.")
+        patterns.append(
+            "Mood scores improved alongside regular journaling activity this week."
+        )
 
     if gratitude_count >= 2 and mood_avg is not None and mood_avg >= 6:
-        patterns.append("Gratitude entries appeared during relatively steadier mood periods.")
+        patterns.append(
+            "Gratitude entries appeared during relatively steadier mood periods."
+        )
 
     if reflection_count >= 2 and distortions:
-        patterns.append("Reflection entries surfaced recurring thinking patterns worth noticing over time.")
+        patterns.append(
+            "Reflection entries surfaced recurring thinking patterns worth noticing over time."
+        )
 
     if mood_trend == "downward" and journal_count >= 2:
-        patterns.append("Mood dipped across the week while journaling continued, which may point to a mixed period rather than one clear pattern.")
+        patterns.append(
+            "Mood dipped across the week while journaling continued, which suggests a mixed week rather than one clear pattern."
+        )
 
     if habit_rate is not None and mood_avg is not None:
         if habit_rate >= 0.6 and mood_avg >= 7:
-            patterns.append("Higher mood and stronger habit consistency appeared together this week.")
+            patterns.append(
+                "Higher mood and stronger habit consistency appeared together this week."
+            )
         elif habit_rate < 0.4 and mood_avg <= 5:
-            patterns.append("Lower mood and weaker habit consistency appeared in the same week.")
+            patterns.append(
+                "Lower mood and weaker habit consistency appeared in the same week."
+            )
 
     if procrastination_rate is not None and procrastination_rate < 0.5:
-        patterns.append("Follow-through in the procrastination tool felt uneven this week.")
+        patterns.append(
+            "Follow-through in the procrastination tool felt uneven this week."
+        )
 
     return dedupe_preserve_order(patterns)
 
+
+# ---------------------------------------------------------------------------
+# Persistence
+# ---------------------------------------------------------------------------
 
 def save_insufficient_insight(
     user,
@@ -301,20 +364,39 @@ def save_insufficient_insight(
     context: dict[str, Any],
     contradiction_flag: bool,
     sufficiency: dict[str, Any],
+    cross_signal_patterns: list[str],
 ) -> WeeklyInsight:
+    """
+    Save a restrained weekly insight for low-signal weeks.
+
+    Even when signal is insufficient, the saved record still includes enough
+    structured UI metadata for the page to render consistently.
+    """
+    fallback_payload = build_insufficient_payload(
+        context=context,
+        sufficiency=sufficiency,
+        contradiction_flag=contradiction_flag,
+        cross_signal_patterns=cross_signal_patterns,
+    )
+
+    enriched_context = build_enriched_context(
+        base_context=context,
+        insight_meta=fallback_payload["insight_meta"],
+    )
+
     insight = WeeklyInsight(
         user_id=user.id,
         week_start=week_start,
         week_end=week_end,
-        summary=None,
-        patterns=[],
-        contradictions=None,
-        suggestions=[],
+        summary=fallback_payload["summary"],
+        patterns=fallback_payload["patterns"],
+        contradictions=fallback_payload["contradictions"],
+        suggestions=fallback_payload["suggestions"],
         sufficiency_level=sufficiency["level"],
         confidence_level=sufficiency["confidence"],
         contradiction_flag=contradiction_flag,
         signals_used=build_signals_used(context),
-        structured_context=context,
+        structured_context=enriched_context,
         generated_at=None,
     )
     db.session.add(insight)
@@ -332,23 +414,49 @@ def save_generated_insight(
     cross_signal_patterns: list[str],
     ai_output: dict[str, Any],
 ) -> WeeklyInsight:
+    """
+    Save a generated weekly insight using the current WeeklyInsight model.
+
+    The main hero reflection is stored in `summary`, cross-signal observations
+    in `patterns`, and small extra UI metadata is stored under
+    `structured_context["insight_meta"]`.
+    """
     merged_patterns = dedupe_preserve_order(
-        (ai_output.get("patterns") or []) + cross_signal_patterns
+        (ai_output.get("cross_signal_observations") or [])
+        + cross_signal_patterns
+    )
+
+    contradictions = ai_output.get("contradictions")
+    if contradiction_flag and not contradictions:
+        contradictions = (
+            "Some signals this week appear mixed, so the overall picture may be better "
+            "read as a changing or uneven week rather than one clear pattern."
+        )
+
+    insight_meta = {
+        "emotional_trend": ai_output.get("emotional_trend"),
+        "confidence_note": ai_output.get("confidence_note") or sufficiency["confidence_note"],
+        "signal_strength_label": ai_output.get("signal_strength_label") or sufficiency["label"],
+    }
+
+    enriched_context = build_enriched_context(
+        base_context=context,
+        insight_meta=insight_meta,
     )
 
     insight = WeeklyInsight(
         user_id=user.id,
         week_start=week_start,
         week_end=week_end,
-        summary=ai_output.get("summary"),
+        summary=ai_output.get("hero_summary"),
         patterns=merged_patterns,
-        contradictions=ai_output.get("contradictions"),
+        contradictions=contradictions,
         suggestions=ai_output.get("suggestions") or [],
         sufficiency_level=sufficiency["level"],
         confidence_level=sufficiency["confidence"],
         contradiction_flag=contradiction_flag,
         signals_used=build_signals_used(context),
-        structured_context=context,
+        structured_context=enriched_context,
         generated_at=datetime.now(timezone.utc),
     )
     db.session.add(insight)
@@ -357,6 +465,15 @@ def save_generated_insight(
 
 
 def build_insight_response(insight: WeeklyInsight) -> dict[str, Any]:
+    """
+    Normalize a WeeklyInsight record into a template-friendly payload.
+
+    This lets the route and template stay simple even when the database schema
+    is still using broad fields like summary/patterns/suggestions.
+    """
+    structured_context = insight.structured_context or {}
+    insight_meta = structured_context.get("insight_meta", {})
+
     summary = insight.summary
     if not summary and insight.sufficiency_level == "insufficient":
         summary = (
@@ -369,14 +486,24 @@ def build_insight_response(insight: WeeklyInsight) -> dict[str, Any]:
         "week_start": insight.week_start,
         "week_end": insight.week_end,
         "summary": summary,
+        "hero_summary": summary,
+        "emotional_trend": insight_meta.get("emotional_trend"),
         "patterns": insight.patterns or [],
         "contradictions": insight.contradictions,
         "suggestions": insight.suggestions or [],
         "sufficiency_level": insight.sufficiency_level,
         "confidence_level": insight.confidence_level,
         "contradiction_flag": insight.contradiction_flag,
+        "signal_strength_label": insight_meta.get(
+            "signal_strength_label",
+            get_signal_strength_label(insight.sufficiency_level),
+        ),
+        "confidence_note": insight_meta.get(
+            "confidence_note",
+            build_confidence_note(insight.sufficiency_level, insight.confidence_level),
+        ),
         "signals_used": insight.signals_used or {},
-        "structured_context": insight.structured_context or {},
+        "structured_context": structured_context,
         "generated_at": insight.generated_at,
     }
 
@@ -385,10 +512,23 @@ def build_insight_response(insight: WeeklyInsight) -> dict[str, Any]:
 # Aggregation helpers
 # ---------------------------------------------------------------------------
 
-def aggregate_journal_data(user: int, week_start: date, week_end: date) -> dict[str, Any]:
+def aggregate_journal_data(
+    user,
+    week_start: date,
+    week_end: date,
+) -> dict[str, Any]:
+    """
+    Aggregate journal activity for the target week.
 
+    This gathers weekly entry counts, entry mix, recurring keywords, tone
+    distribution, and detected cognitive distortion counts.
+    """
     user_timezone = get_user_timezone(user)
-    start_dt, end_dt = get_week_datetime_range_for_user(week_start, week_end, user_timezone)
+    start_dt, end_dt = get_week_datetime_range_for_user(
+        week_start,
+        week_end,
+        user_timezone,
+    )
 
     entries = (
         JournalEntry.query
@@ -432,9 +572,6 @@ def aggregate_journal_data(user: int, week_start: date, week_end: date) -> dict[
         for distortion in distortion_list:
             distortions[str(distortion).strip().lower()] += 1
 
-        # If your AI analysis is stored on a related object instead,
-        # replace the tone/distortion logic above with that relationship.
-
     return {
         "count": len(entries),
         "types": type_counts,
@@ -446,9 +583,20 @@ def aggregate_journal_data(user: int, week_start: date, week_end: date) -> dict[
     }
 
 
-def aggregate_mood_data(user, week_start: date, week_end: date) -> dict[str, Any]:
+def aggregate_mood_data(
+    user,
+    week_start: date,
+    week_end: date,
+) -> dict[str, Any]:
+    """
+    Aggregate mood checklist activity for the target week.
+    """
     user_timezone = get_user_timezone(user)
-    start_dt, end_dt = get_week_datetime_range_for_user(week_start, week_end, user_timezone)
+    start_dt, end_dt = get_week_datetime_range_for_user(
+        week_start,
+        week_end,
+        user_timezone,
+    )
 
     mood_entries = (
         MoodChecklistResult.query
@@ -483,9 +631,23 @@ def aggregate_mood_data(user, week_start: date, week_end: date) -> dict[str, Any
     }
 
 
-def aggregate_habit_data(user, week_start: date, week_end: date) -> dict[str, Any]:
+def aggregate_habit_data(
+    user,
+    week_start: date,
+    week_end: date,
+) -> dict[str, Any]:
+    """
+    Aggregate habit activity for the target week.
+
+    Completion rate is calculated as completed logs divided by expected logs
+    for all active habits across seven days.
+    """
     user_timezone = get_user_timezone(user)
-    start_dt, end_dt = get_week_datetime_range_for_user(week_start, week_end, user_timezone)
+    start_dt, end_dt = get_week_datetime_range_for_user(
+        week_start,
+        week_end,
+        user_timezone,
+    )
 
     active_habits = (
         Habit.query
@@ -528,9 +690,21 @@ def aggregate_habit_data(user, week_start: date, week_end: date) -> dict[str, An
         "log_dates": log_dates,
     }
 
-def aggregate_procrastination_data(user, week_start: date, week_end: date) -> dict[str, Any]:
+
+def aggregate_procrastination_data(
+    user,
+    week_start: date,
+    week_end: date,
+) -> dict[str, Any]:
+    """
+    Aggregate procrastination sheet activity for the target week.
+    """
     user_timezone = get_user_timezone(user)
-    start_dt, end_dt = get_week_datetime_range_for_user(week_start, week_end, user_timezone)
+    start_dt, end_dt = get_week_datetime_range_for_user(
+        week_start,
+        week_end,
+        user_timezone,
+    )
 
     sheets = (
         ProcrastinationSheet.query
@@ -564,18 +738,20 @@ def aggregate_procrastination_data(user, week_start: date, week_end: date) -> di
 
 
 # ---------------------------------------------------------------------------
-# AI integration
-# Replace the stub with your real OpenAI call later.
+# Fallback builders
 # ---------------------------------------------------------------------------
 
-def generate_ai_weekly_insight(
+def build_insufficient_payload(
     context: dict[str, Any],
     sufficiency: dict[str, Any],
     contradiction_flag: bool,
     cross_signal_patterns: list[str],
 ) -> dict[str, Any]:
-    summary = build_fallback_summary(context, contradiction_flag)
+    """
+    Build a restrained fallback payload for weeks with insufficient activity.
 
+    This keeps the UI consistent without overstating weak signals.
+    """
     contradictions = None
     if contradiction_flag:
         contradictions = (
@@ -583,14 +759,69 @@ def generate_ai_weekly_insight(
             "read as a changing or uneven week rather than one clear pattern."
         )
 
-    suggestions = build_gentle_suggestions(context)
-
     return {
-        "summary": summary,
-        "patterns": cross_signal_patterns,
+        "summary": (
+            "There is not enough activity this week to generate a strong reflection yet. "
+            "A few more entries across different days can help the picture become clearer."
+        ),
+        "patterns": cross_signal_patterns[:2],
         "contradictions": contradictions,
-        "suggestions": suggestions,
+        "suggestions": build_gentle_suggestions(context),
+        "insight_meta": {
+            "emotional_trend": (
+                "There is not enough mood and journaling activity yet to describe a clear weekly emotional trend."
+            ),
+            "confidence_note": sufficiency["confidence_note"],
+            "signal_strength_label": sufficiency["label"],
+        },
     }
+
+
+def build_gentle_suggestions(context: dict[str, Any]) -> list[str]:
+    """
+    Build small non-intrusive suggestions from weekly behavior patterns.
+
+    Suggestions stay practical, neutral, and directly tied to the observed
+    weekly signals.
+    """
+    suggestions: list[str] = []
+
+    if context["journal"]["count"] < 3:
+        suggestions.append(
+            "A few more journal entries across different days may help patterns become clearer."
+        )
+
+    if context["mood"]["entries"] < 4:
+        suggestions.append(
+            "More regular mood check-ins could make weekly shifts easier to understand."
+        )
+
+    if context["habits"]["completion_rate"] < 0.4 and context["habits"]["active"] > 0:
+        suggestions.append(
+            "It may help to notice whether lower-follow-through days line up with lower-energy days."
+        )
+
+    if context["journal"]["types"].get("gratitude", 0) == 0:
+        suggestions.append(
+            "Trying a gratitude entry once or twice may add another useful perspective to the week."
+        )
+
+    return dedupe_preserve_order(suggestions)[:3]
+
+
+def build_enriched_context(
+    base_context: dict[str, Any],
+    insight_meta: dict[str, Any],
+) -> dict[str, Any]:
+    """
+    Attach UI-friendly insight metadata to the structured context.
+
+    This avoids requiring an immediate database migration while still giving
+    the template richer fields to render.
+    """
+    enriched_context = dict(base_context)
+    enriched_context["insight_meta"] = insight_meta
+    return enriched_context
 
 
 # ---------------------------------------------------------------------------
@@ -603,6 +834,9 @@ def calculate_active_days(
     habit_dates: set[str],
     procrastination_dates: set[str],
 ) -> int:
+    """
+    Count unique active days across all supported weekly signals.
+    """
     all_dates = set()
     all_dates.update(journal_dates)
     all_dates.update(mood_dates)
@@ -612,6 +846,9 @@ def calculate_active_days(
 
 
 def build_signals_used(context: dict[str, Any]) -> dict[str, int]:
+    """
+    Build a compact summary of the weekly signals used for the insight.
+    """
     return {
         "journal_count": context["journal"]["count"],
         "mood_entries": context["mood"]["entries"],
@@ -624,6 +861,12 @@ def build_signals_used(context: dict[str, Any]) -> dict[str, int]:
 
 
 def extract_simple_keywords(text: str) -> list[str]:
+    """
+    Extract simple recurring keywords from journal content.
+
+    This intentionally stays lightweight and avoids sending raw personal text
+    into the weekly signal summary.
+    """
     if not text:
         return []
 
@@ -644,11 +887,17 @@ def extract_simple_keywords(text: str) -> list[str]:
 
 
 def get_top_items(items: list[str], limit: int = 8) -> list[str]:
+    """
+    Return the most common items while preserving only the item values.
+    """
     counter = Counter(items)
     return [item for item, _count in counter.most_common(limit)]
 
 
 def calculate_variance(values: list[float]) -> float:
+    """
+    Calculate simple population variance for a list of numeric values.
+    """
     if len(values) < 2:
         return 0
 
@@ -658,6 +907,9 @@ def calculate_variance(values: list[float]) -> float:
 
 
 def determine_mood_trend(scores: list[float]) -> str:
+    """
+    Classify mood direction across the week using the first and last score.
+    """
     if len(scores) < 2:
         return "insufficient"
 
@@ -674,45 +926,37 @@ def determine_mood_trend(scores: list[float]) -> str:
     return "mixed"
 
 
-def build_fallback_summary(context: dict[str, Any], contradiction_flag: bool) -> str:
-    journal_count = context["journal"]["count"]
-    mood_count = context["mood"]["entries"]
-    active_days = context["activity"]["active_days"]
+def get_signal_strength_label(level: str) -> str:
+    """
+    Convert a sufficiency level into cleaner UI text.
+    """
+    if level == "strong":
+        return "Strong signal"
+    if level == "building":
+        return "Building signal"
+    return "Limited signal"
 
-    if contradiction_flag:
-        return (
-            f"This week includes activity across {active_days} day(s), with {journal_count} "
-            f"journal entry/entries and {mood_count} mood check-in(s). The overall picture "
-            f"looks somewhat mixed, so it may be more useful to treat this as an uneven week "
-            f"than to force a single conclusion."
-        )
 
-    return (
-        f"This week includes activity across {active_days} day(s), with {journal_count} "
-        f"journal entry/entries and {mood_count} mood check-in(s). There appears to be enough "
-        f"signal for a light weekly reflection, while some patterns may still become clearer "
-        f"with continued use over time."
-    )
+def build_confidence_note(level: str, confidence: str) -> str:
+    """
+    Build a small confidence note for UI display.
+    """
+    if level == "strong":
+        return "Multiple activity signals aligned this week."
 
-def build_gentle_suggestions(context: dict[str, Any]) -> list[str]:
-    suggestions: list[str] = []
+    if level == "building" and confidence == "medium":
+        return "Patterns are emerging across multiple days."
 
-    if context["journal"]["count"] < 3:
-        suggestions.append("A few more journal entries across different days may help patterns become clearer.")
+    if level == "building":
+        return "Some weekly patterns are starting to form."
 
-    if context["mood"]["entries"] < 4:
-        suggestions.append("More regular mood check-ins could make weekly shifts easier to understand.")
-
-    if context["habits"]["completion_rate"] < 0.4 and context["habits"]["active"] > 0:
-        suggestions.append("It may help to notice whether low-follow-through days line up with lower-energy days.")
-
-    if context["journal"]["types"].get("gratitude", 0) == 0:
-        suggestions.append("Trying a gratitude entry once or twice may add another useful perspective to the week.")
-
-    return dedupe_preserve_order(suggestions)[:3]
+    return "This reflection is based on limited weekly activity."
 
 
 def dedupe_preserve_order(items: list[str]) -> list[str]:
+    """
+    Remove duplicates from a list while preserving original order.
+    """
     seen = set()
     deduped: list[str] = []
 
