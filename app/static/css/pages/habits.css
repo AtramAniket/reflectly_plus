@@ -1,0 +1,568 @@
+/* =========================================================
+   HABITS PAGE
+   ========================================================= */
+
+.habits-v5 {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.habits-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.habits-stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.habit-stat-chip {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    align-items: start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: rgba(255,255,255,0.88);
+    border: 1px solid #eadfce;
+    border-radius: 18px;
+    min-height: 96px;
+    box-shadow: var(--shadow-xs);
+}
+
+.habit-stat-icon-wrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 2px;
+}
+
+.habit-stat-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fbf7f2;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.habit-stat-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.habit-stat-copy small {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1.3;
+    font-weight: 800;
+}
+
+.habit-stat-copy strong {
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--color-text-strong);
+}
+
+.habit-stat-note {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin-top: 4px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #fff3e3;
+    color: #b9874c;
+    font-size: 11px;
+    font-weight: 800;
+    border: 1px solid #f0dec2;
+}
+
+/* =========================================================
+   WORKSPACE LAYOUT
+   ========================================================= */
+
+.habits-workspace-v5 {
+    display: grid;
+    grid-template-columns: minmax(320px, 410px) minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.habits-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.habits-panel-heading {
+    min-height: 58px;
+}
+
+.habits-panel-heading-stacked,
+.habits-panel-heading-calendar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.habits-panel-heading-stacked {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+}
+
+.habits-panel-heading-stacked h3,
+.habits-panel-heading-calendar h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-text-strong);
+    line-height: 1.2;
+}
+
+/* =========================================================
+   HABIT LIST
+   ========================================================= */
+
+.habit-card-list,
+.archived-habit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.habit-card,
+.archived-habit-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.90);
+    border: 1px solid #eadfce;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.habit-card:hover {
+    border-color: #e0d3c1;
+    box-shadow: var(--shadow-xs);
+}
+
+.habit-card.is-selected {
+    border-color: #d8dff1;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfbff 100%);
+    box-shadow: 0 8px 18px rgba(127, 144, 190, 0.08);
+}
+
+.habit-card-main {
+    flex: 1;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.habit-card-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.habit-card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--color-text-strong);
+    line-height: 1.35;
+}
+
+.habit-card-helper,
+.habit-card-meta,
+.archived-note {
+    font-size: 13px;
+    color: var(--color-text-soft);
+}
+
+.habit-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.habit-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    position: relative;
+    min-height: 32px;
+}
+
+.habit-chip-status {
+    padding: 7px 11px;
+    border-radius: 999px;
+    font-size: 13px;
+    text-decoration: none;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.habit-chip-status.is-done {
+    background: #eef8ee;
+    color: #6f936f;
+}
+
+.habit-chip-status.is-action {
+    background: #eef2fb;
+    color: #7f90be;
+}
+
+.habit-chip-status.is-action:hover {
+    background: #e8edf8;
+}
+
+/* =========================================================
+   INLINE CREATE CARD
+   ========================================================= */
+
+.habit-card-create {
+    border-style: dashed;
+    border-color: #dbd5eb;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfaff 100%);
+}
+
+.habit-inline-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+    width: 100%;
+}
+
+.habit-inline-form input,
+.habit-inline-form button {
+    width: 100%;
+}
+
+.habit-inline-submit {
+    min-height: 44px;
+}
+
+/* =========================================================
+   ARCHIVE POPOVER
+   ========================================================= */
+
+.habit-archive-menu {
+    position: relative;
+}
+
+.habit-archive-menu summary {
+    list-style: none;
+    cursor: pointer;
+    color: #98a3b6;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    user-select: none;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.habit-archive-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.habit-archive-menu summary:hover {
+    color: #c97571;
+    background: #fff0ee;
+}
+
+.habit-archive-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 20;
+    width: 280px;
+    padding: 12px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #eadfce;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.habit-archive-popover label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--color-text-soft);
+}
+
+.habit-archive-submit {
+    min-height: 40px;
+    margin-top: 4px;
+}
+
+/* =========================================================
+   CALENDAR
+   ========================================================= */
+
+.habit-calendar-shell {
+    position: relative;
+    padding: 16px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.90);
+    border: 1px solid #eadfce;
+    min-height: 530px;
+}
+
+.habit-calendar-nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.habit-calendar-legend {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: var(--color-text-soft);
+    font-weight: 800;
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.legend-done {
+    background: #7f90be;
+}
+
+.legend-missed {
+    background: #d6a266;
+}
+
+.legend-before {
+    background: #d7dce6;
+}
+
+.habit-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.habit-calendar-weekdays span {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 900;
+    color: #a0a8b7;
+    text-transform: uppercase;
+}
+
+.habit-calendar-month {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.habit-calendar-cell {
+    min-height: 78px;
+    border-radius: 16px;
+    padding: 8px;
+    border: 1.5px solid #eadfce;
+    background: #fffdf9;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: 0.18s ease;
+}
+
+.habit-calendar-cell-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.habit-calendar-date {
+    font-size: 12px;
+    font-weight: 900;
+    color: var(--color-text);
+}
+
+.habit-calendar-cell-body {
+    display: flex;
+    align-items: flex-end;
+    min-height: 28px;
+}
+
+.habit-calendar-label {
+    display: inline-block;
+    max-width: 100%;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.25;
+    word-break: break-word;
+    color: var(--color-text-soft);
+}
+
+.habit-calendar-cell.is-completed {
+    background: linear-gradient(180deg, #8fa0c6 0%, #7d8fb9 100%);
+    border-color: #7f90be;
+}
+
+.habit-calendar-cell.is-completed .habit-calendar-date,
+.habit-calendar-cell.is-completed .habit-calendar-label {
+    color: #ffffff;
+}
+
+.habit-calendar-cell.is-missed {
+    background: #fff6ea;
+    border-color: #efdbbf;
+}
+
+.habit-calendar-cell.is-missed .habit-calendar-label {
+    color: #b9874c;
+}
+
+.habit-calendar-cell.is-before-creation {
+    background: #faf7f2;
+    border-style: dashed;
+    border-color: #e7ddd0;
+    opacity: 0.55;
+}
+
+.habit-calendar-cell.is-outside-month {
+    opacity: 0.35;
+}
+
+.habit-calendar-cell.is-future {
+    background: #faf7f2;
+}
+
+.habit-calendar-cell.is-today {
+    box-shadow: 0 0 0 3px rgba(127, 144, 190, 0.14);
+}
+
+.is-empty-calendar {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.habit-calendar-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    pointer-events: none;
+}
+
+.habit-calendar-overlay-card {
+    max-width: 280px;
+    text-align: center;
+    padding: 18px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #eadfce;
+    box-shadow: var(--shadow-xs);
+}
+
+.habit-calendar-overlay-card h4 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-text-strong);
+    margin-bottom: 6px;
+}
+
+/* =========================================================
+   ARCHIVED HABITS
+   ========================================================= */
+
+.archived-habits-section details {
+    border-top: 1px solid #eadfce;
+    padding-top: 18px;
+}
+
+.archived-habits-section summary {
+    cursor: pointer;
+    font-weight: 800;
+    color: var(--color-text);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+    .habits-workspace-v5 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1100px) {
+    .habits-stats-strip {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .habits-stats-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .habit-card,
+    .habit-calendar-nav,
+    .habits-panel-heading-calendar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .habit-card-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .habit-calendar-weekdays,
+    .habit-calendar-month {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .habit-archive-popover {
+        position: static;
+        width: 100%;
+        margin-top: 8px;
+    }
+}
