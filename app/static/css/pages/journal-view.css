@@ -1,0 +1,314 @@
+/* =========================================================
+   JOURNAL VIEW PAGE
+   ========================================================= */
+
+.reading-container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.entry-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 32px;
+    min-height: 340px;
+    margin-bottom: 20px;
+    border: 1px solid #eadfce;
+    box-shadow: var(--shadow-sm);
+    background: #f4efe8;
+}
+
+.entry-hero img {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    display: block;
+}
+
+.entry-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to top,
+        rgba(41, 46, 60, 0.72) 0%,
+        rgba(41, 46, 60, 0.28) 45%,
+        rgba(41, 46, 60, 0.06) 100%);
+}
+
+.entry-hero-overlay {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 22px;
+    z-index: 2;
+}
+
+.entry-title {
+    font-size: 40px;
+    line-height: 1.05;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+}
+
+.entry-date {
+    font-size: 15px;
+    color: rgba(255,255,255,0.92);
+    font-weight: 700;
+}
+
+/* =========================================================
+   TYPE INFO CARD
+   ========================================================= */
+
+.entry-type-card {
+    margin-bottom: 18px;
+}
+
+.entry-type-description {
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--color-text-soft);
+    font-weight: 700;
+}
+
+/* =========================================================
+   ENTRY CONTENT
+   ========================================================= */
+
+.entry-view {
+    margin-bottom: 18px;
+}
+
+.entry-content-full {
+    font-size: 17px;
+    line-height: 2;
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.entry-content-full p + p {
+    margin-top: 1rem;
+}
+
+/* =========================================================
+   PROMPT BLOCKS
+   ========================================================= */
+
+.prompt-block {
+    padding: 18px;
+    border-radius: 22px;
+    border: 1px solid #eadfce;
+    background: #fbf7f2;
+    margin-bottom: 14px;
+}
+
+.prompt-title {
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--color-text-strong);
+    margin-bottom: 8px;
+}
+
+.prompt-answer {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+/* =========================================================
+   FOOTER / MOOD
+   ========================================================= */
+
+.entry-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #ece2d4;
+}
+
+.entry-mood-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 14px;
+    border-radius: 999px;
+    background: #eef3fb;
+    color: #6f86ad;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   AI INSIGHTS
+   ========================================================= */
+
+.ai-insights {
+    margin-top: 22px;
+    padding: 20px;
+    border-radius: 26px;
+    border: 1px solid #eadfce;
+    background: rgba(255,255,255,0.86);
+    box-shadow: var(--shadow-xs);
+}
+
+.ai-insights-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.ai-insights-header h3 {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--color-text-strong);
+}
+
+.ai-badge {
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #f2eef8;
+    color: #8c7cab;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.ai-block {
+    margin-bottom: 16px;
+}
+
+.ai-label {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 6px;
+}
+
+.ai-block p,
+.ai-reframe p {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.ai-tone {
+    display: inline-flex;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #edf4fb;
+    color: #6f86ad;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.distortion-item {
+    padding: 14px;
+    border-radius: 18px;
+    background: #fbf7f2;
+    border: 1px solid #eadfce;
+    margin-bottom: 10px;
+}
+
+.distortion-type {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--color-text-strong);
+    margin-bottom: 4px;
+}
+
+.distortion-evidence {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--color-text-soft);
+    margin-bottom: 4px;
+}
+
+.distortion-reason {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.ai-reframe {
+    padding: 16px;
+    border-radius: 20px;
+    background: #fff8ef;
+    border: 1px solid #efe1c9;
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.entry-actions {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.entry-actions-left {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.back-link {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .entry-hero,
+    .entry-hero img {
+        min-height: 260px;
+        height: 260px;
+        border-radius: 24px;
+    }
+
+    .entry-title {
+        font-size: 30px;
+    }
+
+    .entry-content-full,
+    .prompt-answer {
+        font-size: 15px;
+    }
+
+    .entry-actions,
+    .entry-actions-left,
+    .ai-insights-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .entry-actions-left a,
+    .entry-actions a.btn-danger,
+    .entry-actions a.btn-secondary {
+        width: 100%;
+    }
+}
