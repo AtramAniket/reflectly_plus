@@ -1,0 +1,157 @@
+/* =========================================================
+   JOURNAL CREATE PAGE
+   ========================================================= */
+
+.form-page-shell {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.form-page-header {
+    margin-bottom: 24px;
+}
+
+.form-page-title {
+    font-size: 44px;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    font-weight: 900;
+    color: var(--color-text-strong);
+    margin-bottom: 10px;
+}
+
+.form-page-subtitle {
+    max-width: 700px;
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--color-text-soft);
+    font-weight: 700;
+}
+
+.form-card {
+    padding: 22px;
+    border-radius: 30px;
+    border: 1px solid #eadfce;
+    background: rgba(255,255,255,0.92);
+    box-shadow:
+        0 14px 30px rgba(127, 112, 95, 0.06),
+        0 1px 0 rgba(255,255,255,0.85) inset;
+}
+
+.entry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--color-text);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    min-height: 50px;
+}
+
+.form-group textarea {
+    min-height: 130px;
+}
+
+.entry-form input[type="number"] {
+    max-width: 160px;
+}
+
+.entry-form .ql-toolbar.ql-snow {
+    border: 1px solid #e6dac7;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    background: rgba(255,255,255,0.84);
+}
+
+.entry-form .ql-container.ql-snow {
+    border: 1px solid #e6dac7;
+    border-top: none;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    background: rgba(255,255,255,0.88);
+    min-height: 180px;
+}
+
+.entry-form .ql-editor {
+    min-height: 140px;
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.entry-form .ql-editor.ql-blank::before {
+    color: #9ba5b8;
+    font-style: italic;
+    font-weight: 600;
+}
+
+.entry-form-helper {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--color-text-muted);
+    margin-top: -2px;
+    font-weight: 700;
+}
+
+.form-actions {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.form-actions .btn-primary,
+.entry-form .btn-primary,
+.entry-form button[type="submit"] {
+    min-height: 52px;
+    padding: 14px 22px;
+    border-radius: 18px;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+    .form-page-title {
+        font-size: 34px;
+    }
+
+    .form-page-subtitle {
+        font-size: 15px;
+    }
+
+    .form-card {
+        padding: 18px;
+        border-radius: 24px;
+    }
+
+    .form-actions .btn-primary,
+    .entry-form .btn-primary,
+    .entry-form button[type="submit"] {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .entry-form input[type="number"] {
+        max-width: 100%;
+    }
+}
