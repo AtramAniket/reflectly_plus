@@ -576,39 +576,9 @@ textarea {
     font-weight: 800;
 }
 
-/* =========================================================
-   8. DASHBOARD
-   ========================================================= */
-
-/* Keep your full existing dashboard block here from style.css */
-/* Copy everything from .dashboard-shell through dashboard responsive. */
 
 /* =========================================================
-   9. AUTH PAGES
-   ========================================================= */
-
-/* Keep your full existing auth block here from style.css */
-
-/* =========================================================
-   10. GENERIC ENTRY / LIBRARY / VIEW
-   ========================================================= */
-
-/* Keep your full existing entry/library/view block here from style.css */
-
-/* =========================================================
-   11. AI / CHECKLIST / PROCRASTINATION / HABITS
-   ========================================================= */
-
-/* Keep your full existing AI/checklist/procrastination/habits block here from style.css */
-
-/* =========================================================
-   12. LOGS PAGE
-   ========================================================= */
-
-/* Keep your full existing logs block here from style.css */
-
-/* =========================================================
-   13. RESPONSIVE
+   8. RESPONSIVE
    ========================================================= */
 
 @media (max-width: 1200px) {
