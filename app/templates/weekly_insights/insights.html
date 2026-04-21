@@ -2,6 +2,10 @@
 
 {% block title %}Insights{% endblock %}
 
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/insights.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="insights-page">
     <div class="insights-shell">
@@ -12,7 +16,7 @@
                 <p class="insights-eyebrow">Weekly reflection</p>
                 <h1 class="insights-title">Insights</h1>
                 <p class="insights-subtitle">
-                    A weekly view of your journaling, mood check-ins, habits, and procrastination patterns.
+                    A deeper view of the patterns behind your journals, mood check-ins, habits, and procrastination activity.
                 </p>
             </div>
         </section>
@@ -33,14 +37,18 @@
                     </span>
                 </div>
 
-                {% if insight.sufficiency_level == "rich" %}
-                    <span class="insights-status-badge insights-status-badge--strong">Strong signals</span>
-                {% elif insight.sufficiency_level == "moderate" %}
-                    <span class="insights-status-badge insights-status-badge--emerging">Emerging patterns</span>
-                {% elif insight.sufficiency_level == "basic" %}
-                    <span class="insights-status-badge insights-status-badge--limited">Limited patterns</span>
+                {% if insight.sufficiency_level == "strong" %}
+                    <span class="insights-status-badge insights-status-badge--strong">
+                        {{ insight.signal_strength_label or "Strong signal" }}
+                    </span>
+                {% elif insight.sufficiency_level == "building" %}
+                    <span class="insights-status-badge insights-status-badge--emerging">
+                        {{ insight.signal_strength_label or "Building signal" }}
+                    </span>
                 {% else %}
-                    <span class="insights-status-badge insights-status-badge--insufficient">Not enough data</span>
+                    <span class="insights-status-badge insights-status-badge--insufficient">
+                        {{ insight.signal_strength_label or "Limited signal" }}
+                    </span>
                 {% endif %}
             </div>
 
@@ -53,12 +61,12 @@
         </section>
 
         <!-- Hero -->
-        <section class="insights-hero">
+        <section class="insights-hero insights-hero--refined">
             <div class="insights-hero__main">
                 <div class="insights-section-heading">
                     <div>
                         <p class="insights-section-label">This week at a glance</p>
-                        <h2>Reflection Summary</h2>
+                        <h2>Weekly Reflection</h2>
                     </div>
 
                     {% if insight.generated_at %}
@@ -68,8 +76,15 @@
                     {% endif %}
                 </div>
 
-                <div class="insights-summary-box">
-                    <p>{{ insight.summary }}</p>
+                <div class="insights-summary-box insights-summary-box--featured">
+                    <p>{{ insight.hero_summary or insight.summary }}</p>
+                </div>
+
+                <div class="insights-confidence-row">
+                    <div class="insights-mini-note">
+                        <span class="insights-mini-note__label">Confidence</span>
+                        <p>{{ insight.confidence_note }}</p>
+                    </div>
                 </div>
 
                 {% if insight.contradictions %}
@@ -81,49 +96,105 @@
             </div>
 
             <aside class="insights-hero__visual">
-                <div class="insights-hero-art">
+                <div
+                    class="insights-hero-art"
+                    {% if insight_scene and insight_scene.image_url %}
+                        style="background-image: linear-gradient(180deg, rgba(24, 27, 40, 0.10), rgba(24, 27, 40, 0.55)), url('{{ insight_scene.image_url }}');"
+                    {% endif %}
+                >
                     <div class="insights-hero-art__overlay">
-                        <p class="insights-hero-art__eyebrow">Weekly reflection</p>
-                        <h3 class="insights-hero-art__title">A quieter view of how the week felt</h3>
+                        <p class="insights-hero-art__eyebrow">Emotional trend</p>
+                        <h3 class="insights-hero-art__title">
+                            A quieter read on how the week unfolded
+                        </h3>
                         <p class="insights-hero-art__text">
-                            Patterns become more meaningful over time. This space is meant to help you notice them, not rush them.
+                            {{ insight.emotional_trend or "Patterns become more meaningful over time. This space is meant to help you notice them without forcing conclusions too early." }}
                         </p>
                     </div>
                 </div>
             </aside>
         </section>
 
-        <!-- Secondary Stats -->
-        <section class="insights-stats-grid insights-stats-grid--muted">
+        <!-- Compact signal strip -->
+        <section class="insights-stats-grid insights-stats-grid--compact">
             <article class="insights-stat-card insights-stat-card--muted">
                 <p class="insights-stat-card__label">Journal entries</p>
                 <h3 class="insights-stat-card__value">{{ insight.signals_used.journal_count or 0 }}</h3>
-                <p class="insights-stat-card__hint">Tracked writing activity this week</p>
             </article>
 
             <article class="insights-stat-card insights-stat-card--muted">
                 <p class="insights-stat-card__label">Mood check-ins</p>
                 <h3 class="insights-stat-card__value">{{ insight.signals_used.mood_entries or 0 }}</h3>
-                <p class="insights-stat-card__hint">Recorded emotional check-ins</p>
             </article>
 
             <article class="insights-stat-card insights-stat-card--muted">
                 <p class="insights-stat-card__label">Active days</p>
                 <h3 class="insights-stat-card__value">{{ insight.signals_used.active_days or 0 }}</h3>
-                <p class="insights-stat-card__hint">Days with meaningful activity</p>
             </article>
 
             <article class="insights-stat-card insights-stat-card--muted">
-                <p class="insights-stat-card__label">Procrastination sheets</p>
-                <h3 class="insights-stat-card__value">{{ insight.signals_used.procrastination_sheets or 0 }}</h3>
-                <p class="insights-stat-card__hint">Sessions captured this week</p>
+                <p class="insights-stat-card__label">Habit logs</p>
+                <h3 class="insights-stat-card__value">{{ insight.signals_used.habit_completed_logs or 0 }}</h3>
             </article>
         </section>
 
-        <!-- Priority Grid -->
+        <!-- Main interpretation grid -->
+        <section class="insights-main-grid insights-main-grid--balanced">
+
+            <!-- Cross-signal observations -->
+            <article class="insights-card insights-card--feature">
+                <div class="insights-section-heading">
+                    <div>
+                        <p class="insights-section-label">Patterns</p>
+                        <h2>Cross-Signal Observations</h2>
+                    </div>
+                </div>
+
+                {% if insight.patterns %}
+                    <div class="insights-pattern-list insights-pattern-list--spacious">
+                        {% for pattern in insight.patterns %}
+                            <div class="insights-pattern-item">
+                                <div class="insights-pattern-item__dot"></div>
+                                <p>{{ pattern }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="insights-empty-state">
+                        <p>Not enough connected weekly activity yet to surface stronger cross-patterns.</p>
+                    </div>
+                {% endif %}
+            </article>
+
+            <!-- Suggestions -->
+            <article class="insights-card">
+                <div class="insights-section-heading">
+                    <div>
+                        <p class="insights-section-label">Suggestions</p>
+                        <h2>Gentle Next Steps</h2>
+                    </div>
+                </div>
+
+                {% if insight.suggestions %}
+                    <div class="insights-suggestion-list">
+                        {% for suggestion in insight.suggestions %}
+                            <div class="insights-suggestion-item">
+                                <p>{{ suggestion }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="insights-empty-state">
+                        <p>Suggestions will appear once there is enough weekly signal to reflect on more clearly.</p>
+                    </div>
+                {% endif %}
+            </article>
+        </section>
+
+        <!-- Secondary grid -->
         <section class="insights-priority-grid">
 
-            <!-- Thinking Patterns -->
+            <!-- Cognitive Signals -->
             <article class="insights-card">
                 <div class="insights-section-heading">
                     <div>
@@ -151,35 +222,7 @@
                 {% endif %}
             </article>
 
-            <!-- Suggestions -->
-            <article class="insights-card">
-                <div class="insights-section-heading">
-                    <div>
-                        <p class="insights-section-label">Suggestions</p>
-                        <h2>Gentle Next Steps</h2>
-                    </div>
-                </div>
-
-                {% if insight.suggestions %}
-                    <div class="insights-suggestion-list">
-                        {% for suggestion in insight.suggestions %}
-                            <div class="insights-suggestion-item">
-                                <p>{{ suggestion }}</p>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="insights-empty-state">
-                        <p>Suggestions will appear once there is enough consistent weekly signal to reflect on.</p>
-                    </div>
-                {% endif %}
-            </article>
-        </section>
-
-        <!-- Snapshot + Patterns -->
-        <section class="insights-main-grid">
-
-            <!-- Weekly Snapshot -->
+            <!-- Weekly Activity Snapshot -->
             <article class="insights-card">
                 <div class="insights-section-heading">
                     <div>
@@ -273,34 +316,7 @@
 
                 </div>
             </article>
-
-            <!-- Patterns -->
-            <article class="insights-card">
-                <div class="insights-section-heading">
-                    <div>
-                        <p class="insights-section-label">Patterns</p>
-                        <h2>Cross-Signal Observations</h2>
-                    </div>
-                </div>
-
-                {% if insight.patterns %}
-                    <div class="insights-pattern-list">
-                        {% for pattern in insight.patterns %}
-                            <div class="insights-pattern-item">
-                                <div class="insights-pattern-item__dot"></div>
-                                <p>{{ pattern }}</p>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="insights-empty-state">
-                        <p>Not enough connected activity yet to surface meaningful cross-patterns.</p>
-                    </div>
-                {% endif %}
-            </article>
         </section>
-
-
 
     </div>
 </div>
