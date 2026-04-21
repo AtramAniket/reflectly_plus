@@ -80,7 +80,7 @@ html {
 
 body {
     font-family: var(--font-ui);
-    line-height: 1.65;
+    line-height: 1.72;
     display: flex;
     color: var(--color-text);
     background:
@@ -518,7 +518,7 @@ select {
     border-radius: 16px;
     background: rgba(255,255,255,0.86);
     color: var(--color-text);
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.6;
     transition:
         border-color 0.2s ease,
@@ -581,31 +581,6 @@ textarea {
    8. RESPONSIVE
    ========================================================= */
 
-@media (max-width: 1200px) {
-    .dashboard-grid,
-    .dashboard-grid-lean,
-    .habits-workspace-v5 {
-        grid-template-columns: 1fr;
-    }
-
-    .habit-panel-enhanced {
-        position: static;
-        top: auto;
-    }
-}
-
-@media (max-width: 1100px) {
-    .habits-stats-strip,
-    .entries-summary-grid,
-    .procrastination-comparison-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .task-detail-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
 @media (max-width: 900px) {
     body {
         display: block;
@@ -623,97 +598,32 @@ textarea {
         margin-left: 0;
         padding: 18px;
     }
-
-    .dashboard-hero {
-        grid-template-columns: 1fr;
-    }
 }
 
 @media (max-width: 700px) {
-    .dashboard-hero__stats,
-    .dashboard-hero__actions,
-    .dashboard-mini-stats,
-    .habits-stats-strip,
-    .entries-summary-grid,
-    .score-grid,
-    .procrastination-comparison-grid,
-    .logs-grid {
-        grid-template-columns: 1fr;
+    .main {
+        padding: 16px;
     }
 
-    .entry-item-top,
-    .habit-top-row,
-    .habit-progress-row,
-    .habit-card,
-    .habit-calendar-nav,
-    .habits-panel-heading-calendar,
-    .entry-library-top,
-    .entry-library-footer,
-    .pagination,
-    .checklist-score-header,
-    .entry-actions,
-    .procrastination-view-top,
-    .section-header,
-    .logs-card__top,
-    .logs-card__footer {
+    .section-header {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .habit-card-actions {
-        width: 100%;
-        justify-content: flex-start;
+    .page-title {
+        font-size: 28px;
     }
 
-    .habit-calendar-weekdays,
-    .habit-calendar-month {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .habit-archive-popover {
-        position: static;
-        width: 100%;
-        margin-top: 8px;
-    }
-
-    .chart-container-large {
-        height: 260px;
-    }
-
-    .checklist-options {
-        gap: 8px;
-    }
-
-    .logs-shell {
-        width: min(100%, calc(100% - 1rem));
-    }
-
-    .logs-page {
-        padding: 1.25rem 0 2rem;
-    }
-
-    .logs-title,
-    .dashboard-hero__title {
-        font-size: 1.95rem;
-    }
-
-    .logs-hero,
-    .logs-card,
-    .logs-note,
-    .dashboard-hero__content,
-    .dashboard-hero-art {
-        padding: 1rem;
+    .card {
+        padding: 18px;
         border-radius: 22px;
     }
 
-    .dashboard-hero-art__image,
-    .dashboard-hero-art__fallback-inner {
-        min-height: 240px;
-    }
-
-    .dashboard-hero-stat {
-        min-width: calc(50% - 0.35rem);
-        flex: 1 1 calc(50% - 0.35rem);
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger {
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -722,20 +632,12 @@ textarea {
         padding: 14px;
     }
 
-    .page-title,
-    .auth-title,
-    .procrastination-task-title,
-    .entry-title {
+    .page-title {
         font-size: 24px;
     }
 
-    .auth-card {
-        padding: 28px 22px;
-        border-radius: 20px;
-    }
-
-    .dashboard-hero__subtitle,
-    .dashboard-hero-art__fallback-text {
-        font-size: 14px;
+    .card {
+        padding: 16px;
+        border-radius: 18px;
     }
 }
