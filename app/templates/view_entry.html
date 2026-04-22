@@ -6,78 +6,548 @@
 
 {% block content %}
 
-<div class="reading-container">
+{% set mood_score = entry.mood_score or 5 %}
 
-    <!-- Hero -->
-    <div class="entry-hero">
-        <img src="{{ entry.image_url or 'https://picsum.photos/1200/400' }}" alt="Journal cover image">
+{% if mood_score <= 2 %}
+    {% set mood_label = "Very Low" %}
+    {% set mood_emoji = "😣" %}
+    {% set mood_theme = "mood-theme-low" %}
+{% elif mood_score <= 4 %}
+    {% set mood_label = "Low" %}
+    {% set mood_emoji = "😕" %}
+    {% set mood_theme = "mood-theme-muted" %}
+{% elif mood_score == 5 %}
+    {% set mood_label = "Mixed" %}
+    {% set mood_emoji = "😐" %}
+    {% set mood_theme = "mood-theme-mixed" %}
+{% elif mood_score <= 7 %}
+    {% set mood_label = "Okay" %}
+    {% set mood_emoji = "🙂" %}
+    {% set mood_theme = "mood-theme-calm" %}
+{% elif mood_score == 8 %}
+    {% set mood_label = "Good" %}
+    {% set mood_emoji = "😊" %}
+    {% set mood_theme = "mood-theme-good" %}
+{% elif mood_score == 9 %}
+    {% set mood_label = "Bright" %}
+    {% set mood_emoji = "😄" %}
+    {% set mood_theme = "mood-theme-bright" %}
+{% else %}
+    {% set mood_label = "Excellent" %}
+    {% set mood_emoji = "🤩" %}
+    {% set mood_theme = "mood-theme-excellent" %}
+{% endif %}
 
-        <div class="entry-hero-overlay">
-            <h1 class="entry-title">{{ entry.title }}</h1>
-            <p class="entry-date">{{ entry.created_at.strftime('%B %d, %Y') }}</p>
+<div class="journal-reading-shell">
+
+    <section class="entry-hero-card {{ mood_theme }}">
+        <div class="entry-hero-bg-shapes" aria-hidden="true">
+            <span class="hero-shape hero-shape-one"></span>
+            <span class="hero-shape hero-shape-two"></span>
+            <span class="hero-shape hero-shape-three"></span>
         </div>
-    </div>
 
-    <!-- Journal Type Info -->
-    <div class="card entry-type-card">
+        <div class="entry-hero-topbar">
+            <a href="{{ url_for('journal.view_all_entries') }}" class="entry-back-link desktop-only">
+                ← Back to All Entries
+            </a>
 
+            <div class="entry-actions-menu desktop-only">
+                <button
+                    type="button"
+                    class="entry-menu-toggle"
+                    id="entry-menu-toggle"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="entry-menu-dropdown"
+                >
+                    ⋯
+                </button>
+
+                <div class="entry-menu-dropdown" id="entry-menu-dropdown">
+                    <a href="{{ url_for('journal.edit_entry', entry_id=entry.id) }}" class="entry-menu-item">
+                        ✏️ Edit entry
+                    </a>
+
+                    <button
+                        type="button"
+                        class="entry-menu-item entry-menu-item-danger"
+                        id="open-delete-modal"
+                    >
+                        🗑 Delete entry
+                    </button>
+
+                    <a href="{{ url_for('journal.view_all_entries') }}" class="entry-menu-item">
+                        ← All entries
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="entry-hero-content">
+            <div class="entry-hero-copy">
+                <p class="entry-date">{{ entry.created_at.strftime('%B %d, %Y') }}</p>
+                <h1 class="entry-title">{{ entry.title }}</h1>
+
+                <div class="entry-meta-row">
+                    <span class="entry-mood-pill">
+                        <span class="entry-mood-emoji">{{ mood_emoji }}</span>
+                        <span>{{ mood_label }}</span>
+                    </span>
+
+                    {% if entry.entry_type == "gratitude" %}
+                        <span class="entry-subtle-pill">Gratitude Entry</span>
+                    {% elif entry.entry_type == "reflection" %}
+                        <span class="entry-subtle-pill">Daily Reflection</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="entry-hero-side" aria-hidden="true">
+                <div class="entry-hero-badge">{{ mood_emoji }}</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="entry-reading-card">
         {% if entry.entry_type == "simple" %}
-            <h3 class="card-title">Simple Journal</h3>
-            <p class="entry-type-description">
-                A free-form space to write whatever is on your mind.
-            </p>
+            <div class="entry-reading-body ql-editor entry-content-rich">
+                {{ entry.content | safe }}
+            </div>
 
         {% elif entry.entry_type == "gratitude" %}
-            <h3 class="card-title">Gratitude Journal</h3>
-            <p class="entry-type-description">
-                Gratitude entries help you notice the people, moments, and small things that made the day better.
-                Over time, they can make it easier to spot what feels steady, supportive, and meaningful.
-            </p>
+            <div class="entry-structured-stack">
+                <div class="prompt-block">
+                    <h4 class="prompt-title">What are you grateful for first?</h4>
+                    <p class="prompt-answer">{{ entry.structured_content.gratitude_1 }}</p>
+                </div>
 
-        {% elif entry.entry_type == "reflection" %}
-            <h3 class="card-title">Daily Reflection</h3>
-            <p class="entry-type-description">
-                Reflection helps you look back on the day with a little more clarity — what worked,
-                what felt difficult, and what you want to carry into tomorrow.
-            </p>
-        {% endif %}
+                <div class="prompt-block">
+                    <h4 class="prompt-title">What else felt meaningful today?</h4>
+                    <p class="prompt-answer">{{ entry.structured_content.gratitude_2 }}</p>
+                </div>
 
-    </div>
-
-    <!-- Entry Content -->
-    <div class="card entry-view">
-
-        {% if entry.entry_type == "simple" %}
-            {% include 'partials/_view_simple.html' %}
-
-        {% elif entry.entry_type == "gratitude" %}
-            {% include 'partials/_view_gratitude.html' %}
+                <div class="prompt-block">
+                    <h4 class="prompt-title">What small thing are you glad happened?</h4>
+                    <p class="prompt-answer">{{ entry.structured_content.gratitude_3 }}</p>
+                </div>
+            </div>
 
         {% elif entry.entry_type == "reflection" %}
             {% include 'partials/_view_reflection.html' %}
         {% endif %}
+    </section>
 
-    </div>
-
-    <!-- Actions -->
-    <div class="entry-actions">
-
-        <div class="entry-actions-left">
-            <a href="{{ url_for('journal.edit_entry', entry_id=entry.id) }}" class="btn-secondary">
-                ✏️ Edit
-            </a>
-
-            <a href="{{ url_for('journal.delete_entry', entry_id=entry.id) }}" class="btn-danger">
-                🗑 Delete
-            </a>
+    {% if entry.entry_type == "simple" %}
+    <section class="reflection-card" id="reflection-card">
+        <div class="reflection-card-head">
+            <div>
+                <p class="reflection-kicker">Optional Reflection</p>
+                <h2 class="reflection-title">Reflect with AI</h2>
+                <p class="reflection-subtitle">
+                    Get a gentle summary of this entry without taking over the page.
+                </p>
+            </div>
         </div>
 
-        <a href="{{ url_for('main.dashboard') }}" class="back-link">
-            ← Back to Dashboard
-        </a>
+        {% if analysis %}
+            <div class="reflection-ready-bar" id="reflection-ready-bar">
+                <div>
+                    <p class="reflection-ready-title">Reflection ready</p>
+                    <p class="reflection-ready-subtitle">You can open it anytime below.</p>
+                </div>
 
-    </div>
+                <div class="reflection-ready-actions">
+                    <button type="button" class="btn-secondary" id="toggle-reflection-btn">
+                        View Reflection
+                    </button>
+                    <button type="button" class="btn-secondary" id="regenerate-reflection-btn">
+                        Regenerate
+                    </button>
+                </div>
+            </div>
+
+            <div class="reflection-loader" id="reflection-loader" hidden>
+                <div class="reflection-loader-orb"></div>
+                <div>
+                    <p class="reflection-loader-title">Reading your entry…</p>
+                    <p class="reflection-loader-text">Putting together a softer reflection.</p>
+                </div>
+            </div>
+
+            <div class="reflection-output" id="reflection-output" data-open="false">
+                <div class="reflection-grid">
+                    <div class="reflection-block reflection-block-summary">
+                        <p class="reflection-label">Summary</p>
+                        <p id="reflection-summary">{{ analysis.summary }}</p>
+                    </div>
+
+                    <div class="reflection-block reflection-block-tone">
+                        <p class="reflection-label">Tone</p>
+                        <div class="reflection-tone-pill" id="reflection-tone">{{ analysis.tone }}</div>
+                    </div>
+                </div>
+
+                <div
+                    class="reflection-block reflection-block-distortions {% if not analysis.distortions %}is-empty{% endif %}"
+                    id="reflection-distortions-block"
+                >
+                    <p class="reflection-label">Patterns noticed</p>
+
+                    <div id="reflection-distortions-list">
+                        {% if analysis.distortions %}
+                            {% for item in analysis.distortions %}
+                                <div class="distortion-item">
+                                    <p class="distortion-type">{{ item.type }}</p>
+                                    <p class="distortion-evidence">{{ item.evidence }}</p>
+                                    <p class="distortion-reason">{{ item.reason }}</p>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="reflection-empty-text">No strong negative thinking pattern stood out here.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="reflection-block reflection-block-reframe">
+                    <p class="reflection-label">A kinder read of this moment</p>
+                    <p id="reflection-reframe">{{ analysis.reframe }}</p>
+                </div>
+            </div>
+        {% else %}
+            <div class="reflection-empty-state" id="reflection-empty-state">
+                <div class="reflection-empty-copy">
+                    <p class="reflection-empty-title">No reflection generated yet.</p>
+                    <p class="reflection-empty-text">
+                        Keep the journal as it is, or generate a personal summary when you want one.
+                    </p>
+                </div>
+
+                <button type="button" class="btn-primary" id="generate-reflection-btn">
+                    ✨ Generate Reflection
+                </button>
+            </div>
+
+            <div class="reflection-loader" id="reflection-loader" hidden>
+                <div class="reflection-loader-orb"></div>
+                <div>
+                    <p class="reflection-loader-title">Reading your entry…</p>
+                    <p class="reflection-loader-text">Putting together a softer reflection.</p>
+                </div>
+            </div>
+
+            <div class="reflection-output" id="reflection-output" data-open="true" hidden>
+                <div class="reflection-grid">
+                    <div class="reflection-block reflection-block-summary">
+                        <p class="reflection-label">Summary</p>
+                        <p id="reflection-summary"></p>
+                    </div>
+
+                    <div class="reflection-block reflection-block-tone">
+                        <p class="reflection-label">Tone</p>
+                        <div class="reflection-tone-pill" id="reflection-tone"></div>
+                    </div>
+                </div>
+
+                <div class="reflection-block reflection-block-distortions is-empty" id="reflection-distortions-block">
+                    <p class="reflection-label">Patterns noticed</p>
+                    <div id="reflection-distortions-list">
+                        <p class="reflection-empty-text">No strong negative thinking pattern stood out here.</p>
+                    </div>
+                </div>
+
+                <div class="reflection-block reflection-block-reframe">
+                    <p class="reflection-label">Gentle perspective</p>
+                    <p id="reflection-reframe"></p>
+                </div>
+
+                <div class="reflection-output-actions">
+                    <button type="button" class="btn-secondary" id="collapse-reflection-btn">
+                        Hide Reflection
+                    </button>
+                    <button type="button" class="btn-secondary" id="regenerate-reflection-btn">
+                        Regenerate
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+    {% endif %}
 
 </div>
+
+<div class="mobile-entry-actionbar">
+    <a href="{{ url_for('journal.view_all_entries') }}" class="mobile-action-btn">
+        ← Entries
+    </a>
+    <a href="{{ url_for('journal.edit_entry', entry_id=entry.id) }}" class="mobile-action-btn">
+        ✏️ Edit
+    </a>
+    <button type="button" class="mobile-action-btn mobile-action-btn-danger" id="open-delete-modal-mobile">
+        🗑 Delete
+    </button>
+</div>
+
+<div class="confirm-modal" id="delete-confirm-modal" hidden>
+    <div class="confirm-modal-backdrop" id="delete-modal-backdrop"></div>
+
+    <div class="confirm-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+        <h3 class="confirm-modal-title" id="delete-modal-title">Delete this entry?</h3>
+        <p class="confirm-modal-text">
+            This will permanently remove the journal entry and any saved reflection attached to it.
+        </p>
+
+        <div class="confirm-modal-actions">
+            <button type="button" class="btn-secondary" id="cancel-delete-modal">
+                Cancel
+            </button>
+
+            <form method="POST" action="{{ url_for('journal.delete_entry', entry_id=entry.id) }}">
+                <button type="submit" class="btn-danger">
+                    Delete Entry
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if entry.entry_type == "simple" %}
+<script>
+    (function () {
+        const generateBtn = document.getElementById('generate-reflection-btn');
+        const regenerateBtn = document.getElementById('regenerate-reflection-btn');
+        const toggleBtn = document.getElementById('toggle-reflection-btn');
+        const collapseBtn = document.getElementById('collapse-reflection-btn');
+
+        const emptyState = document.getElementById('reflection-empty-state');
+        const readyBar = document.getElementById('reflection-ready-bar');
+        const loader = document.getElementById('reflection-loader');
+        const output = document.getElementById('reflection-output');
+
+        const summaryEl = document.getElementById('reflection-summary');
+        const toneEl = document.getElementById('reflection-tone');
+        const reframeEl = document.getElementById('reflection-reframe');
+        const distortionsList = document.getElementById('reflection-distortions-list');
+        const distortionsBlock = document.getElementById('reflection-distortions-block');
+
+        function setLoading(isLoading) {
+            if (loader) {
+                loader.hidden = !isLoading;
+            }
+
+            if (generateBtn) {
+                generateBtn.disabled = isLoading;
+                generateBtn.textContent = isLoading ? 'Generating…' : '✨ Generate Reflection';
+            }
+
+            if (regenerateBtn) {
+                regenerateBtn.disabled = isLoading;
+                regenerateBtn.textContent = isLoading ? 'Regenerating…' : 'Regenerate';
+            }
+        }
+
+        function setOutputOpen(open) {
+            if (!output) return;
+
+            output.hidden = !open;
+            output.dataset.open = open ? 'true' : 'false';
+
+            if (toggleBtn) {
+                toggleBtn.textContent = open ? 'Hide Reflection' : 'View Reflection';
+            }
+        }
+
+        function renderDistortions(items) {
+            if (!distortionsList || !distortionsBlock) return;
+
+            distortionsList.innerHTML = '';
+
+            if (!Array.isArray(items) || items.length === 0) {
+                distortionsBlock.classList.add('is-empty');
+                distortionsList.innerHTML = '<p class="reflection-empty-text">No strong negative thinking pattern stood out here.</p>';
+                return;
+            }
+
+            distortionsBlock.classList.remove('is-empty');
+
+            items.forEach(function (item) {
+                const card = document.createElement('div');
+                card.className = 'distortion-item';
+
+                const type = document.createElement('p');
+                type.className = 'distortion-type';
+                type.textContent = item.type || 'Pattern';
+
+                const evidence = document.createElement('p');
+                evidence.className = 'distortion-evidence';
+                evidence.textContent = item.evidence || '';
+
+                const reason = document.createElement('p');
+                reason.className = 'distortion-reason';
+                reason.textContent = item.reason || '';
+
+                card.appendChild(type);
+                if (item.evidence) card.appendChild(evidence);
+                if (item.reason) card.appendChild(reason);
+
+                distortionsList.appendChild(card);
+            });
+        }
+
+        function renderAnalysis(data) {
+            summaryEl.textContent = data.summary || '';
+            toneEl.textContent = data.tone || 'Balanced';
+            reframeEl.textContent = data.reframe || '';
+            renderDistortions(data.distortions || []);
+
+            if (emptyState) emptyState.hidden = true;
+            if (readyBar) readyBar.style.display = 'flex';
+
+            setOutputOpen(true);
+        }
+
+        async function requestReflection(regenerate) {
+            try {
+                setLoading(true);
+
+                const formData = new FormData();
+                if (regenerate) {
+                    formData.append('regenerate', 'true');
+                }
+
+                const response = await fetch(
+                    "{{ url_for('journal.generate_reflection', entry_id=entry.id) }}",
+                    {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok || !data.ok) {
+                    throw new Error(data.message || 'Could not generate reflection.');
+                }
+
+                renderAnalysis(data.analysis || {});
+            } catch (error) {
+                alert(error.message || 'Could not generate reflection right now.');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        if (generateBtn) {
+            generateBtn.addEventListener('click', function () {
+                requestReflection(false);
+            });
+        }
+
+        if (regenerateBtn) {
+            regenerateBtn.addEventListener('click', function () {
+                requestReflection(true);
+            });
+        }
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function () {
+                const shouldOpen = output.dataset.open !== 'true';
+                setOutputOpen(shouldOpen);
+            });
+        }
+
+        if (collapseBtn) {
+            collapseBtn.addEventListener('click', function () {
+                setOutputOpen(false);
+            });
+        }
+
+        {% if analysis %}
+        if (readyBar) {
+            readyBar.style.display = 'flex';
+        }
+        setOutputOpen(false);
+        {% endif %}
+    })();
+</script>
+{% endif %}
+
+<script>
+    (function () {
+        const menuToggle = document.getElementById('entry-menu-toggle');
+        const menuDropdown = document.getElementById('entry-menu-dropdown');
+
+        const openDeleteDesktop = document.getElementById('open-delete-modal');
+        const openDeleteMobile = document.getElementById('open-delete-modal-mobile');
+        const modal = document.getElementById('delete-confirm-modal');
+        const cancelDelete = document.getElementById('cancel-delete-modal');
+        const backdrop = document.getElementById('delete-modal-backdrop');
+
+        function closeMenu() {
+            if (!menuToggle || !menuDropdown) return;
+            menuDropdown.classList.remove('is-open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        }
+
+        function openMenu() {
+            if (!menuToggle || !menuDropdown) return;
+            menuDropdown.classList.add('is-open');
+            menuToggle.setAttribute('aria-expanded', 'true');
+        }
+
+        if (menuToggle && menuDropdown) {
+            menuToggle.addEventListener('click', function (event) {
+                event.stopPropagation();
+                const isOpen = menuDropdown.classList.contains('is-open');
+                isOpen ? closeMenu() : openMenu();
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!menuDropdown.contains(event.target) && !menuToggle.contains(event.target)) {
+                    closeMenu();
+                }
+            });
+        }
+
+        function openModal() {
+            if (!modal) return;
+            modal.hidden = false;
+            document.body.classList.add('modal-open');
+            closeMenu();
+        }
+
+        function closeModal() {
+            if (!modal) return;
+            modal.hidden = true;
+            document.body.classList.remove('modal-open');
+        }
+
+        if (openDeleteDesktop) {
+            openDeleteDesktop.addEventListener('click', openModal);
+        }
+
+        if (openDeleteMobile) {
+            openDeleteMobile.addEventListener('click', openModal);
+        }
+
+        if (cancelDelete) {
+            cancelDelete.addEventListener('click', closeModal);
+        }
+
+        if (backdrop) {
+            backdrop.addEventListener('click', closeModal);
+        }
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeModal();
+                closeMenu();
+            }
+        });
+    })();
+</script>
 
 {% endblock %}
