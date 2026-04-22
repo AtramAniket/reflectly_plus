@@ -1,53 +1,404 @@
-<div class="form-group">
-    <label for="title">Title</label>
-    <input
-        id="title"
-        type="text"
-        name="title"
-        placeholder="Give your entry a title"
-        required
-    >
+<div class="journal-step-panel is-active" id="gratitude-step-1">
+    <div class="journal-focus-card gratitude-focus-card gratitude-focus-card--intro">
+        <div class="gratitude-intro-layout">
+            <div class="gratitude-intro-copy">
+                <span class="journal-kicker">Gratitude Journal</span>
+                <h1 class="journal-focus-title">Take a small pause for what felt good.</h1>
+                <p class="journal-focus-text">
+                    This space helps you notice what supported you, what mattered, and what small moment is worth keeping from today.
+                </p>
+
+                <div class="gratitude-intro-points">
+                    <div class="gratitude-intro-point">
+                        <span class="gratitude-intro-emoji">🌤️</span>
+                        <span>Notice something good</span>
+                    </div>
+                    <div class="gratitude-intro-point">
+                        <span class="gratitude-intro-emoji">🤍</span>
+                        <span>Remember what helped</span>
+                    </div>
+                    <div class="gratitude-intro-point">
+                        <span class="gratitude-intro-emoji">✨</span>
+                        <span>Keep one small moment</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gratitude-intro-art" aria-hidden="true">
+                <div class="gratitude-art-card gratitude-art-card-main">🌼</div>
+                <div class="gratitude-art-card gratitude-art-card-small">☁️</div>
+            </div>
+        </div>
+
+        <div class="journal-step-actions">
+            <button type="button" class="btn-primary journal-next-btn" id="gratitude-start-btn">
+                Begin
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="gratitude_1">What are you grateful for today?</label>
-    <textarea
-        id="gratitude_1"
-        name="gratitude_1"
-        placeholder="Something small or big that mattered today..."
-        required
-    ></textarea>
+<div class="journal-step-panel" id="gratitude-step-2">
+    <div class="journal-focus-card gratitude-focus-card">
+        <div class="journal-focus-head">
+            <span class="journal-kicker">Prompt One</span>
+            <h2 class="journal-focus-title">What are you grateful for today?</h2>
+            <p class="journal-focus-text">
+                It can be something big, small, practical, emotional, or unexpectedly comforting.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="gratitude_1">Your answer</label>
+            <textarea
+                id="gratitude_1"
+                name="gratitude_1"
+                placeholder="Something that mattered today..."
+                required
+            ></textarea>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="gratitude-back-to-intro">
+                Back
+            </button>
+            <button type="button" class="btn-primary journal-next-btn" id="gratitude-to-step-3">
+                Next
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="gratitude_2">Who or what made today better?</label>
-    <textarea
-        id="gratitude_2"
-        name="gratitude_2"
-        placeholder="A person, a moment, or even a small comfort..."
-        required
-    ></textarea>
+<div class="journal-step-panel" id="gratitude-step-3">
+    <div class="journal-focus-card gratitude-focus-card">
+        <div class="journal-focus-head">
+            <span class="journal-kicker">Prompt Two</span>
+            <h2 class="journal-focus-title">Who or what made today lighter?</h2>
+            <p class="journal-focus-text">
+                A person, a routine, a kind word, a meal, some rest, or even a quiet break counts.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="gratitude_2">Your answer</label>
+            <textarea
+                id="gratitude_2"
+                name="gratitude_2"
+                placeholder="Who or what helped today feel easier?"
+                required
+            ></textarea>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="gratitude-back-to-step-2">
+                Back
+            </button>
+            <button type="button" class="btn-primary journal-next-btn" id="gratitude-to-step-4">
+                Next
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="gratitude_3">Small moment you want to remember</label>
-    <textarea
-        id="gratitude_3"
-        name="gratitude_3"
-        placeholder="Capture one quiet detail from today..."
-        required
-    ></textarea>
+<div class="journal-step-panel" id="gratitude-step-4">
+    <div class="journal-focus-card gratitude-focus-card">
+        <div class="journal-focus-head">
+            <span class="journal-kicker">Prompt Three</span>
+            <h2 class="journal-focus-title">What small moment do you want to remember?</h2>
+            <p class="journal-focus-text">
+                Try to capture a detail — something easy to miss, but lovely to keep.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="gratitude_3">Your answer</label>
+            <textarea
+                id="gratitude_3"
+                name="gratitude_3"
+                placeholder="A small moment worth keeping..."
+                required
+            ></textarea>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="gratitude-back-to-step-3">
+                Back
+            </button>
+            <button type="button" class="btn-primary journal-next-btn" id="gratitude-to-step-5">
+                Next
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="mood_score">Mood (1–10)</label>
-    <input
-        id="mood_score"
-        type="number"
-        name="mood_score"
-        min="1"
-        max="10"
-        placeholder="e.g. 7"
-        required
-    >
+<div class="journal-step-panel" id="gratitude-step-5">
+    <div class="journal-focus-card gratitude-focus-card">
+        <div class="journal-focus-head">
+            <span class="journal-kicker">Mood Check</span>
+            <h2 class="journal-focus-title">How are you feeling now?</h2>
+            <p class="journal-focus-text">
+                Pick the one that feels closest after this moment of reflection.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <div class="mood-picker" id="gratitude-mood-picker">
+                <button type="button" class="mood-option" data-score="1" data-label="Very low">
+                    <span class="mood-option-emoji">😣</span>
+                    <span class="mood-option-score">1</span>
+                </button>
+                <button type="button" class="mood-option" data-score="2" data-label="Low">
+                    <span class="mood-option-emoji">😕</span>
+                    <span class="mood-option-score">2</span>
+                </button>
+                <button type="button" class="mood-option" data-score="3" data-label="Heavy">
+                    <span class="mood-option-emoji">🙁</span>
+                    <span class="mood-option-score">3</span>
+                </button>
+                <button type="button" class="mood-option" data-score="4" data-label="Uneasy">
+                    <span class="mood-option-emoji">😐</span>
+                    <span class="mood-option-score">4</span>
+                </button>
+                <button type="button" class="mood-option" data-score="5" data-label="Mixed">
+                    <span class="mood-option-emoji">🫥</span>
+                    <span class="mood-option-score">5</span>
+                </button>
+                <button type="button" class="mood-option" data-score="6" data-label="Okay">
+                    <span class="mood-option-emoji">🙂</span>
+                    <span class="mood-option-score">6</span>
+                </button>
+                <button type="button" class="mood-option" data-score="7" data-label="Warm">
+                    <span class="mood-option-emoji">😊</span>
+                    <span class="mood-option-score">7</span>
+                </button>
+                <button type="button" class="mood-option" data-score="8" data-label="Good">
+                    <span class="mood-option-emoji">😄</span>
+                    <span class="mood-option-score">8</span>
+                </button>
+                <button type="button" class="mood-option" data-score="9" data-label="Bright">
+                    <span class="mood-option-emoji">😁</span>
+                    <span class="mood-option-score">9</span>
+                </button>
+                <button type="button" class="mood-option" data-score="10" data-label="Excellent">
+                    <span class="mood-option-emoji">🤩</span>
+                    <span class="mood-option-score">10</span>
+                </button>
+            </div>
+
+            <input type="hidden" name="mood_score" id="gratitude-hidden-mood-score" required>
+
+            <div class="entry-form-helper entry-helper-row">
+                <span id="gratitude-mood-selection-text">Choose the emoji that feels closest.</span>
+                <span id="gratitude-mood-selection-score">No mood selected</span>
+            </div>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="gratitude-back-to-step-4">
+                Back
+            </button>
+            <button type="button" class="btn-primary journal-next-btn" id="gratitude-to-review">
+                Review
+            </button>
+        </div>
+    </div>
 </div>
+
+<div class="journal-step-panel" id="gratitude-step-6">
+    <div class="journal-focus-card gratitude-focus-card gratitude-focus-card--review">
+        <div class="journal-focus-head">
+            <span class="journal-kicker">Review</span>
+            <h2 class="journal-focus-title">Your gratitude entry is ready.</h2>
+            <p class="journal-focus-text">
+                Take one last glance before saving it.
+            </p>
+        </div>
+
+        <div class="gratitude-review-stack">
+            <div class="gratitude-review-card">
+                <p class="gratitude-review-label">What felt meaningful today</p>
+                <p class="gratitude-review-text" id="gratitude-review-1"></p>
+            </div>
+
+            <div class="gratitude-review-card">
+                <p class="gratitude-review-label">What made the day lighter</p>
+                <p class="gratitude-review-text" id="gratitude-review-2"></p>
+            </div>
+
+            <div class="gratitude-review-card">
+                <p class="gratitude-review-label">A small moment to keep</p>
+                <p class="gratitude-review-text" id="gratitude-review-3"></p>
+            </div>
+        </div>
+
+        <div class="gratitude-review-footer">
+            <span class="journal-meta-pill" id="gratitude-review-mood">Mood not selected</span>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="gratitude-back-to-step-5">
+                Back
+            </button>
+            <button type="submit" class="btn-primary" id="gratitude-submit-btn">
+                Save Entry
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const form = document.getElementById('gratitudeJournalForm');
+
+        const progressFill = document.getElementById('gratitude-progress-fill');
+        const progressStep = document.getElementById('gratitude-progress-step');
+
+        const steps = {
+            1: document.getElementById('gratitude-step-1'),
+            2: document.getElementById('gratitude-step-2'),
+            3: document.getElementById('gratitude-step-3'),
+            4: document.getElementById('gratitude-step-4'),
+            5: document.getElementById('gratitude-step-5'),
+            6: document.getElementById('gratitude-step-6')
+        };
+
+        const gratitude1 = document.getElementById('gratitude_1');
+        const gratitude2 = document.getElementById('gratitude_2');
+        const gratitude3 = document.getElementById('gratitude_3');
+
+        const moodOptions = document.querySelectorAll('#gratitude-mood-picker .mood-option');
+        const hiddenMoodInput = document.getElementById('gratitude-hidden-mood-score');
+        const moodSelectionText = document.getElementById('gratitude-mood-selection-text');
+        const moodSelectionScore = document.getElementById('gratitude-mood-selection-score');
+
+        const review1 = document.getElementById('gratitude-review-1');
+        const review2 = document.getElementById('gratitude-review-2');
+        const review3 = document.getElementById('gratitude-review-3');
+        const reviewMood = document.getElementById('gratitude-review-mood');
+
+        const startBtn = document.getElementById('gratitude-start-btn');
+        const toStep3Btn = document.getElementById('gratitude-to-step-3');
+        const toStep4Btn = document.getElementById('gratitude-to-step-4');
+        const toStep5Btn = document.getElementById('gratitude-to-step-5');
+        const toReviewBtn = document.getElementById('gratitude-to-review');
+
+        const backToIntroBtn = document.getElementById('gratitude-back-to-intro');
+        const backToStep2Btn = document.getElementById('gratitude-back-to-step-2');
+        const backToStep3Btn = document.getElementById('gratitude-back-to-step-3');
+        const backToStep4Btn = document.getElementById('gratitude-back-to-step-4');
+        const backToStep5Btn = document.getElementById('gratitude-back-to-step-5');
+
+        const moodMap = {
+            1: "😣 Very Low",
+            2: "😕 Low",
+            3: "🙁 Heavy",
+            4: "😐 Uneasy",
+            5: "🫥 Mixed",
+            6: "🙂 Okay",
+            7: "😊 Warm",
+            8: "😄 Good",
+            9: "😁 Bright",
+            10: "🤩 Excellent"
+        };
+
+        function showStep(stepNumber) {
+            Object.keys(steps).forEach(function (key) {
+                steps[key].classList.toggle('is-active', Number(key) === stepNumber);
+            });
+
+            const progressPercent = (stepNumber / 6) * 100;
+            progressFill.style.width = progressPercent + '%';
+            progressStep.textContent = `Step ${stepNumber} of 6`;
+        }
+
+        function requireText(field) {
+            const value = field.value.trim();
+            if (!value) {
+                field.focus();
+                field.reportValidity();
+                return false;
+            }
+            return true;
+        }
+
+        function updateReview() {
+            review1.textContent = gratitude1.value.trim() || '—';
+            review2.textContent = gratitude2.value.trim() || '—';
+            review3.textContent = gratitude3.value.trim() || '—';
+            reviewMood.textContent = moodMap[hiddenMoodInput.value] || 'Mood not selected';
+        }
+
+        function setMood(score, label) {
+            hiddenMoodInput.value = score;
+
+            moodOptions.forEach(option => {
+                option.classList.toggle('is-selected', option.dataset.score === String(score));
+            });
+
+            moodSelectionText.textContent = label || "Mood selected";
+            moodSelectionScore.textContent = `${score} / 10`;
+            reviewMood.textContent = moodMap[score] || 'Mood not selected';
+        }
+
+        startBtn.addEventListener('click', function () {
+            showStep(2);
+        });
+
+        toStep3Btn.addEventListener('click', function () {
+            if (!requireText(gratitude1)) return;
+            showStep(3);
+        });
+
+        toStep4Btn.addEventListener('click', function () {
+            if (!requireText(gratitude2)) return;
+            showStep(4);
+        });
+
+        toStep5Btn.addEventListener('click', function () {
+            if (!requireText(gratitude3)) return;
+            showStep(5);
+        });
+
+        toReviewBtn.addEventListener('click', function () {
+            if (!hiddenMoodInput.value) {
+                moodSelectionText.textContent = 'Please choose a mood before continuing.';
+                return;
+            }
+
+            updateReview();
+            showStep(6);
+        });
+
+        backToIntroBtn.addEventListener('click', function () {
+            showStep(1);
+        });
+
+        backToStep2Btn.addEventListener('click', function () {
+            showStep(2);
+        });
+
+        backToStep3Btn.addEventListener('click', function () {
+            showStep(3);
+        });
+
+        backToStep4Btn.addEventListener('click', function () {
+            showStep(4);
+        });
+
+        backToStep5Btn.addEventListener('click', function () {
+            showStep(5);
+        });
+
+        moodOptions.forEach(option => {
+            option.addEventListener('click', function () {
+                setMood(this.dataset.score, this.dataset.label);
+            });
+        });
+
+        form.addEventListener('submit', function () {
+            updateReview();
+        });
+
+        showStep(1);
+    })();
+</script>
