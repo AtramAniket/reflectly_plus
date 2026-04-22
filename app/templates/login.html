@@ -1,9 +1,11 @@
 {% extends 'auth_base.html' %}
 
-{% block title %}Welcome back{% endblock %}
-{% block subtitle %}Log in to continue your reflection journey.{% endblock %}
+{% block page_title %}Welcome back{% endblock %}
+{% block hero_title %}Welcome back{% endblock %}
+{% block hero_subtitle %}Log in to continue your reflection journey.{% endblock %}
+{% block auth_title %}Log in{% endblock %}
+{% block subtitle %}Pick up where you left off.{% endblock %}
 
-<!-- Page CSS -->
 {% block page_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/auth_pages.css') }}">
 {% endblock %}
@@ -21,7 +23,7 @@
         <input id="password" type="password" name="password" placeholder="Enter your password" required>
     </div>
 
-    <button type="submit" class="btn-primary">Login</button>
+    <button type="submit" class="btn-primary auth-submit-btn">Log in</button>
 </form>
 
 <p class="auth-switch">

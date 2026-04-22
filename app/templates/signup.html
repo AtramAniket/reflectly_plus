@@ -1,9 +1,11 @@
 {% extends 'auth_base.html' %}
 
-{% block title %}Create account{% endblock %}
-{% block subtitle %}Start journaling, tracking habits, and reflecting with intention.{% endblock %}
+{% block page_title %}Create account{% endblock %}
+{% block hero_title %}Start your reflection journey{% endblock %}
+{% block hero_subtitle %}Journal with intention, track your habits, and return to your thoughts with more clarity.{% endblock %}
+{% block auth_title %}Create account{% endblock %}
+{% block subtitle %}Set up your space and begin gently.{% endblock %}
 
-<!-- Page CSS -->
 {% block page_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/auth_pages.css') }}">
 {% endblock %}
@@ -21,11 +23,11 @@
         <input id="password" type="password" name="password" placeholder="Create a password" required>
     </div>
 
-    <button type="submit" class="btn-primary">Signup</button>
+    <button type="submit" class="btn-primary auth-submit-btn">Create account</button>
 </form>
 
 <p class="auth-switch">
     Already have an account?
-    <a href="{{ url_for('auth.login') }}">Login</a>
+    <a href="{{ url_for('auth.login') }}">Log in</a>
 </p>
 {% endblock %}

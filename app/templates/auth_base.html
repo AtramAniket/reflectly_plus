@@ -3,39 +3,54 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Reflectly - {% block title %}{% endblock %}</title>
+    <title>Reflectly - {% block page_title %}{% endblock %}</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <!-- Page CSS -->
     {% block page_css %}{% endblock %}
 </head>
 
 <body class="auth-body">
     <div class="auth-container">
-        <div class="auth-card">
 
-            <div class="auth-header">
-                <div class="auth-brand">Reflectly</div>
-                <h2 class="auth-title">{% block auth_title %}{% endblock %}</h2>
-                <p class="auth-subtitle">{% block subtitle %}{% endblock %}</p>
+        <section class="auth-page-intro">
+            <section class="auth-page-intro">
+
+                <h1 class="auth-page-title">
+                    {% block hero_title %}{% endblock %}
+                </h1>
+                <p class="auth-page-subtitle">
+                    {% block hero_subtitle %}{% endblock %}
+                </p>
+            </section>
+        </section>
+
+        <section class="auth-card-wrap">
+
+            <div class="auth-card">
+
+                <div class="auth-header">
+                    <div class="auth-brand">Reflectly</div>
+                    <h2 class="auth-title">{% block auth_title %}{% endblock %}</h2>
+                    <p class="auth-subtitle">{% block subtitle %}{% endblock %}</p>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-container">
+                            {% for category, message in messages %}
+                                <div class="flash flash-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
             </div>
+        </section>
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div class="flash-container">
-                        {% for category, message in messages %}
-                            <div class="flash flash-{{ category }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
-
-            {% block content %}{% endblock %}
-
-        </div>
     </div>
 
     <script>
@@ -45,6 +60,5 @@
             });
         }, 3000);
     </script>
-
 </body>
 </html>
