@@ -161,17 +161,27 @@
                     <button type="button" class="btn-secondary" id="toggle-reflection-btn">
                         View Reflection
                     </button>
-                    <button type="button" class="btn-secondary" id="regenerate-reflection-btn">
+                    <button
+                        type="button"
+                        class="btn-secondary"
+                        id="regenerate-reflection-btn"
+                        {% if not can_regenerate %}disabled{% endif %}
+                    >
                         Regenerate
                     </button>
                 </div>
+                {% if not can_regenerate %}
+                    <p class="reflection-helper-text">
+                        Edit this entry to enable regeneration.
+                    </p>
+                {% endif %}
             </div>
 
             <div class="reflection-loader" id="reflection-loader" hidden>
                 <div class="reflection-loader-orb"></div>
-                <div>
-                    <p class="reflection-loader-title">Reading your entry…</p>
-                    <p class="reflection-loader-text">Putting together a softer reflection.</p>
+                <div class="reflection-loader-copy">
+                    <p class="reflection-loader-title">Reflecting on your entry…</p>
+                    <p class="reflection-loader-text">This can take a few seconds while AI prepares the summary.</p>
                 </div>
             </div>
 
@@ -330,9 +340,21 @@
         const distortionsList = document.getElementById('reflection-distortions-list');
         const distortionsBlock = document.getElementById('reflection-distortions-block');
 
+        let reflectionRequestInFlight = false;
+
         function setLoading(isLoading) {
+            const reflectionCard = document.getElementById('reflection-card');
+
+            if (reflectionCard) {
+                reflectionCard.classList.toggle('is-loading', isLoading);
+            }
+
             if (loader) {
                 loader.hidden = !isLoading;
+            }
+
+            if (readyBar) {
+                readyBar.style.display = isLoading ? 'none' : 'flex';
             }
 
             if (generateBtn) {
@@ -343,6 +365,14 @@
             if (regenerateBtn) {
                 regenerateBtn.disabled = isLoading;
                 regenerateBtn.textContent = isLoading ? 'Regenerating…' : 'Regenerate';
+            }
+
+            if (toggleBtn) {
+                toggleBtn.disabled = isLoading;
+            }
+
+            if (collapseBtn) {
+                collapseBtn.disabled = isLoading;
             }
         }
 
@@ -407,6 +437,10 @@
         }
 
         async function requestReflection(regenerate) {
+            if (reflectionRequestInFlight) return;
+
+            reflectionRequestInFlight = true;
+
             try {
                 setLoading(true);
 
@@ -437,6 +471,7 @@
                 alert(error.message || 'Could not generate reflection right now.');
             } finally {
                 setLoading(false);
+                reflectionRequestInFlight = false;
             }
         }
 
