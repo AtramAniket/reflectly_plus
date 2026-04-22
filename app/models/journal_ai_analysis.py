@@ -28,3 +28,10 @@ class JournalAIAnalysis(db.Model):
 	assessment: Mapped[str] = mapped_column(String(50))
 
 	created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+
+	updated_at: Mapped[Optional[datetime.datetime]] = mapped_column(
+	    DateTime(timezone=True),
+	    nullable=True,
+	    default=None,
+	    onupdate=func.now()
+	)
