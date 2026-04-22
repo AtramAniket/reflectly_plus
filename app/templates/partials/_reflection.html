@@ -1,53 +1,404 @@
-<div class="form-group">
-    <label for="title">Title</label>
-    <input
-        id="title"
-        type="text"
-        name="title"
-        placeholder="Give your entry a title"
-        required
-    >
+<div class="journal-step-panel is-active" id="reflection-step-1">
+    <div class="journal-focus-card reflection-focus-card reflection-focus-card--intro">
+        <div class="reflection-intro-layout">
+            <div class="reflection-intro-copy">
+                <span class="journal-kicker">Daily Reflection</span>
+                <h1 class="journal-focus-title">Look back with a little more clarity.</h1>
+                <p class="journal-focus-text">
+                    This reflection helps you notice what worked, what felt difficult, and what you want to carry into tomorrow.
+                </p>
+
+                <div class="reflection-intro-points">
+                    <div class="reflection-intro-point">
+                        <span class="reflection-intro-emoji">🌤️</span>
+                        <span>Notice what went right</span>
+                    </div>
+                    <div class="reflection-intro-point">
+                        <span class="reflection-intro-emoji">🌧️</span>
+                        <span>Name what felt difficult</span>
+                    </div>
+                    <div class="reflection-intro-point">
+                        <span class="reflection-intro-emoji">🌱</span>
+                        <span>Carry one intention forward</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reflection-intro-art" aria-hidden="true">
+                <div class="reflection-art-card reflection-art-card-main">🪞</div>
+                <div class="reflection-art-card reflection-art-card-small">🌙</div>
+            </div>
+        </div>
+
+        <div class="journal-step-actions">
+            <button type="button" class="btn-primary journal-next-btn" id="reflection-start-btn">
+                Begin
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="went_well">What went well today?</label>
-    <textarea
-        id="went_well"
-        name="went_well"
-        placeholder="What felt good, steady, or meaningful today?"
-        required
-    ></textarea>
+<div class="journal-step-panel" id="reflection-step-2">
+    <div class="journal-focus-card reflection-focus-card">
+        <div class="journal-focus-head">
+            <span class="journal-kicker">Prompt One</span>
+            <h2 class="journal-focus-title">What went well today?</h2>
+            <p class="journal-focus-text">
+                Think about what felt steady, meaningful, or quietly successful.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="went_well">Your answer</label>
+            <textarea
+                id="went_well"
+                name="went_well"
+                placeholder="What felt good, steady, or meaningful today?"
+                required
+            ></textarea>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="reflection-back-to-intro">
+                Back
+            </button>
+            <button type="button" class="btn-primary journal-next-btn" id="reflection-to-step-3">
+                Next
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="challenging">What felt difficult?</label>
-    <textarea
-        id="challenging"
-        name="challenging"
-        placeholder="What felt heavy, frustrating, or draining?"
-        required
-    ></textarea>
+<div class="journal-step-panel" id="reflection-step-3">
+    <div class="journal-focus-card reflection-focus-card">
+        <div class="journal-focus-head">
+            <span class="journal-kicker">Prompt Two</span>
+            <h2 class="journal-focus-title">What felt difficult?</h2>
+            <p class="journal-focus-text">
+                Name what felt heavy, frustrating, or draining without needing to fix it yet.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="challenging">Your answer</label>
+            <textarea
+                id="challenging"
+                name="challenging"
+                placeholder="What felt heavy, frustrating, or draining?"
+                required
+            ></textarea>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="reflection-back-to-step-2">
+                Back
+            </button>
+            <button type="button" class="btn-primary journal-next-btn" id="reflection-to-step-4">
+                Next
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="tomorrow">What will you do tomorrow?</label>
-    <textarea
-        id="tomorrow"
-        name="tomorrow"
-        placeholder="One small intention for tomorrow..."
-        required
-    ></textarea>
+<div class="journal-step-panel" id="reflection-step-4">
+    <div class="journal-focus-card reflection-focus-card">
+        <div class="journal-focus-head">
+            <span class="journal-kicker">Prompt Three</span>
+            <h2 class="journal-focus-title">What will you carry into tomorrow?</h2>
+            <p class="journal-focus-text">
+                Keep it small and realistic. One intention is enough.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="tomorrow">Your answer</label>
+            <textarea
+                id="tomorrow"
+                name="tomorrow"
+                placeholder="One small intention for tomorrow..."
+                required
+            ></textarea>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="reflection-back-to-step-3">
+                Back
+            </button>
+            <button type="button" class="btn-primary journal-next-btn" id="reflection-to-step-5">
+                Next
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="mood_score">Mood (1–10)</label>
-    <input
-        id="mood_score"
-        type="number"
-        name="mood_score"
-        min="1"
-        max="10"
-        placeholder="e.g. 5"
-        required
-    >
+<div class="journal-step-panel" id="reflection-step-5">
+    <div class="journal-focus-card reflection-focus-card">
+        <div class="journal-focus-head">
+            <span class="journal-kicker">Mood Check</span>
+            <h2 class="journal-focus-title">How are you feeling now?</h2>
+            <p class="journal-focus-text">
+                Pick the one that feels closest after reflecting.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <div class="mood-picker" id="reflection-mood-picker">
+                <button type="button" class="mood-option" data-score="1" data-label="Very low">
+                    <span class="mood-option-emoji">😣</span>
+                    <span class="mood-option-score">1</span>
+                </button>
+                <button type="button" class="mood-option" data-score="2" data-label="Low">
+                    <span class="mood-option-emoji">😕</span>
+                    <span class="mood-option-score">2</span>
+                </button>
+                <button type="button" class="mood-option" data-score="3" data-label="Heavy">
+                    <span class="mood-option-emoji">🙁</span>
+                    <span class="mood-option-score">3</span>
+                </button>
+                <button type="button" class="mood-option" data-score="4" data-label="Uneasy">
+                    <span class="mood-option-emoji">😐</span>
+                    <span class="mood-option-score">4</span>
+                </button>
+                <button type="button" class="mood-option" data-score="5" data-label="Mixed">
+                    <span class="mood-option-emoji">🫥</span>
+                    <span class="mood-option-score">5</span>
+                </button>
+                <button type="button" class="mood-option" data-score="6" data-label="Okay">
+                    <span class="mood-option-emoji">🙂</span>
+                    <span class="mood-option-score">6</span>
+                </button>
+                <button type="button" class="mood-option" data-score="7" data-label="Steady">
+                    <span class="mood-option-emoji">😊</span>
+                    <span class="mood-option-score">7</span>
+                </button>
+                <button type="button" class="mood-option" data-score="8" data-label="Good">
+                    <span class="mood-option-emoji">😄</span>
+                    <span class="mood-option-score">8</span>
+                </button>
+                <button type="button" class="mood-option" data-score="9" data-label="Bright">
+                    <span class="mood-option-emoji">😁</span>
+                    <span class="mood-option-score">9</span>
+                </button>
+                <button type="button" class="mood-option" data-score="10" data-label="Excellent">
+                    <span class="mood-option-emoji">🤩</span>
+                    <span class="mood-option-score">10</span>
+                </button>
+            </div>
+
+            <input type="hidden" name="mood_score" id="reflection-hidden-mood-score" required>
+
+            <div class="entry-form-helper entry-helper-row">
+                <span id="reflection-mood-selection-text">Choose the emoji that feels closest.</span>
+                <span id="reflection-mood-selection-score">No mood selected</span>
+            </div>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="reflection-back-to-step-4">
+                Back
+            </button>
+            <button type="button" class="btn-primary journal-next-btn" id="reflection-to-review">
+                Review
+            </button>
+        </div>
+    </div>
 </div>
+
+<div class="journal-step-panel" id="reflection-step-6">
+    <div class="journal-focus-card reflection-focus-card reflection-focus-card--review">
+        <div class="journal-focus-head">
+            <span class="journal-kicker">Review</span>
+            <h2 class="journal-focus-title">Your reflection is ready.</h2>
+            <p class="journal-focus-text">
+                Give it one final look before saving it.
+            </p>
+        </div>
+
+        <div class="reflection-review-stack">
+            <div class="reflection-review-card">
+                <p class="reflection-review-label">What worked today</p>
+                <p class="reflection-review-text" id="reflection-review-went-well"></p>
+            </div>
+
+            <div class="reflection-review-card">
+                <p class="reflection-review-label">What felt difficult</p>
+                <p class="reflection-review-text" id="reflection-review-challenging"></p>
+            </div>
+
+            <div class="reflection-review-card">
+                <p class="reflection-review-label">Tomorrow intention</p>
+                <p class="reflection-review-text" id="reflection-review-tomorrow"></p>
+            </div>
+        </div>
+
+        <div class="reflection-review-footer">
+            <span class="journal-meta-pill" id="reflection-review-mood">Mood not selected</span>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="reflection-back-to-step-5">
+                Back
+            </button>
+            <button type="submit" class="btn-primary" id="reflection-submit-btn">
+                Save Entry
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const form = document.getElementById('reflectionJournalForm');
+
+        const progressFill = document.getElementById('reflection-progress-fill');
+        const progressStep = document.getElementById('reflection-progress-step');
+
+        const steps = {
+            1: document.getElementById('reflection-step-1'),
+            2: document.getElementById('reflection-step-2'),
+            3: document.getElementById('reflection-step-3'),
+            4: document.getElementById('reflection-step-4'),
+            5: document.getElementById('reflection-step-5'),
+            6: document.getElementById('reflection-step-6')
+        };
+
+        const wentWell = document.getElementById('went_well');
+        const challenging = document.getElementById('challenging');
+        const tomorrow = document.getElementById('tomorrow');
+
+        const moodOptions = document.querySelectorAll('#reflection-mood-picker .mood-option');
+        const hiddenMoodInput = document.getElementById('reflection-hidden-mood-score');
+        const moodSelectionText = document.getElementById('reflection-mood-selection-text');
+        const moodSelectionScore = document.getElementById('reflection-mood-selection-score');
+
+        const reviewWentWell = document.getElementById('reflection-review-went-well');
+        const reviewChallenging = document.getElementById('reflection-review-challenging');
+        const reviewTomorrow = document.getElementById('reflection-review-tomorrow');
+        const reviewMood = document.getElementById('reflection-review-mood');
+
+        const startBtn = document.getElementById('reflection-start-btn');
+        const toStep3Btn = document.getElementById('reflection-to-step-3');
+        const toStep4Btn = document.getElementById('reflection-to-step-4');
+        const toStep5Btn = document.getElementById('reflection-to-step-5');
+        const toReviewBtn = document.getElementById('reflection-to-review');
+
+        const backToIntroBtn = document.getElementById('reflection-back-to-intro');
+        const backToStep2Btn = document.getElementById('reflection-back-to-step-2');
+        const backToStep3Btn = document.getElementById('reflection-back-to-step-3');
+        const backToStep4Btn = document.getElementById('reflection-back-to-step-4');
+        const backToStep5Btn = document.getElementById('reflection-back-to-step-5');
+
+        const moodMap = {
+            1: "😣 Very Low",
+            2: "😕 Low",
+            3: "🙁 Heavy",
+            4: "😐 Uneasy",
+            5: "🫥 Mixed",
+            6: "🙂 Okay",
+            7: "😊 Steady",
+            8: "😄 Good",
+            9: "😁 Bright",
+            10: "🤩 Excellent"
+        };
+
+        function showStep(stepNumber) {
+            Object.keys(steps).forEach(function (key) {
+                steps[key].classList.toggle('is-active', Number(key) === stepNumber);
+            });
+
+            const progressPercent = (stepNumber / 6) * 100;
+            progressFill.style.width = progressPercent + '%';
+            progressStep.textContent = `Step ${stepNumber} of 6`;
+        }
+
+        function requireText(field) {
+            const value = field.value.trim();
+            if (!value) {
+                field.focus();
+                field.reportValidity();
+                return false;
+            }
+            return true;
+        }
+
+        function updateReview() {
+            reviewWentWell.textContent = wentWell.value.trim() || '—';
+            reviewChallenging.textContent = challenging.value.trim() || '—';
+            reviewTomorrow.textContent = tomorrow.value.trim() || '—';
+            reviewMood.textContent = moodMap[hiddenMoodInput.value] || 'Mood not selected';
+        }
+
+        function setMood(score, label) {
+            hiddenMoodInput.value = score;
+
+            moodOptions.forEach(option => {
+                option.classList.toggle('is-selected', option.dataset.score === String(score));
+            });
+
+            moodSelectionText.textContent = label || "Mood selected";
+            moodSelectionScore.textContent = `${score} / 10`;
+            reviewMood.textContent = moodMap[score] || 'Mood not selected';
+        }
+
+        startBtn.addEventListener('click', function () {
+            showStep(2);
+        });
+
+        toStep3Btn.addEventListener('click', function () {
+            if (!requireText(wentWell)) return;
+            showStep(3);
+        });
+
+        toStep4Btn.addEventListener('click', function () {
+            if (!requireText(challenging)) return;
+            showStep(4);
+        });
+
+        toStep5Btn.addEventListener('click', function () {
+            if (!requireText(tomorrow)) return;
+            showStep(5);
+        });
+
+        toReviewBtn.addEventListener('click', function () {
+            if (!hiddenMoodInput.value) {
+                moodSelectionText.textContent = 'Please choose a mood before continuing.';
+                return;
+            }
+
+            updateReview();
+            showStep(6);
+        });
+
+        backToIntroBtn.addEventListener('click', function () {
+            showStep(1);
+        });
+
+        backToStep2Btn.addEventListener('click', function () {
+            showStep(2);
+        });
+
+        backToStep3Btn.addEventListener('click', function () {
+            showStep(3);
+        });
+
+        backToStep4Btn.addEventListener('click', function () {
+            showStep(4);
+        });
+
+        backToStep5Btn.addEventListener('click', function () {
+            showStep(5);
+        });
+
+        moodOptions.forEach(option => {
+            option.addEventListener('click', function () {
+                setMood(this.dataset.score, this.dataset.label);
+            });
+        });
+
+        form.addEventListener('submit', function () {
+            updateReview();
+        });
+
+        showStep(1);
+    })();
+</script>
