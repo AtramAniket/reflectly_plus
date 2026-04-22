@@ -8,37 +8,53 @@
 
 <div class="form-page-shell">
 
-    <div class="form-page-header">
-        {% if entry_type == "simple" %}
-            <h1 class="form-page-title">Simple Journal</h1>
-            <p class="form-page-subtitle">
-                A free space to write whatever is on your mind.
-            </p>
+    {% if entry_type == "simple" %}
+        <div class="journal-flow-shell">
 
-        {% elif entry_type == "gratitude" %}
-            <h1 class="form-page-title">Gratitude Journal</h1>
-            <p class="form-page-subtitle">
-                A guided entry to notice what felt meaningful, supportive, or quietly good today.
-            </p>
-
-        {% elif entry_type == "reflection" %}
-            <h1 class="form-page-title">Daily Reflection</h1>
-            <p class="form-page-subtitle">
-                A structured way to reflect on what went well, what felt difficult, and what you want to carry forward.
-            </p>
-        {% endif %}
-    </div>
-
-    <div class="form-card">
-        <form method="POST" class="entry-form">
-
-            {% include "partials/_" + entry_type + ".html" %}
-
-            <div class="form-actions">
-                <button type="submit" class="btn-primary">Save Entry</button>
+            <div class="journal-flow-progress">
+                <div class="journal-flow-progress-track">
+                    <span class="journal-flow-progress-fill" id="journal-progress-fill"></span>
+                </div>
+                <div class="journal-flow-progress-meta">
+                    <span class="journal-flow-progress-step" id="journal-progress-step">Step 1 of 2</span>
+                    <span class="journal-flow-progress-label">Simple Journal</span>
+                </div>
             </div>
-        </form>
-    </div>
+
+            <form method="POST" class="entry-form journal-step-form" id="simpleJournalForm">
+                {% include "partials/_simple.html" %}
+            </form>
+
+        </div>
+
+    {% else %}
+
+        <div class="form-page-header">
+            {% if entry_type == "gratitude" %}
+                <h1 class="form-page-title">Gratitude Journal</h1>
+                <p class="form-page-subtitle">
+                    A guided entry to notice what felt meaningful, supportive, or quietly good today.
+                </p>
+
+            {% elif entry_type == "reflection" %}
+                <h1 class="form-page-title">Daily Reflection</h1>
+                <p class="form-page-subtitle">
+                    A structured way to reflect on what went well, what felt difficult, and what you want to carry forward.
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="form-card">
+            <form method="POST" class="entry-form">
+                {% include "partials/_" + entry_type + ".html" %}
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Save Entry</button>
+                </div>
+            </form>
+        </div>
+
+    {% endif %}
 
 </div>
 
