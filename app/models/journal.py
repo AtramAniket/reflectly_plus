@@ -26,7 +26,14 @@ class JournalEntry(UserMixin, db.Model):
 
 	created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
-	# Foreign ket to user
+	updated_at: Mapped[Optional[datetime.datetime]] = mapped_column(
+	    DateTime(timezone=True),
+	    nullable=True,
+	    default=None,
+	    onupdate=func.now()
+	)
+
+	# Foreign key to user
 	user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'), nullable=False)
 
 	# Relationship(backref)
