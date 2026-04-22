@@ -3,6 +3,11 @@
 {% block title %}Create account{% endblock %}
 {% block subtitle %}Start journaling, tracking habits, and reflecting with intention.{% endblock %}
 
+<!-- Page CSS -->
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/auth_pages.css') }}">
+{% endblock %}
+
 {% block content %}
 <form method="POST" class="auth-form">
 
