@@ -64,6 +64,8 @@ def create_new_entry(entry_type):
         abort(404)
 
     if request.method == 'POST':
+        from datetime import datetime
+
         title = request.form.get('title', '').strip()
         mood_score_raw = request.form.get('mood_score', '').strip()
         image_url = None
@@ -117,7 +119,6 @@ def create_new_entry(entry_type):
                 }
 
                 now = datetime.now()
-
                 generated_title = (
                     f"Gratitude Journal Entry • "
                     f"{now.strftime('%A %B %d, %Y')} "
@@ -136,10 +137,6 @@ def create_new_entry(entry_type):
 
             # REFLECTION JOURNAL ENTRY
             else:
-                if not title:
-                    flash('Title is required and cannot be empty.', 'error')
-                    return redirect(request.url)
-
                 went_well = request.form.get('went_well', '').strip()
                 challenging = request.form.get('challenging', '').strip()
                 tomorrow = request.form.get('tomorrow', '').strip()
@@ -154,8 +151,15 @@ def create_new_entry(entry_type):
                     'tomorrow': tomorrow,
                 }
 
+                now = datetime.now()
+                generated_title = (
+                    f"Daily Reflection Entry • "
+                    f"{now.strftime('%A %B %d, %Y')} "
+                    f"{now.strftime('%I:%M %p').lstrip('0')}"
+                )
+
                 new_entry = JournalEntry(
-                    title=title,
+                    title=generated_title,
                     content=None,
                     structured_content=structured_content,
                     entry_type='reflection',
