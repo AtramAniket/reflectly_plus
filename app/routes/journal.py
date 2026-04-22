@@ -189,10 +189,17 @@ def view_entry(entry_id):
 
     analysis = entry.ai_analysis if entry.entry_type == "simple" else None
 
+    can_regenerate = False
+    if analysis and entry.updated_at:
+        last_reflection_at = analysis.updated_at or analysis.created_at
+        if last_reflection_at and entry.updated_at > last_reflection_at:
+            can_regenerate = True
+
     return render_template(
         'view_entry.html',
         entry=entry,
-        analysis=analysis
+        analysis=analysis,
+        can_regenerate=can_regenerate
     )
 
 
@@ -219,6 +226,25 @@ def generate_reflection(entry_id):
     force_regenerate = request.form.get("regenerate") == "true"
 
     existing_analysis = entry.ai_analysis
+
+    if force_regenerate:
+        if not existing_analysis:
+            return jsonify({
+                "ok": False,
+                "message": "No existing reflection found to regenerate."
+            }), 400
+
+        if not entry.updated_at or not existing_analysis.created_at:
+            return jsonify({
+                "ok": False,
+                "message": "Edit the journal entry before regenerating the reflection."
+            }), 400
+
+        if entry.updated_at <= existing_analysis.created_at:
+            return jsonify({
+                "ok": False,
+                "message": "Reflection is already up to date."
+            }), 400
 
     if existing_analysis and not force_regenerate:
         return jsonify({
