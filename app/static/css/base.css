@@ -84,10 +84,10 @@ body {
     display: flex;
     color: var(--color-text);
     background:
-        radial-gradient(circle at top left, rgba(255, 242, 222, 0.88), transparent 24%),
-        radial-gradient(circle at top right, rgba(233, 244, 228, 0.85), transparent 20%),
-        radial-gradient(circle at bottom left, rgba(237, 242, 255, 0.75), transparent 18%),
-        linear-gradient(180deg, #f8f2eb 0%, #f6f1ea 45%, #f4efe9 100%);
+        radial-gradient(circle at top left, rgba(255, 232, 205, 0.52), transparent 22%),
+        radial-gradient(circle at top right, rgba(220, 236, 214, 0.48), transparent 18%),
+        radial-gradient(circle at bottom left, rgba(224, 232, 248, 0.40), transparent 18%),
+        linear-gradient(180deg, #efe8de 0%, #ece5db 48%, #e8e1d7 100%);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     min-height: 100vh;
