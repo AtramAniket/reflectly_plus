@@ -1,0 +1,126 @@
+/* =========================================================
+   9. AUTH PAGES
+   ========================================================= */
+
+.auth-body {
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, rgba(255, 239, 216, 0.85), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(229, 241, 223, 0.75), transparent 22%),
+        linear-gradient(180deg, #faf6f0 0%, #f5f0e9 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-body::before,
+.auth-body::after {
+    content: "";
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.45;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.auth-body::before {
+    background: #fff0d6;
+    top: -140px;
+    left: -120px;
+}
+
+.auth-body::after {
+    background: #dfead5;
+    bottom: -180px;
+    right: -120px;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    z-index: 1;
+}
+
+.auth-card {
+    width: 25rem;
+    max-width: 430px;
+    background: rgba(255,255,255,0.92);
+    border-radius: 28px;
+    padding: 36px 32px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid #eadfce;
+    backdrop-filter: blur(10px);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.auth-brand {
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+}
+
+.auth-title {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--color-text-strong);
+}
+
+.auth-subtitle {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: var(--color-text-soft);
+    line-height: 1.7;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--color-text);
+}
+
+.auth-switch {
+    margin: 22px 0 0;
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.auth-switch a {
+    color: var(--color-primary);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
