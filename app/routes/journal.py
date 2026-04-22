@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 from app.extensions import db
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.journal import JournalEntry
@@ -65,15 +66,9 @@ def create_new_entry(entry_type):
     if request.method == 'POST':
         title = request.form.get('title', '').strip()
         mood_score_raw = request.form.get('mood_score', '').strip()
-
-        image_id = random.randint(1, 700)
         image_url = None
 
         try:
-            if not title:
-                flash('Title is required and cannot be empty.', 'error')
-                return redirect(request.url)
-
             if not mood_score_raw:
                 flash('Mood score is required.', 'error')
                 return redirect(request.url)
@@ -86,6 +81,10 @@ def create_new_entry(entry_type):
 
             # SIMPLE JOURNAL ENTRY
             if entry_type == 'simple':
+                if not title:
+                    flash('Title is required and cannot be empty.', 'error')
+                    return redirect(request.url)
+
                 content = request.form.get('content', '').strip()
 
                 if not content:
@@ -117,8 +116,16 @@ def create_new_entry(entry_type):
                     'gratitude_3': gratitude_3,
                 }
 
+                now = datetime.now()
+
+                generated_title = (
+                    f"Gratitude Journal Entry • "
+                    f"{now.strftime('%A %B %d, %Y')} "
+                    f"{now.strftime('%I:%M %p').lstrip('0')}"
+                )
+
                 new_entry = JournalEntry(
-                    title=title,
+                    title=generated_title,
                     content=None,
                     structured_content=structured_content,
                     entry_type='gratitude',
@@ -129,6 +136,10 @@ def create_new_entry(entry_type):
 
             # REFLECTION JOURNAL ENTRY
             else:
+                if not title:
+                    flash('Title is required and cannot be empty.', 'error')
+                    return redirect(request.url)
+
                 went_well = request.form.get('went_well', '').strip()
                 challenging = request.form.get('challenging', '').strip()
                 tomorrow = request.form.get('tomorrow', '').strip()
