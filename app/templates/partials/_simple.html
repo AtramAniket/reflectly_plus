@@ -1,50 +1,272 @@
-<div class="form-group">
-    <label for="title">Title</label>
-    <input
-        id="title"
-        type="text"
-        name="title"
-        placeholder="Give your entry a title"
-        required
-    >
+<div class="journal-step-panel is-active" id="journal-step-1">
+    <div class="journal-focus-card journal-focus-card--narrow">
+        <div class="journal-focus-head">
+            <h1 class="journal-focus-title">Give your entry a title.</h1>
+            <p class="journal-focus-text">
+                Start with a short title you’ll recognize later.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="title">Entry Title</label>
+            <input
+                id="title"
+                type="text"
+                name="title"
+                placeholder="Give your entry a title"
+                maxlength="80"
+                required
+            >
+            <div class="entry-form-helper entry-helper-row">
+                <span>Keep it short and memorable.</span>
+                <span id="title-count">0 / 80</span>
+            </div>
+        </div>
+
+        <div class="journal-step-actions">
+            <button type="button" class="btn-primary journal-next-btn" id="go-to-mood">
+                Next
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="editor">What’s on your mind?</label>
-    <div id="editor"></div>
-    <input type="hidden" name="content" id="hidden-content">
+<div class="journal-step-panel" id="journal-step-2">
+    <div class="journal-focus-card">
+        <div class="journal-focus-head">
+            <h2 class="journal-focus-title">How are you feeling right now?</h2>
+            <p class="journal-focus-text">
+                Pick the one that feels closest. We’ll save the score behind the scenes.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <div class="mood-picker" id="mood-picker">
+                <button type="button" class="mood-option" data-score="1" data-label="Very low">
+                    <span class="mood-option-emoji">😣</span>
+                    <span class="mood-option-score">1</span>
+                </button>
+                <button type="button" class="mood-option" data-score="2" data-label="Low">
+                    <span class="mood-option-emoji">😕</span>
+                    <span class="mood-option-score">2</span>
+                </button>
+                <button type="button" class="mood-option" data-score="3" data-label="Heavy">
+                    <span class="mood-option-emoji">🙁</span>
+                    <span class="mood-option-score">3</span>
+                </button>
+                <button type="button" class="mood-option" data-score="4" data-label="Uneasy">
+                    <span class="mood-option-emoji">😐</span>
+                    <span class="mood-option-score">4</span>
+                </button>
+                <button type="button" class="mood-option" data-score="5" data-label="Flat">
+                    <span class="mood-option-emoji">🫥</span>
+                    <span class="mood-option-score">5</span>
+                </button>
+                <button type="button" class="mood-option" data-score="6" data-label="Okay">
+                    <span class="mood-option-emoji">🙂</span>
+                    <span class="mood-option-score">6</span>
+                </button>
+                <button type="button" class="mood-option" data-score="7" data-label="Light">
+                    <span class="mood-option-emoji">😊</span>
+                    <span class="mood-option-score">7</span>
+                </button>
+                <button type="button" class="mood-option" data-score="8" data-label="Good">
+                    <span class="mood-option-emoji">😄</span>
+                    <span class="mood-option-score">8</span>
+                </button>
+                <button type="button" class="mood-option" data-score="9" data-label="Bright">
+                    <span class="mood-option-emoji">😁</span>
+                    <span class="mood-option-score">9</span>
+                </button>
+                <button type="button" class="mood-option" data-score="10" data-label="Excellent">
+                    <span class="mood-option-emoji">🤩</span>
+                    <span class="mood-option-score">10</span>
+                </button>
+            </div>
+
+            <input type="hidden" name="mood_score" id="hidden-mood-score" required>
+
+            <div class="entry-form-helper entry-helper-row">
+                <span id="mood-selection-text">Choose the emoji that feels closest.</span>
+                <span id="mood-selection-score">No mood selected</span>
+            </div>
+        </div>
+
+        <div class="journal-step-actions journal-step-actions-between">
+            <button type="button" class="btn-secondary journal-back-btn" id="back-to-title">
+                Back
+            </button>
+            <button type="button" class="btn-primary journal-next-btn" id="go-to-writing">
+                Next
+            </button>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="mood_score">Mood (1–10)</label>
-    <input
-        id="mood_score"
-        type="number"
-        name="mood_score"
-        min="1"
-        max="10"
-        placeholder="e.g. 6"
-        required
-    >
+<div class="journal-step-panel" id="journal-step-3">
+    <div class="journal-entry-stage">
+        <div class="journal-entry-stage__top">
+            <h2 class="journal-entry-stage__title" id="entry-title-preview">Untitled entry</h2>
+
+            <div class="journal-entry-stage__meta">
+                <span class="journal-meta-pill" id="entry-mood-preview">Mood not selected</span>
+                <span class="journal-meta-pill">Simple Journal</span>
+            </div>
+        </div>
+
+        <div class="form-card journal-editor-card">
+            <div class="form-group">
+                <label for="editor">What’s on your mind?</label>
+                <div id="editor"></div>
+                <input type="hidden" name="content" id="hidden-content">
+                <p class="entry-form-helper">
+                    Tip: use the toolbar to add headings, quotes, bullet points, links, or images.
+                </p>
+            </div>
+
+            <div class="journal-step-actions journal-step-actions-between">
+                <button type="button" class="btn-secondary journal-back-btn" id="back-to-mood">
+                    Back
+                </button>
+
+                <button type="submit" class="btn-primary">
+                    Save Entry
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script>
-    const quill = new Quill('#editor', {
-        theme: 'snow',
-        placeholder: 'Write your thoughts...',
-        modules: {
-            toolbar: [
-                [{ header: [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                ['blockquote', 'code-block'],
-                [{ list: 'ordered' }, { list: 'bullet' }],
-                ['link', 'image']
-            ]
-        }
-    });
+    (function () {
+        const form = document.getElementById('simpleJournalForm');
+        const titleInput = document.getElementById('title');
+        const titleCount = document.getElementById('title-count');
+        const hiddenMoodInput = document.getElementById('hidden-mood-score');
+        const moodOptions = document.querySelectorAll('.mood-option');
+        const moodSelectionText = document.getElementById('mood-selection-text');
+        const moodSelectionScore = document.getElementById('mood-selection-score');
 
-    document.querySelector('.entry-form').onsubmit = function() {
-        document.querySelector('#hidden-content').value = quill.root.innerHTML;
-    };
+        const stepOne = document.getElementById('journal-step-1');
+        const stepTwo = document.getElementById('journal-step-2');
+        const stepThree = document.getElementById('journal-step-3');
+
+        const progressFill = document.getElementById('journal-progress-fill');
+        const progressStep = document.getElementById('journal-progress-step');
+
+        const goToMoodBtn = document.getElementById('go-to-mood');
+        const backToTitleBtn = document.getElementById('back-to-title');
+        const goToWritingBtn = document.getElementById('go-to-writing');
+        const backToMoodBtn = document.getElementById('back-to-mood');
+
+        const titlePreview = document.getElementById('entry-title-preview');
+        const moodPreview = document.getElementById('entry-mood-preview');
+        const hiddenContent = document.getElementById('hidden-content');
+
+        const moodMap = {
+            1: "😣 Very low · 1/10",
+            2: "😕 Low · 2/10",
+            3: "🙁 Heavy · 3/10",
+            4: "😐 Uneasy · 4/10",
+            5: "🫥 Flat · 5/10",
+            6: "🙂 Okay · 6/10",
+            7: "😊 Light · 7/10",
+            8: "😄 Good · 8/10",
+            9: "😁 Bright · 9/10",
+            10: "🤩 Excellent · 10/10"
+        };
+
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            placeholder: 'Write your thoughts...',
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ['bold', 'italic', 'underline'],
+                    ['blockquote', 'code-block'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link', 'image']
+                ]
+            }
+        });
+
+        function updateTitleCount() {
+            titleCount.textContent = `${titleInput.value.length} / 80`;
+        }
+
+        function showStep(step) {
+            stepOne.classList.toggle('is-active', step === 1);
+            stepTwo.classList.toggle('is-active', step === 2);
+            stepThree.classList.toggle('is-active', step === 3);
+
+            if (step === 1) {
+                progressFill.style.width = '33.33%';
+                progressStep.textContent = 'Step 1 of 3';
+            } else if (step === 2) {
+                progressFill.style.width = '66.66%';
+                progressStep.textContent = 'Step 2 of 3';
+            } else {
+                progressFill.style.width = '100%';
+                progressStep.textContent = 'Step 3 of 3';
+            }
+        }
+
+        function setMood(score, label) {
+            hiddenMoodInput.value = score;
+
+            moodOptions.forEach(option => {
+                option.classList.toggle('is-selected', option.dataset.score === String(score));
+            });
+
+            moodSelectionText.textContent = label || "Mood selected";
+            moodSelectionScore.textContent = `${score} / 10`;
+            moodPreview.textContent = moodMap[score] || `Mood · ${score}/10`;
+        }
+
+        titleInput.addEventListener('input', function () {
+            updateTitleCount();
+            titlePreview.textContent = titleInput.value.trim() || 'Untitled entry';
+        });
+
+        moodOptions.forEach(option => {
+            option.addEventListener('click', function () {
+                setMood(this.dataset.score, this.dataset.label);
+            });
+        });
+
+        goToMoodBtn.addEventListener('click', function () {
+            if (!titleInput.value.trim()) {
+                titleInput.focus();
+                titleInput.reportValidity();
+                return;
+            }
+            titlePreview.textContent = titleInput.value.trim();
+            showStep(2);
+        });
+
+        backToTitleBtn.addEventListener('click', function () {
+            showStep(1);
+        });
+
+        goToWritingBtn.addEventListener('click', function () {
+            if (!hiddenMoodInput.value) {
+                moodSelectionText.textContent = 'Please choose a mood before continuing.';
+                return;
+            }
+            showStep(3);
+        });
+
+        backToMoodBtn.addEventListener('click', function () {
+            showStep(2);
+        });
+
+        form.addEventListener('submit', function () {
+            hiddenContent.value = quill.root.innerHTML;
+        });
+
+        updateTitleCount();
+        showStep(1);
+    })();
 </script>
