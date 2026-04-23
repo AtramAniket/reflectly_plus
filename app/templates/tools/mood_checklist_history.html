@@ -5,47 +5,124 @@
 {% endblock %}
 
 {% block content %}
-<div class="centered-container">
-    <div class="page-header">
-        <h1 class="page-title">Check-In History</h1>
-        <p class="page-subtitle">
-            Review past mood and wellbeing check-ins over time.
-        </p>
+<div class="centered-container checklist-page checklist-history-page">
+
+    <section class="checklist-hero">
+        <div class="page-header checklist-page-header checklist-page-header-row">
+            <div>
+                <div class="checklist-eyebrow">History</div>
+                <h1 class="page-title">Mood Check-In History</h1>
+                <p class="page-subtitle">
+                    Review past check-ins and notice patterns over time.
+                </p>
+            </div>
+
+            <a href="{{ url_for('main.dashboard') }}"
+               class="btn-secondary checklist-top-back-btn">
+                ← Back to Dashboard
+            </a>
+        </div>
+    </section>
+
+    {% if results %}
+
+    <div class="checklist-history-stats">
+        <div class="checklist-stat-card">
+            <div class="checklist-stat-label">Total Check-Ins</div>
+            <div class="checklist-stat-value">{{ results|length }}</div>
+        </div>
+
+        <div class="checklist-stat-card">
+            <div class="checklist-stat-label">Latest Score</div>
+            <div class="checklist-stat-value">{{ results[0].total_score }}/40</div>
+        </div>
+
+        <div class="checklist-stat-card">
+            <div class="checklist-stat-label">Latest Entry</div>
+            <div class="checklist-stat-small">
+                {{ results[0].created_at.strftime('%b %d, %Y') }}
+            </div>
+        </div>
     </div>
 
-    <div class="entries-grid">
-        {% if results %}
-            {% for result in results %}
-                {% set feedback = get_checklist_feedback(result.total_score) %}
-                <div class="entry-library-card">
-                    <div class="entry-library-top">
-                        <div>
-                            <a href="{{ url_for('tools.view_mood_checklist_result', result_id=result.id) }}"
-                               class="entry-library-title">
-                                Check-In from {{ result.created_at.strftime('%B %d, %Y') }}
-                            </a>
-                        </div>
+    <div class="checklist-history-list">
+        {% for result in results %}
+            {% set feedback = get_checklist_feedback(result.total_score) %}
 
-                        <span class="entry-type-badge reflection-badge">
-                            {{ result.total_score }}/40
-                        </span>
+            <article class="checklist-timeline-card">
+                <div class="checklist-timeline-left">
+                    <div class="checklist-mood-icon checklist-mood-{{ feedback.tone }}">
+                        {% if feedback.tone == 'low' %}
+                            😊
+                        {% elif feedback.tone == 'mild' %}
+                            🙂 
+                        {% elif feedback.tone == 'moderate' %}
+                            😐
+                        {% elif feedback.tone == 'high' %}
+                            🙁
+                        {% else %}
+                            😞
+                        {% endif %}
                     </div>
 
-                    <p class="entry-library-preview">{{ feedback.label }}</p>
-
-                    <div class="entry-library-footer">
-                        <span>{{ feedback.message }}</span>
-                        <span class="entry-library-meta">
-                            {{ result.created_at.strftime('%I:%M %p') }}
+                    <div class="checklist-score-panel">
+                        <div class="checklist-score-panel-label">Score</div>
+                        <div class="checklist-score-panel-value">{{ result.total_score }}/40</div>
+                        <span class="checklist-score-panel-pill checklist-score-panel-{{ feedback.tone }}">
+                            {{ feedback.label }}
                         </span>
                     </div>
                 </div>
-            {% endfor %}
-        {% else %}
-            <div class="card">
-                <p class="empty-text">No check-ins yet. Your results will appear here once you complete one.</p>
-            </div>
-        {% endif %}
+
+                <div class="checklist-timeline-divider"></div>
+
+                <div class="checklist-timeline-main">
+                    <div class="checklist-timeline-date-row">
+                        <span class="checklist-timeline-date-icon">🗓️</span>
+                        <span class="checklist-timeline-date-text">
+                            {{ result.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                        </span>
+                    </div>
+
+                    <p class="checklist-timeline-message">
+                        {{ feedback.message }}
+                    </p>
+
+                    {% if result.note %}
+                    <div class="checklist-timeline-note">
+                        {{ result.note[:150] }}{% if result.note|length > 150 %}...{% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="checklist-timeline-action">
+                    <a href="{{ url_for('tools.view_mood_checklist_result', result_id=result.id) }}"
+                       class="checklist-view-link">
+                        <span>View details</span>
+                        <span class="checklist-view-arrow">›</span>
+                    </a>
+                </div>
+            </article>
+        {% endfor %}
     </div>
+
+    {% else %}
+
+    <div class="card checklist-empty-card">
+        <div class="checklist-section-label">No history yet</div>
+        <h3 class="card-title">Your check-ins will appear here</h3>
+        <p class="page-subtitle">
+            Complete your first mood check-in to begin building your reflection timeline.
+        </p>
+
+        <div class="checklist-actions">
+            <a href="{{ url_for('tools.mood_checklist') }}" class="btn-primary">
+                Take First Check-In
+            </a>
+        </div>
+    </div>
+
+    {% endif %}
+
 </div>
 {% endblock %}

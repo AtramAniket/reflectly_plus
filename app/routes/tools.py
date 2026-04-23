@@ -5,8 +5,13 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from app.extensions import db
 from app.models.mood_checklist import MoodChecklistResult
 from app.models.procrastination_sheet import ProcrastinationSheet, ProcrastinationTask
-from app.helper.mood_wellbeing_check import CHECKLIST_QUESTIONS, get_checklist_feedback
 from app.helper.procrastination_sheets_helper import get_sheet_stats, MAX_PROCRASTINATION_TASKS
+from app.helper.mood_wellbeing_check import (
+    CHECKLIST_QUESTIONS,
+    get_checklist_feedback,
+    get_checklist_question_texts,
+    build_grouped_checklist_sections,
+)
 
 tools = Blueprint('tools', __name__)
 
@@ -60,7 +65,7 @@ def mood_checklist():
 
     return render_template(
         "tools/mood_checklist.html",
-        questions=CHECKLIST_QUESTIONS
+        questions=get_checklist_question_texts()
     )
 
 
@@ -90,20 +95,13 @@ def view_mood_checklist_result(result_id):
         abort(403)
 
     feedback = get_checklist_feedback(result.total_score)
-
-    question_answer_pairs = [
-        {
-            "question": question,
-            "score": result.answers.get(f"q_{idx}", 0)
-        }
-        for idx, question in enumerate(CHECKLIST_QUESTIONS)
-    ]
+    grouped_response_sections = build_grouped_checklist_sections(result.answers)
 
     return render_template(
         "tools/view_mood_checklist_result.html",
         result=result,
         feedback=feedback,
-        question_answer_pairs=question_answer_pairs
+        grouped_response_sections=grouped_response_sections
     )
 
 # /tools/anti-procratination

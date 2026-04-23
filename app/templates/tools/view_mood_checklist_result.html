@@ -5,19 +5,31 @@
 {% endblock %}
 
 {% block content %}
-<div class="centered-container">
-    <div class="page-header">
-        <h1 class="page-title">Check-In Result</h1>
-        <p class="page-subtitle">
-            Completed on {{ result.created_at.strftime('%B %d, %Y at %I:%M %p') }}
-        </p>
-    </div>
+<div class="centered-container checklist-page">
+    <section class="checklist-hero">
+        <div class="page-header checklist-page-header checklist-page-header-row">
+            <div>
+                <div class="checklist-eyebrow">Check-in result</div>
+                <h1 class="page-title">Your reflection summary</h1>
+                <p class="page-subtitle">
+                    Completed on {{ result.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                </p>
+            </div>
+
+            <a href="{{ url_for('main.dashboard') }}" class="btn-secondary checklist-top-back-btn">
+                ← Back to Dashboard
+            </a>
+        </div>
+    </section>
 
     <div class="card checklist-result-card">
         <div class="checklist-score-header">
-            <div>
+            <div class="checklist-score-block">
                 <div class="checklist-score-label">Total Score</div>
                 <div class="checklist-score-value">{{ result.total_score }}/40</div>
+                <p class="checklist-score-caption">
+                    This number is only a reflection snapshot, not a diagnosis.
+                </p>
             </div>
 
             <div class="checklist-status-badge checklist-status-{{ feedback.tone }}">
@@ -26,6 +38,7 @@
         </div>
 
         <div class="checklist-result-message">
+            <div class="checklist-section-label">What this may suggest</div>
             <p>{{ feedback.message }}</p>
         </div>
 
@@ -39,35 +52,77 @@
         <div class="checklist-disclaimer-secondary">
             This result is only a reflective screening tool and should not be used as a diagnosis or treatment recommendation.
         </div>
+
+        <div class="checklist-result-actions">
+            <a href="{{ url_for('tools.mood_checklist') }}" class="btn-primary">Take again</a>
+            <a href="{{ url_for('tools.mood_checklist_history') }}" class="btn-secondary">View history</a>
+        </div>
     </div>
 
     <div class="card checklist-breakdown-card">
-        <h3 class="card-title">Response Breakdown</h3>
-
-        <div class="checklist-breakdown-list">
-            {% for item in question_answer_pairs %}
-            <div class="checklist-breakdown-item">
-                <div class="checklist-breakdown-question">{{ item.question }}</div>
-                <div class="checklist-breakdown-score">Score: {{ item.score }}</div>
+        <div class="checklist-card-heading">
+            <div>
+                <div class="checklist-section-label">A closer look</div>
+                <h3 class="card-title">Patterns from this check-in</h3>
+                <p class="checklist-section-intro">
+                    These cards highlight the main areas that may have been showing up for you today.
+                </p>
             </div>
+        </div>
+
+        <div class="checklist-grid">
+            {% for section in grouped_response_sections %}
+            <section class="checklist-grid-card checklist-grid-{{ section.category_key }}">
+                
+                <div class="checklist-grid-top">
+                    <div class="checklist-grid-icon">
+                        {% if section.category_key == "energy_motivation" %}⚡{% endif %}
+                        {% if section.category_key == "mind_focus" %}🧠{% endif %}
+                        {% if section.category_key == "emotional_weight" %}☁️{% endif %}
+                        {% if section.category_key == "self_connection" %}💛{% endif %}
+                    </div>
+
+                    <div>
+                        <h4 class="checklist-grid-title">{{ section.category_label }}</h4>
+                        <p class="checklist-grid-subtitle">
+                            {{ section.category_description }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="checklist-grid-items">
+                    {% for item in section["items"] %}
+                    <div class="checklist-mini-item">
+                        <div class="checklist-mini-head">
+                            <span class="checklist-mini-title">{{ item.title }}</span>
+
+                            <span class="checklist-response-badge checklist-response-{{ item.tone }}">
+                                {{ item.label }}
+                            </span>
+                        </div>
+
+                        <p class="checklist-mini-summary">
+                            {{ item.summary }}
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </section>
             {% endfor %}
         </div>
     </div>
 
     {% if result.note %}
-    <div class="card">
-        <h3 class="card-title">Your note</h3>
-        <p>{{ result.note }}</p>
+    <div class="card checklist-note-card">
+        <div class="checklist-card-heading">
+            <div>
+                <div class="checklist-section-label">Your reflection</div>
+                <h3 class="card-title">Saved note</h3>
+            </div>
+        </div>
+        <p class="checklist-saved-note">{{ result.note }}</p>
     </div>
     {% endif %}
-
-    <div class="entry-actions">
-        <div class="entry-actions-left">
-            <a href="{{ url_for('tools.mood_checklist') }}" class="btn-secondary">Take again</a>
-            <a href="{{ url_for('tools.mood_checklist_history') }}" class="btn-secondary">View history</a>
-        </div>
-
-        <a href="{{ url_for('main.dashboard') }}" class="back-link">← Back to Dashboard</a>
-    </div>
 </div>
 {% endblock %}

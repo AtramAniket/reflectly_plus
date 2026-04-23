@@ -5,62 +5,168 @@
 {% endblock %}
 
 {% block content %}
-<div class="centered-container">
-    <div class="page-header">
-        <h1 class="page-title">Mood & Wellbeing Check-In</h1>
-        <p class="page-subtitle">
-            A structured check-in to help you reflect on how you're doing emotionally and mentally.
-        </p>
-    </div>
-
-    <div class="card checklist-intro-card">
-        <p class="checklist-disclaimer">
-            This tool is meant for reflection and early self-awareness. It is not a diagnosis, treatment plan,
-            or substitute for professional care.
-        </p>
-
-        <div class="checklist-scale-guide">
-            <span>0 = Not at all</span>
-            <span>1 = A little</span>
-            <span>2 = Sometimes</span>
-            <span>3 = Often</span>
-            <span>4 = Very much</span>
+<div class="centered-container checklist-page">
+    <section class="checklist-hero">
+        <div class="page-header checklist-page-header">
+            <div class="checklist-eyebrow">Reflective tool</div>
+            <h1 class="page-title">Mood & Wellbeing Check-In</h1>
+            <p class="page-subtitle">
+                A gentle structured check-in to help you pause, reflect, and notice how you’ve been feeling lately.
+            </p>
         </div>
-    </div>
+
+        <div class="card checklist-intro-card">
+            <div class="checklist-intro-layout">
+                <div class="checklist-intro-content">
+                    <div class="checklist-section-label">Before you begin</div>
+                    <p class="checklist-disclaimer">
+                        This tool is meant for reflection and early self-awareness. It is not a diagnosis,
+                        treatment plan, or substitute for professional care.
+                    </p>
+
+                    <div class="checklist-scale-guide">
+                        <span><strong>0</strong> Not at all</span>
+                        <span><strong>1</strong> A little</span>
+                        <span><strong>2</strong> Sometimes</span>
+                        <span><strong>3</strong> Often</span>
+                        <span><strong>4</strong> Very much</span>
+                    </div>
+                </div>
+
+                <aside class="checklist-intro-aside">
+                    <div class="checklist-intro-aside-icon">✦</div>
+                    <h3 class="checklist-intro-aside-title">How this works</h3>
+
+                    <div class="checklist-intro-points">
+                        <div class="checklist-intro-point">
+                            <span class="checklist-intro-point-dot"></span>
+                            <span>10 short prompts</span>
+                        </div>
+                        <div class="checklist-intro-point">
+                            <span class="checklist-intro-point-dot"></span>
+                            <span>Choose the closest fit</span>
+                        </div>
+                        <div class="checklist-intro-point">
+                            <span class="checklist-intro-point-dot"></span>
+                            <span>Less than a minute</span>
+                        </div>
+                        <div class="checklist-intro-point">
+                            <span class="checklist-intro-point-dot"></span>
+                            <span>No perfect answer needed</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
 
     <form method="POST" class="card checklist-form-card">
-        {% for question in questions %}
-            {% set q_index = loop.index0 %}
-
-            <div class="checklist-question-block">
-                <div class="checklist-question-text">
-                    {{ loop.index }}. {{ question }}
-                </div>
-
-                <div class="checklist-options">
-                    {% for score in range(5) %}
-                    <label class="checklist-option">
-                        <input type="radio" name="q_{{ q_index }}" value="{{ score }}" required>
-                        <span>{{ score }}</span>
-                    </label>
-                    {% endfor %}
-                </div>
+        <div class="checklist-form-header">
+            <div>
+                <div class="checklist-section-label">Check-in questions</div>
+                <h2 class="checklist-form-title">How has this felt for you recently?</h2>
             </div>
-        {% endfor %}
+        </div>
+
+        <div class="checklist-question-list">
+            {% for question in questions %}
+                {% set q_index = loop.index0 %}
+
+                <div class="checklist-question-block enhanced-question-card">
+
+                    <div class="checklist-question-main">
+                        <div class="checklist-question-meta">Question {{ loop.index }}</div>
+
+                        <div class="checklist-question-text">
+                            {{ question }}
+                        </div>
+
+                        <div class="checklist-options" role="radiogroup" aria-label="Question {{ loop.index }}">
+                            {% for score in range(5) %}
+                            <label class="checklist-option">
+                                <input
+                                    type="radio"
+                                    name="q_{{ q_index }}"
+                                    value="{{ score }}"
+                                    required
+                                    onchange="updateChecklistState({{ q_index }}, {{ score }})"
+                                >
+                                <span class="checklist-option-chip">
+                                    <span class="checklist-option-value">{{ score }}</span>
+                                </span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="checklist-question-state" id="state-panel-{{ q_index }}">
+                        <div class="checklist-state-icon" id="state-icon-{{ q_index }}">
+                            ○
+                        </div>
+
+                        <div class="checklist-state-label" id="state-label-{{ q_index }}">
+                            Choose one
+                        </div>
+
+                        <div class="checklist-state-subtext" id="state-subtext-{{ q_index }}">
+                            No response selected yet
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
 
         <div class="checklist-form-footer">
-            <div class="form-group">
+            <div class="form-group checklist-note-group">
                 <label for="note">Optional note</label>
                 <textarea
                     id="note"
                     name="note"
-                    rows="4"
-                    placeholder="Anything you want to note about how you've been feeling?"
+                    rows="5"
+                    placeholder="You can add a short note about what has been weighing on you, what felt different this week, or anything you want to remember."
                 ></textarea>
             </div>
 
-            <button type="submit" class="btn-primary">Submit check-in</button>
+            <div class="checklist-submit-row">
+                <p class="checklist-submit-help">
+                    You’re not aiming for a perfect answer here — just an honest snapshot.
+                </p>
+                <button type="submit" class="btn-primary checklist-submit-btn">Submit check-in</button>
+            </div>
         </div>
     </form>
 </div>
+<script>
+function updateChecklistState(index, score) {
+    const icon = document.getElementById(`state-icon-${index}`);
+    const label = document.getElementById(`state-label-${index}`);
+    const sub = document.getElementById(`state-subtext-${index}`);
+    const panel = document.getElementById(`state-panel-${index}`);
+
+    const states = {
+        0: { icon: "😊", label: "Not at all", sub: "Feeling steady here", cls: "state-low" },
+        1: { icon: "🙂", label: "A little", sub: "Slightly present", cls: "state-light" },
+        2: { icon: "😐", label: "Sometimes", sub: "Shows up now and then", cls: "state-mid" },
+        3: { icon: "😕", label: "Often", sub: "More noticeable lately", cls: "state-high" },
+        4: { icon: "😣", label: "Very much", sub: "Strongly present right now", cls: "state-heavy" }
+    };
+
+    const state = states[score];
+
+    icon.textContent = state.icon;
+    label.textContent = state.label;
+    sub.textContent = state.sub;
+
+    panel.classList.remove(
+        "state-low",
+        "state-light",
+        "state-mid",
+        "state-high",
+        "state-heavy"
+    );
+
+    panel.classList.add(state.cls);
+}
+</script>
 {% endblock %}
