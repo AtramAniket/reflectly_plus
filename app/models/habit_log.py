@@ -1,7 +1,7 @@
-from datetime import date
+from datetime import date, datetime
 from app.extensions import db
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Integer, Date, ForeignKey, Boolean, func, UniqueConstraint
+from sqlalchemy import Integer, Date, DateTime, ForeignKey, Boolean, func, UniqueConstraint
 
 class HabitLog(db.Model):
 
@@ -20,4 +20,10 @@ class HabitLog(db.Model):
 	habit_id: Mapped[int] = mapped_column(ForeignKey('habits.id'), nullable=False)
 
 	habit = relationship('Habit', back_populates='logs')
+
+	created_at: Mapped[datetime] = mapped_column(
+	    DateTime(timezone=True),
+	    nullable=False,
+	    server_default=func.now()
+	)
 
