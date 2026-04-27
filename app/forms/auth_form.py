@@ -45,7 +45,7 @@ class SignupForm(FlaskForm):
     submit = SubmitField("Create account")
 
     def validate_username(self, username):
-        cleaned_username = username.data.strip()
+        cleaned_username = username.data.strip().lower()
 
         if not USERNAME_PATTERN.match(cleaned_username):
             raise ValidationError("Username can only contain letters, numbers, and underscores.")
