@@ -1,70 +1,69 @@
 from app.extensions import db
 from app.models.user import User
+from app.forms.auth_form import SignupForm, LoginForm
+
 from flask_login import login_user, logout_user, current_user
-from flask import Blueprint, url_for, render_template, request, redirect, flash
+from flask import Blueprint, url_for, render_template, redirect, flash
+from sqlalchemy import or_
+
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/signup', methods = ['GET', 'POST'])
+
+@auth.route('/signup', methods=['GET', 'POST'])
 def signup():
 
-	if current_user.is_authenticated:
-		return redirect(url_for('main.dashboard'))
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
 
-	if request.method == 'POST':
-		email = request.form.get('email')
-		password = request.form.get('password')
+    form = SignupForm()
 
-		# basic validation
-		if not email and password:
-			flash('Email and password are required', 'error')
-			return redirect(url_for('auth.signup'))
+    if form.validate_on_submit():
+        user = User(
+            username=form.username.data.strip(),
+            email=form.email.data.strip().lower()
+        )
+        user.set_password(form.password.data)
 
-		# check if user exists
-		existing_user = User.query.filter_by(email=email).first()
-		if existing_user:
-			flash('user already exists', 'error')
-			return redirect(url_for('auth.signup'))
+        db.session.add(user)
+        db.session.commit()
 
-		# create a new user
-		user = User(email=email)
-		user.set_password(password)
+        flash('Your account has been created. Please log in to continue.', 'success')
+        return redirect(url_for('auth.login'))
 
-		db.session.add(user)
-		db.session.commit()
+    return render_template('signup.html', form=form)
 
-		flash('User created successfully. Please Login to comtinue', 'success')
-		return redirect(url_for('auth.login'))
 
-	return render_template('signup.html')
-
-@auth.route('/login', methods = ['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
 
-	if current_user.is_authenticated:
-		return redirect(url_for('main.dashboard'))
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
 
-	if request.method == 'POST':
+    form = LoginForm()
 
-		email = request.form.get('email')
-		password = request.form.get('password')
+    if form.validate_on_submit():
+        identifier = form.identifier.data.strip().lower()
 
-		# check if user exists
-		user = User.query.filter_by(email=email).first()
-		if user and user.check_password(password):
-			login_user(user)
-			flash('User successfully logged in!', 'success')
-			return redirect(url_for('main.dashboard'))
-		else:
-			flash('Invalid username or password', 'warning')
-			return redirect(url_for('auth.login'))
+        user = User.query.filter(
+            or_(
+                User.email == identifier,
+                User.username == identifier
+            )
+        ).first()
 
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember.data)
+            flash(f'Welcome back, {user.username}.', 'success')
+            return redirect(url_for('main.dashboard'))
 
-	return render_template('login.html')
+        flash('Invalid email/username or password.', 'warning')
+
+    return render_template('login.html', form=form)
 
 
 @auth.route('/logout')
 def logout():
-	logout_user()
-	flash('user successfully logged out', 'success')
-	return redirect(url_for('auth.login'))
+    logout_user()
+    flash('You have been logged out successfully.', 'success')
+    return redirect(url_for('auth.login'))
