@@ -13,6 +13,7 @@ class User(UserMixin, db.Model):
         return f"User {self.email}"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    username: Mapped[str] = mapped_column(String(80), nullable=False, unique=True, index=True)
     email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     password_hash: Mapped[str] = mapped_column(String(100), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
