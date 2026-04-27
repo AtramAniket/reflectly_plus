@@ -14,7 +14,7 @@
 
             <h1 class="dashboard-hero__title">
                 Welcome back,
-                {{ (email.split('@')[0].split('.')[0] | title) if email else 'Friend' }}!
+                {{ current_user.username.title() }}!
             </h1>
 
             <p class="dashboard-hero__eyebrow">
