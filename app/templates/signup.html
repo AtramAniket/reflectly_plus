@@ -17,6 +17,7 @@
     <div class="input-group">
         {{ form.username.label }}
         {{ form.username(placeholder="Choose a username", autocomplete="username") }}
+        <p class="form-hint">Use 3–20 characters. Letters, numbers, and underscores only.</p>
 
         {% for error in form.username.errors %}
             <p class="form-error">{{ error }}</p>
@@ -35,6 +36,7 @@
     <div class="input-group">
         {{ form.password.label }}
         {{ form.password(placeholder="Create a password", autocomplete="new-password") }}
+        <p class="form-hint">Use at least 8 characters.</p>
 
         {% for error in form.password.errors %}
             <p class="form-error">{{ error }}</p>
