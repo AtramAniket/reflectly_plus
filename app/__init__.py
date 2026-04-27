@@ -1,5 +1,5 @@
 from flask import Flask
-from .extensions import db, login_manager, migrate
+from .extensions import db, login_manager, migrate, csrf
 
 def create_app():
 
@@ -7,6 +7,7 @@ def create_app():
     app.config.from_object("config.Config")
 
     db.init_app(app)
+    csrf.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
