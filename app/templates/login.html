@@ -3,7 +3,7 @@
 {% block page_title %}Welcome back{% endblock %}
 {% block hero_title %}Welcome back{% endblock %}
 {% block hero_subtitle %}Log in to continue your reflection journey.{% endblock %}
-{% block auth_title %}Log in{% endblock %}
+{% block auth_title %}Welcome back{% endblock %}
 {% block subtitle %}Pick up where you left off.{% endblock %}
 
 {% block page_css %}
@@ -11,19 +11,33 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST" class="auth-form">
+<form method="POST" class="auth-form" novalidate>
+    {{ form.hidden_tag() }}
 
     <div class="input-group">
-        <label for="email">Email</label>
-        <input id="email" type="email" name="email" placeholder="Enter your email" required>
+        {{ form.identifier.label }}
+        {{ form.identifier(placeholder="Enter email or username", autocomplete="username") }}
+
+        {% for error in form.identifier.errors %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
     </div>
 
     <div class="input-group">
-        <label for="password">Password</label>
-        <input id="password" type="password" name="password" placeholder="Enter your password" required>
+        {{ form.password.label }}
+        {{ form.password(placeholder="Enter your password", autocomplete="current-password") }}
+
+        {% for error in form.password.errors %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
     </div>
 
-    <button type="submit" class="btn-primary auth-submit-btn">Log in</button>
+    <label class="remember-row">
+        {{ form.remember() }}
+        <span>{{ form.remember.label.text }}</span>
+    </label>
+
+    {{ form.submit(class="btn-primary auth-submit-btn") }}
 </form>
 
 <p class="auth-switch">
