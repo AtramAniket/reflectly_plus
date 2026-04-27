@@ -1,10 +1,18 @@
 {% extends 'auth_base.html' %}
 
-{% block page_title %}Welcome back{% endblock %}
+{% block page_title %}Log in{% endblock %}
+
 {% block hero_title %}Welcome back{% endblock %}
-{% block hero_subtitle %}Log in to continue your reflection journey.{% endblock %}
-{% block auth_title %}Welcome back{% endblock %}
-{% block subtitle %}Pick up where you left off.{% endblock %}
+
+{% block hero_subtitle %}
+Return to your journal, habits, and reflections.
+{% endblock %}
+
+{% block auth_title %}Log in{% endblock %}
+
+{% block subtitle %}
+Use your email or username to continue.
+{% endblock %}
 
 {% block page_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/auth_pages.css') }}">
