@@ -265,6 +265,32 @@
     box-shadow: 0 0 0 4px rgba(207, 125, 119, 0.14);
 }
 
+.form-hint {
+    margin: -2px 0 0;
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1.45;
+    color: var(--color-text-muted);
+}
+
+.form-error {
+    margin: 2px 0 0;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: var(--color-danger-soft);
+    border: 1px solid rgba(207, 125, 119, 0.24);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.45;
+    color: var(--color-danger);
+}
+
+.input-group:has(.form-error) input {
+    border-color: var(--color-danger);
+    background: #fffafa;
+    box-shadow: 0 0 0 4px rgba(207, 125, 119, 0.12);
+}
+
 @media (max-width: 700px) {
     .auth-container {
         padding: 32px 16px 24px;
