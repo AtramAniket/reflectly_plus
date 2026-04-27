@@ -11,6 +11,8 @@ def create_app():
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
+    login_manager.login_view = "auth.login"
+    login_manager.login_message_category = "warning"
 
     from .routes.auth import auth
     from .routes.beta import demo
