@@ -5,50 +5,72 @@
 {% endblock %}
 
 {% block content %}
-<div class="centered-container">
-    <div class="page-header">
-        <h1 class="page-title">New Anti-Procrastination Sheet</h1>
-        <p class="page-subtitle">
-            Create a worksheet and then add tasks one by one. Each sheet can hold up to 20 tasks.
-        </p>
-    </div>
+<div class="centered-container worksheet-create-page">
 
-    <div class="card checklist-intro-card">
-        <p class="checklist-disclaimer">
-            This tool is for reflection and action planning. It is not a diagnosis or treatment tool.
-            Use it to compare what you expected a task to feel like with what it was actually like.
+    <div class="worksheet-hero card">
+        <div class="worksheet-kicker">Momentum Worksheet</div>
+
+        <h1 class="page-title">Turn avoided tasks into small, clear actions.</h1>
+
+        <p class="page-subtitle">
+            Use this worksheet to capture tasks you have been putting off, rate how difficult
+            they seem before starting, and compare that with how they actually felt afterward.
         </p>
+
+        <div class="worksheet-flow">
+            <div class="worksheet-flow-step">
+                <span>1</span>
+                <strong>Name the task</strong>
+                <p>Write down what you are avoiding.</p>
+            </div>
+
+            <div class="worksheet-flow-step">
+                <span>2</span>
+                <strong>Predict the effort</strong>
+                <p>Rate expected difficulty and satisfaction.</p>
+            </div>
+
+            <div class="worksheet-flow-step">
+                <span>3</span>
+                <strong>Review after action</strong>
+                <p>Compare expectation with reality.</p>
+            </div>
+        </div>
     </div>
 
     <form method="POST" class="card procrastination-form-card">
+        {{ form.hidden_tag() }}
+
         <div class="procrastination-section">
-            <h3 class="card-title">Sheet details</h3>
+            <h3 class="card-title">Create your worksheet</h3>
 
             <div class="form-group">
-                <label for="title">Sheet title</label>
-                <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    placeholder="Example: This Week's Avoided Tasks"
-                    required
-                >
+                {{ form.title.label }}
+                {{ form.title(class="form-control") }}
+
+                {% for error in form.title.errors %}
+                    <p class="form-error">{{ error }}</p>
+                {% endfor %}
             </div>
 
             <div class="form-group">
-                <label for="note">Optional note <span class="muted-inline">(optional)</span></label>
-                <textarea
-                    id="note"
-                    name="note"
-                    rows="4"
-                    placeholder="Example: Mostly work tasks I keep postponing because they feel bigger than they are."
-                ></textarea>
+                {{ form.note.label }}
+                <span class="muted-inline">(optional)</span>
+                {{ form.note(class="form-control") }}
+
+                {% for error in form.note.errors %}
+                    <p class="form-error">{{ error }}</p>
+                {% endfor %}
             </div>
         </div>
 
         <div class="procrastination-form-footer">
-            <button type="submit" class="btn-primary">Create sheet</button>
+            {{ form.submit(class="btn-primary") }}
+            <a href="{{ url_for('tools.procrastination_sheet_history') }}" class="btn-secondary">
+                View previous worksheets
+            </a>
         </div>
     </form>
+
 </div>
 {% endblock %}
