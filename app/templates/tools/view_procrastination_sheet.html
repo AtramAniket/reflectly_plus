@@ -15,22 +15,22 @@
 
     <div class="entries-summary-grid">
         <div class="summary-card">
-            <div class="summary-label">Tasks added</div>
+            <div class="summary-label">Tasks Logged</div>
             <div class="summary-value">{{ stats.total_tasks }}</div>
         </div>
 
         <div class="summary-card">
-            <div class="summary-label">Completed</div>
+            <div class="summary-label">Tasks Attempted</div>
             <div class="summary-value">{{ stats.completed_tasks }}</div>
         </div>
 
         <div class="summary-card">
-            <div class="summary-label">Remaining slots</div>
+            <div class="summary-label">Space Left</div>
             <div class="summary-value">{{ stats.entries_remaining }}</div>
         </div>
 
         <div class="summary-card">
-            <div class="summary-label">Avg difficulty</div>
+            <div class="summary-label">Difficulty Shift</div>
             <div class="summary-value">
                 {% if stats.avg_expected_difficulty is not none %}
                     {{ stats.avg_expected_difficulty }}
@@ -51,119 +51,143 @@
     </div>
     {% endif %}
 
-    <div class="card procrastination-sheet-table-card">
-        <div class="section-header">
-            <h3 class="card-title">Task Table</h3>
+    <div class="card worksheet-board-card">
+        <div class="section-header worksheet-board-header">
+            <div>
+                <h3 class="card-title">Worksheet tasks</h3>
+                <p class="worksheet-board-subtitle">
+                    Review what felt difficult before starting, then compare it with what actually happened.
+                </p>
+            </div>
 
             {% if stats.total_tasks < max_tasks %}
             <a href="{{ url_for('tools.add_procrastination_task', sheet_id=sheet.id) }}" class="btn-primary">
-                Add Task
+                + Add Task
             </a>
             {% else %}
-            <span class="table-limit-note">Sheet full</span>
+            <span class="table-limit-note">Worksheet full</span>
             {% endif %}
         </div>
 
         {% if sheet.tasks %}
-        <div class="procrastination-table-wrap">
-            <table class="procrastination-table">
-                <thead>
-                    <tr>
-                        <th>Task</th>
-                        <th>Expected</th>
-                        <th>Actual</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for task in sheet.tasks %}
-                    <tr>
-                        <td>
-                            <div class="task-cell-title">{{ task.task_name }}</div>
-                            <div class="task-cell-subtext">
-                                Tiny step: {{ task.tiny_step[:80] }}{% if task.tiny_step|length > 80 %}...{% endif %}
-                            </div>
-                        </td>
-                        <td>
-                            D: {{ task.expected_difficulty }}/10<br>
-                            S: {{ task.expected_satisfaction }}/10
-                        </td>
-                        <td>
+        <div class="worksheet-task-list">
+            {% for task in sheet.tasks %}
+            <article class="worksheet-task-card">
+                <div class="worksheet-task-main">
+                    <div>
+                        <div class="worksheet-task-topline">
+                            <span class="worksheet-task-number">Task {{ loop.index }}</span>
                             {% if task.is_completed %}
-                                D: {{ task.actual_difficulty }}/10<br>
-                                S: {{ task.actual_satisfaction }}/10
+                                <span class="task-state-pill task-state-complete">
+                                    ✓ Completed
+                                </span>
+                            {% else %}
+                                <span class="task-state-pill task-state-pending">
+                                    ⏳ Pending
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <h4 class="worksheet-task-title">{{ task.task_name }}</h4>
+
+                        <p class="worksheet-task-step">
+                            <strong>Tiny first step:</strong> {{ task.tiny_step }}
+                        </p>
+                    </div>
+
+                    <div class="worksheet-task-action">
+                        {% if task.is_completed %}
+                        <a href="{{ url_for('tools.complete_procrastination_task', task_id=task.id) }}" class="btn-secondary">
+                            Edit Review
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('tools.complete_procrastination_task', task_id=task.id) }}" class="btn-primary">
+                            Complete Task
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="worksheet-score-grid">
+                    <div class="worksheet-score-card">
+                        <span>Expected Difficulty</span>
+                        <strong>{{ task.expected_difficulty }}/10</strong>
+                    </div>
+
+                    <div class="worksheet-score-card">
+                        <span>Expected Satisfaction</span>
+                        <strong>{{ task.expected_satisfaction }}/10</strong>
+                    </div>
+
+                    <div class="worksheet-score-card">
+                        <span>Actual Difficulty</span>
+                        <strong>
+                            {% if task.is_completed %}
+                                {{ task.actual_difficulty }}/10
                             {% else %}
                                 —
                             {% endif %}
-                        </td>
-                        <td>
+                        </strong>
+                    </div>
+
+                    <div class="worksheet-score-card">
+                        <span>Actual Satisfaction</span>
+                        <strong>
                             {% if task.is_completed %}
-                                <span class="status-badge status-done">Done</span>
+                                {{ task.actual_satisfaction }}/10
                             {% else %}
-                                <span class="status-badge status-pending">Pending</span>
+                                —
                             {% endif %}
-                        </td>
-                        <td>
-                            {% if task.is_completed %}
-                                <a href="{{ url_for('tools.complete_procrastination_task', task_id=task.id) }}" class="btn-link">
-                                    Edit
-                                </a>
-                            {% else %}
-                                <a href="{{ url_for('tools.complete_procrastination_task', task_id=task.id) }}" class="btn-link">
-                                    Complete
-                                </a>
-                            {% endif %}
-                        </td>
-                    </tr>
+                        </strong>
+                    </div>
+                </div>
 
-                    {% if task.avoidance_reason or task.resistance_thoughts or task.reflection %}
-                    <tr class="task-detail-row">
-                        <td colspan="5">
-                            <div class="task-detail-grid">
-                                {% if task.avoidance_reason %}
-                                <div class="task-detail-block">
-                                    <div class="task-detail-label">Why you were avoiding it</div>
-                                    <p>{{ task.avoidance_reason }}</p>
-                                </div>
-                                {% endif %}
-
-                                {% if task.resistance_thoughts %}
-                                <div class="task-detail-block">
-                                    <div class="task-detail-label">Resistance thoughts</div>
-                                    <p>{{ task.resistance_thoughts }}</p>
-                                </div>
-                                {% endif %}
-
-                                {% if task.reflection %}
-                                <div class="task-detail-block">
-                                    <div class="task-detail-label">Reflection</div>
-                                    <p>{{ task.reflection }}</p>
-                                </div>
-                                {% endif %}
-                            </div>
-                        </td>
-                    </tr>
+                {% if task.avoidance_reason or task.resistance_thoughts or task.reflection %}
+                <div class="worksheet-reflection-grid">
+                    {% if task.avoidance_reason %}
+                    <div class="worksheet-note-block">
+                        <span>Why it felt hard</span>
+                        <p>{{ task.avoidance_reason }}</p>
+                    </div>
                     {% endif %}
 
-                    {% endfor %}
-                </tbody>
-            </table>
+                    {% if task.resistance_thoughts %}
+                    <div class="worksheet-note-block">
+                        <span>Resistance thought</span>
+                        <p>{{ task.resistance_thoughts }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if task.reflection %}
+                    <div class="worksheet-note-block">
+                        <span>After-action reflection</span>
+                        <p>{{ task.reflection }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </article>
+            {% endfor %}
         </div>
         {% else %}
-        <p class="empty-text">
-            No tasks added yet. Add your first avoided task to start comparing expected vs actual difficulty.
-        </p>
+        <div class="worksheet-empty-state">
+            <h4>No tasks added yet.</h4>
+            <p>Add your first avoided task and turn it into a tiny starting point.</p>
+            <a href="{{ url_for('tools.add_procrastination_task', sheet_id=sheet.id) }}" class="btn-primary">
+                Add First Task
+            </a>
+        </div>
         {% endif %}
     </div>
 
-    <div class="entry-actions">
-        <div class="entry-actions-left">
-            <a href="{{ url_for('tools.anti_procrastination') }}" class="btn-secondary">Create another sheet</a>
-            <a href="{{ url_for('tools.procrastination_sheet_history') }}" class="btn-secondary">View history</a>
-        </div>
+    <div class="worksheet-footer-actions">
+        <a href="{{ url_for('tools.procrastination_sheet_history') }}" class="btn-secondary">
+            ← Worksheet History
+        </a>
 
-        <a href="{{ url_for('main.dashboard') }}" class="back-link">← Back to Dashboard</a>
+        <a href="{{ url_for('tools.anti_procrastination') }}" class="btn-secondary">
+            + New Worksheet
+        </a>
     </div>
 </div>
 {% endblock %}

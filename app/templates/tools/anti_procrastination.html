@@ -10,30 +10,30 @@
     <div class="worksheet-hero card">
         <div class="worksheet-kicker">Momentum Worksheet</div>
 
-        <h1 class="page-title">Turn avoided tasks into small, clear actions.</h1>
+        <h1 class="page-title">For tasks that feel heavier than they really are.</h1>
 
         <p class="page-subtitle">
-            Use this worksheet to capture tasks you have been putting off, rate how difficult
-            they seem before starting, and compare that with how they actually felt afterward.
+            This worksheet helps you write down avoided tasks, choose a tiny first step,
+            and later compare your expectation with what actually happened.
         </p>
 
         <div class="worksheet-flow">
             <div class="worksheet-flow-step">
                 <span>1</span>
-                <strong>Name the task</strong>
-                <p>Write down what you are avoiding.</p>
+                <strong>Write the avoided task</strong>
+                <p>Name the task without trying to solve everything yet.</p>
             </div>
 
             <div class="worksheet-flow-step">
                 <span>2</span>
-                <strong>Predict the effort</strong>
-                <p>Rate expected difficulty and satisfaction.</p>
+                <strong>Choose a tiny first step</strong>
+                <p>Make the starting point small enough to begin.</p>
             </div>
 
             <div class="worksheet-flow-step">
                 <span>3</span>
-                <strong>Review after action</strong>
-                <p>Compare expectation with reality.</p>
+                <strong>Review what changed</strong>
+                <p>After attempting it, compare expected difficulty with actual difficulty.</p>
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
         {{ form.hidden_tag() }}
 
         <div class="procrastination-section">
-            <h3 class="card-title">Create your worksheet</h3>
+            <h3 class="card-title">Start a new worksheet</h3>
 
             <div class="form-group">
                 {{ form.title.label }}
@@ -66,9 +66,6 @@
 
         <div class="procrastination-form-footer">
             {{ form.submit(class="btn-primary") }}
-            <a href="{{ url_for('tools.procrastination_sheet_history') }}" class="btn-secondary">
-                View previous worksheets
-            </a>
         </div>
     </form>
 

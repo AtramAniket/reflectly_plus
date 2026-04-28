@@ -5,43 +5,65 @@
 {% endblock %}
 
 {% block content %}
-<div class="centered-container">
-    <div class="page-header">
-        <h1 class="page-title">Anti-Procrastination History</h1>
-        <p class="page-subtitle">
-            Review your saved worksheets and how tasks actually compared to expectations.
-        </p>
+<div class="reading-container worksheet-history-page">
+
+    <div class="history-hero card">
+        <div>
+            <div class="worksheet-kicker">Worksheet Archive</div>
+            <h1 class="page-title">Momentum Worksheet History</h1>
+            <p class="page-subtitle">
+                Review past worksheets, compare expectations with reality, and spot where tasks felt easier after starting.
+            </p>
+        </div>
+
+        <a href="{{ url_for('tools.anti_procrastination') }}" class="btn-primary">
+            + New Worksheet
+        </a>
     </div>
 
-    <div class="entries-grid">
-        {% if sheets %}
-            {% for sheet in sheets %}
-                {% set stats = get_sheet_stats(sheet) %}
-                <div class="entry-library-card">
-                    <div class="entry-library-top">
-                        <div>
-                            <a href="{{ url_for('tools.view_procrastination_sheet', sheet_id=sheet.id) }}"
-                               class="entry-library-title">
-                                {{ sheet.title }}
-                            </a>
-                        </div>
+    {% if sheets %}
+    <div class="worksheet-history-grid">
+        {% for sheet in sheets %}
+            {% set stats = get_sheet_stats(sheet) %}
 
-                        <span class="entry-type-badge reflection-badge">
-                            {{ stats.completed_tasks }}/{{ stats.total_tasks }}
+            <a href="{{ url_for('tools.view_procrastination_sheet', sheet_id=sheet.id) }}" class="worksheet-history-card">
+                <div class="history-card-top">
+                    <div>
+                        <span class="history-card-date">
+                            {{ sheet.created_at.strftime('%b %d, %Y • %I:%M %p') }}
                         </span>
+                        <h3>{{ sheet.title }}</h3>
                     </div>
 
-                    <p class="entry-library-preview">
-                        {% if sheet.note %}
-                            {{ sheet.note[:150] }}{% if sheet.note|length > 150 %}...{% endif %}
-                        {% else %}
-                            {{ stats.total_tasks }} tasks added, {{ stats.entries_remaining }} slots remaining out of {{ max_tasks }}.
-                        {% endif %}
-                    </p>
+                    <span class="history-completion-pill">
+                        {{ stats.completed_tasks }}/{{ stats.total_tasks }}
+                    </span>
+                </div>
 
-                    <div class="entry-library-footer">
-                        <span>
-                            Avg difficulty:
+                {% if sheet.note %}
+                <p class="history-card-note">
+                    {{ sheet.note[:120] }}{% if sheet.note|length > 120 %}...{% endif %}
+                </p>
+                {% else %}
+                <p class="history-card-note muted">
+                    No worksheet note added.
+                </p>
+                {% endif %}
+
+                <div class="history-metrics">
+                    <div>
+                        <span>Tasks Logged</span>
+                        <strong>{{ stats.total_tasks }}/{{ max_tasks }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Attempted</span>
+                        <strong>{{ stats.completed_tasks }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Difficulty Shift</span>
+                        <strong>
                             {% if stats.avg_expected_difficulty is not none %}
                                 {{ stats.avg_expected_difficulty }}
                                 {% if stats.avg_actual_difficulty is not none %}
@@ -50,18 +72,21 @@
                             {% else %}
                                 —
                             {% endif %}
-                        </span>
-                        <span class="entry-library-meta">
-                            {{ sheet.created_at.strftime('%b %d, %I:%M %p') }}
-                        </span>
+                        </strong>
                     </div>
                 </div>
-            {% endfor %}
-        {% else %}
-            <div class="card">
-                <p class="empty-text">No anti-procrastination sheets yet. Your saved sheets will appear here.</p>
-            </div>
-        {% endif %}
+            </a>
+        {% endfor %}
     </div>
+    {% else %}
+    <div class="card worksheet-empty-state">
+        <h4>No worksheets yet.</h4>
+        <p>Create your first worksheet and start turning avoided tasks into tiny actions.</p>
+        <a href="{{ url_for('tools.anti_procrastination') }}" class="btn-primary">
+            Create Worksheet
+        </a>
+    </div>
+    {% endif %}
+
 </div>
 {% endblock %}

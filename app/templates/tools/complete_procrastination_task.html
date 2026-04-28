@@ -5,85 +5,127 @@
 {% endblock %}
 
 {% block content %}
-<div class="centered-container">
+<div class="centered-container worksheet-complete-page">
+
     <div class="page-header">
-        <h1 class="page-title">Complete Task</h1>
+        <div class="worksheet-kicker">Task Review</div>
+
+        <h1 class="page-title">What happened after you started?</h1>
+
         <p class="page-subtitle">
-            Update actual scores for <strong>{{ task.task_name }}</strong>.
+            Review <strong>{{ task.task_name }}</strong> from
+            <strong>{{ sheet.title }}</strong>.
         </p>
     </div>
 
-    <div class="card checklist-intro-card">
-        <p class="checklist-disclaimer">
-            Compare what you expected before starting with how the task actually felt after attempting it.
-        </p>
-    </div>
-
-    <div class="card procrastination-view-card">
-        <h3 class="card-title">Before you started</h3>
-        <div class="procrastination-comparison-grid">
-            <div class="comparison-card">
-                <div class="comparison-label">Expected difficulty</div>
-                <div class="comparison-value">{{ task.expected_difficulty }}/10</div>
-            </div>
-
-            <div class="comparison-card">
-                <div class="comparison-label">Expected satisfaction</div>
-                <div class="comparison-value">{{ task.expected_satisfaction }}/10</div>
+    <div class="card completion-before-card">
+        <div class="form-section-heading">
+            <span class="section-number">1</span>
+            <div>
+                <h3 class="card-title">Before starting</h3>
+                <p>This is what you expected before attempting the task.</p>
             </div>
         </div>
+
+        <h4 class="completion-task-title">{{ task.task_name }}</h4>
+
+        <p class="completion-tiny-step">
+            <strong>Tiny first step:</strong> {{ task.tiny_step }}
+        </p>
+
+        <div class="worksheet-score-grid completion-score-grid">
+            <div class="worksheet-score-card">
+                <span>Expected Difficulty</span>
+                <strong>{{ task.expected_difficulty }}/10</strong>
+            </div>
+
+            <div class="worksheet-score-card">
+                <span>Expected Satisfaction</span>
+                <strong>{{ task.expected_satisfaction }}/10</strong>
+            </div>
+        </div>
+
+        {% if task.avoidance_reason or task.resistance_thoughts %}
+        <div class="worksheet-reflection-grid completion-reflection-grid">
+            {% if task.avoidance_reason %}
+            <div class="worksheet-note-block">
+                <span>Why it felt hard</span>
+                <p>{{ task.avoidance_reason }}</p>
+            </div>
+            {% endif %}
+
+            {% if task.resistance_thoughts %}
+            <div class="worksheet-note-block">
+                <span>Resistance thought</span>
+                <p>{{ task.resistance_thoughts }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
 
-    <form method="POST" class="card procrastination-form-card">
+    <form method="POST" class="card procrastination-form-card completion-review-form">
+        {{ form.hidden_tag() }}
+
         <div class="procrastination-section">
-            <h3 class="card-title">After attempting the task</h3>
+            <div class="form-section-heading">
+                <span class="section-number">2</span>
+                <div>
+                    <h3 class="card-title">After attempting it</h3>
+                    <p>Now compare the expectation with the real experience.</p>
+                </div>
+            </div>
 
             <div class="score-grid">
                 <div class="score-card">
-                    <label class="score-label">Actual difficulty</label>
+                    {{ form.actual_difficulty.label(class="score-label") }}
                     <div class="score-scale">0 = very easy, 10 = extremely hard</div>
-                    <input
-                        type="number"
-                        name="actual_difficulty"
-                        min="0"
-                        max="10"
-                        value="{{ task.actual_difficulty if task.actual_difficulty is not none else '' }}"
-                        required
-                    >
+                    {{ form.actual_difficulty(class="form-control score-input") }}
+
+                    {% for error in form.actual_difficulty.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
                 </div>
 
                 <div class="score-card">
-                    <label class="score-label">Actual satisfaction</label>
-                    <div class="score-scale">0 = none, 10 = extremely satisfying</div>
-                    <input
-                        type="number"
-                        name="actual_satisfaction"
-                        min="0"
-                        max="10"
-                        value="{{ task.actual_satisfaction if task.actual_satisfaction is not none else '' }}"
-                        required
-                    >
+                    {{ form.actual_satisfaction.label(class="score-label") }}
+                    <div class="score-scale">0 = not rewarding, 10 = very satisfying</div>
+                    {{ form.actual_satisfaction(class="form-control score-input") }}
+
+                    {% for error in form.actual_satisfaction.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
                 </div>
             </div>
         </div>
 
         <div class="procrastination-section">
-            <h3 class="card-title">Reflection</h3>
+            <div class="form-section-heading">
+                <span class="section-number">3</span>
+                <div>
+                    <h3 class="card-title">Reflection</h3>
+                    <p>Capture the lesson while it is still fresh.</p>
+                </div>
+            </div>
 
-            <div class="form-group">
-                <label for="reflection">What did you notice or learn? <span class="muted-inline">(optional)</span></label>
-                <textarea
-                    id="reflection"
-                    name="reflection"
-                    rows="4"
-                    placeholder="Example: It was not as bad as I expected, and getting started was the hardest part."
-                >{{ task.reflection or '' }}</textarea>
+            <div class="form-group roomy-form-group">
+                {{ form.reflection.label }}
+                {{ form.reflection(class="form-control") }}
+
+                {% for error in form.reflection.errors %}
+                    <p class="form-error">{{ error }}</p>
+                {% endfor %}
             </div>
         </div>
 
         <div class="procrastination-form-footer">
-            <button type="submit" class="btn-primary">Save completion</button>
+            {{ form.submit(class="btn-primary") }}
+
+            <a href="{{ url_for('tools.view_procrastination_sheet', sheet_id=sheet.id) }}" class="btn-secondary">
+                Cancel
+            </a>
         </div>
     </form>
+
 </div>
 {% endblock %}

@@ -5,91 +5,136 @@
 {% endblock %}
 
 {% block content %}
-<div class="centered-container">
+<div class="centered-container worksheet-task-page">
+
     <div class="page-header">
-        <h1 class="page-title">Add Task</h1>
+        <div class="worksheet-kicker">Add Task</div>
+
+        <h1 class="page-title">Add one avoided task.</h1>
+
         <p class="page-subtitle">
-            Add a task to <strong>{{ sheet.title }}</strong>.
+            You are adding this to <strong>{{ sheet.title }}</strong>.
             {{ sheet.tasks|length }}/{{ max_tasks }} tasks used.
         </p>
     </div>
 
-    <form method="POST" class="card procrastination-form-card">
-        <div class="procrastination-section">
-            <h3 class="card-title">Task</h3>
+    <div class="card task-guidance-card">
+        <h3 class="card-title">Keep this small and honest.</h3>
+        <p>
+            This is not about planning the whole project. Capture one task, why it feels heavy,
+            and the smallest first step that would make starting easier.
+        </p>
+    </div>
 
-            <div class="form-group">
-                <label for="task_name">What task are you avoiding?</label>
-                <input
-                    type="text"
-                    id="task_name"
-                    name="task_name"
-                    placeholder="Example: Finish module 3 of my course"
-                    required
-                >
+    <form method="POST" class="card procrastination-form-card task-add-form">
+        {{ form.hidden_tag() }}
+
+        <div class="procrastination-section">
+            <div class="form-section-heading">
+                <span class="section-number">1</span>
+                <div>
+                    <h3 class="card-title">Name the task</h3>
+                    <p>Write the avoided task in plain language.</p>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="avoidance_reason">Why have you been putting it off? <span class="muted-inline">(optional)</span></label>
-                <textarea
-                    id="avoidance_reason"
-                    name="avoidance_reason"
-                    rows="4"
-                    placeholder="Example: It feels heavy, confusing, and I keep telling myself I'll do it later."
-                ></textarea>
+            <div class="form-group roomy-form-group">
+                {{ form.task_name.label }}
+                {{ form.task_name(class="form-control") }}
+
+                {% for error in form.task_name.errors %}
+                    <p class="form-error">{{ error }}</p>
+                {% endfor %}
             </div>
         </div>
 
         <div class="procrastination-section">
-            <h3 class="card-title">Before you start</h3>
+            <div class="form-section-heading">
+                <span class="section-number">2</span>
+                <div>
+                    <h3 class="card-title">Notice the resistance</h3>
+                    <p>Optional, but useful when reviewing the worksheet later.</p>
+                </div>
+            </div>
+
+            <div class="form-group roomy-form-group">
+                {{ form.avoidance_reason.label }}
+                {{ form.avoidance_reason(class="form-control") }}
+
+                {% for error in form.avoidance_reason.errors %}
+                    <p class="form-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="form-group roomy-form-group">
+                {{ form.resistance_thoughts.label }}
+                {{ form.resistance_thoughts(class="form-control") }}
+
+                {% for error in form.resistance_thoughts.errors %}
+                    <p class="form-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="procrastination-section">
+            <div class="form-section-heading">
+                <span class="section-number">3</span>
+                <div>
+                    <h3 class="card-title">Before starting</h3>
+                    <p>Rate how the task feels right now.</p>
+                </div>
+            </div>
 
             <div class="score-grid">
                 <div class="score-card">
-                    <label class="score-label">Expected difficulty</label>
+                    {{ form.expected_difficulty.label(class="score-label") }}
                     <div class="score-scale">0 = very easy, 10 = extremely hard</div>
-                    <input type="number" name="expected_difficulty" min="0" max="10" required>
+                    {{ form.expected_difficulty(class="form-control score-input") }}
+
+                    {% for error in form.expected_difficulty.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
                 </div>
 
                 <div class="score-card">
-                    <label class="score-label">Expected satisfaction</label>
-                    <div class="score-scale">0 = none, 10 = extremely satisfying</div>
-                    <input type="number" name="expected_satisfaction" min="0" max="10" required>
+                    {{ form.expected_satisfaction.label(class="score-label") }}
+                    <div class="score-scale">0 = not rewarding, 10 = very satisfying</div>
+                    {{ form.expected_satisfaction(class="form-control score-input") }}
+
+                    {% for error in form.expected_satisfaction.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
                 </div>
             </div>
         </div>
 
         <div class="procrastination-section">
-            <h3 class="card-title">What thoughts are making it harder?</h3>
-
-            <div class="form-group">
-                <label for="resistance_thoughts">Resistance thoughts <span class="muted-inline">(optional)</span></label>
-                <textarea
-                    id="resistance_thoughts"
-                    name="resistance_thoughts"
-                    rows="4"
-                    placeholder="Example: This will take forever. I'll probably do it badly anyway."
-                ></textarea>
+            <div class="form-section-heading">
+                <span class="section-number">4</span>
+                <div>
+                    <h3 class="card-title">Choose the tiny first step</h3>
+                    <p>Make the first move so small that it feels doable.</p>
+                </div>
             </div>
-        </div>
 
-        <div class="procrastination-section">
-            <h3 class="card-title">Smallest possible first step</h3>
+            <div class="form-group roomy-form-group">
+                {{ form.tiny_step.label }}
+                {{ form.tiny_step(class="form-control") }}
 
-            <div class="form-group">
-                <label for="tiny_step">What is the smallest step you can take?</label>
-                <textarea
-                    id="tiny_step"
-                    name="tiny_step"
-                    rows="3"
-                    placeholder="Example: Open the course and complete just one lesson or 10 minutes."
-                    required
-                ></textarea>
+                {% for error in form.tiny_step.errors %}
+                    <p class="form-error">{{ error }}</p>
+                {% endfor %}
             </div>
         </div>
 
         <div class="procrastination-form-footer">
-            <button type="submit" class="btn-primary">Add task</button>
+            {{ form.submit(class="btn-primary") }}
+
+            <a href="{{ url_for('tools.view_procrastination_sheet', sheet_id=sheet.id) }}" class="btn-secondary">
+                Cancel
+            </a>
         </div>
     </form>
+
 </div>
 {% endblock %}
