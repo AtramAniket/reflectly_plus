@@ -1,5 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
 from flask_login import login_required, current_user
+from app.forms.procrastination_forms import ProcrastinationSheetForm
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 
 from app.extensions import db
@@ -109,39 +110,31 @@ def view_mood_checklist_result(result_id):
 @tools.route("/tools/anti-procrastination", methods=["GET", "POST"])
 @login_required
 def anti_procrastination():
-    if request.method == "POST":
+    form = ProcrastinationSheetForm()
+
+    if form.validate_on_submit():
         try:
-            title = request.form.get("title", "").strip()
-            note = request.form.get("note", "").strip() or None
-
-            if not title:
-                flash("Sheet title is required.", "error")
-                return redirect(request.url)
-
             sheet = ProcrastinationSheet(
                 user_id=current_user.id,
-                title=title,
-                note=note
+                title=form.title.data.strip(),
+                note=form.note.data.strip() or None
             )
 
             db.session.add(sheet)
             db.session.commit()
 
-            flash("New anti-procrastination sheet created.", "success")
+            flash("New worksheet created. Add your first task when you're ready.", "success")
             return redirect(url_for("tools.view_procrastination_sheet", sheet_id=sheet.id))
 
         except SQLAlchemyError:
             db.session.rollback()
-            flash("Something went wrong while creating your sheet.", "error")
+            flash("Something went wrong while creating your worksheet.", "error")
             return redirect(request.url)
 
-        except Exception as e:
-            db.session.rollback()
-            print("CREATE SHEET ERROR:", e)
-            flash("Unexpected error occurred. Please try again.", "error")
-            return redirect(request.url)
-
-    return render_template("tools/anti_procrastination.html")
+    return render_template(
+        "tools/anti_procrastination.html",
+        form=form
+    )
 
 
 @tools.route("/tools/anti-procrastination/<int:sheet_id>")
