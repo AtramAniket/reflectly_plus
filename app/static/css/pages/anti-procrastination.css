@@ -1,5 +1,5 @@
 /* =========================================================
-   ANTI-PROCRASTINATION PAGES
+   ANTI-PROCRASTINATION / MOMENTUM WORKSHEET
    ========================================================= */
 
 .centered-container {
@@ -13,19 +13,19 @@
 }
 
 /* =========================================================
-   SHARED INTRO / FORM CARDS
+   SHARED FORM / CARD STRUCTURE
    ========================================================= */
 
 .procrastination-form-card,
 .procrastination-view-card,
-.procrastination-sheet-table-card {
+.worksheet-board-card {
     margin-bottom: 18px;
 }
 
 .procrastination-section {
-    padding: 6px 0 22px;
+    padding: 8px 0 26px;
     border-bottom: 1px solid #eee3d4;
-    margin-bottom: 22px;
+    margin-bottom: 26px;
 }
 
 .procrastination-section:last-of-type {
@@ -39,321 +39,49 @@
     align-items: center;
     justify-content: flex-start;
     gap: 12px;
-    margin-top: 4px;
+    margin-top: 8px;
+    padding-top: 2px;
 }
 
-/* =========================================================
-   COMPARISON / SCORE BLOCKS
-   ========================================================= */
-
-.procrastination-comparison-grid,
-.score-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+.procrastination-form-footer .btn-primary {
+    width: auto;
+    min-width: 180px;
 }
 
-.comparison-card,
-.score-card,
-.task-detail-block {
-    padding: 14px;
-    border-radius: 16px;
-    background: #fbf7f2;
-    border: 1px solid #eadfce;
+/* Better readable form labels */
+.form-group {
+    margin-top: 18px;
 }
 
-.comparison-label,
-.score-scale,
-.muted-inline,
-.task-detail-label,
-.task-cell-subtext,
-.table-limit-note,
-.procrastination-view-label {
-    color: var(--color-text-soft);
+.form-group:first-of-type {
+    margin-top: 14px;
 }
 
-.comparison-label,
-.score-scale,
-.task-detail-label,
-.table-limit-note,
-.procrastination-view-label {
-    font-size: 13px;
-    line-height: 1.7;
-    font-weight: 700;
-}
-
-.comparison-value {
-    margin-top: 4px;
-    font-size: 28px;
-    line-height: 1.1;
-    font-weight: 900;
-    color: var(--color-text-strong);
-    letter-spacing: -0.03em;
-}
-
+.form-group label,
+.roomy-form-group label,
+.score-card label,
 .score-label {
     display: inline-block;
-    margin-bottom: 6px;
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--color-text-strong);
-}
-
-/* =========================================================
-   VIEW HEADER
-   ========================================================= */
-
-.procrastination-view-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.procrastination-view-label {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 800;
-    margin-bottom: 6px;
-}
-
-.procrastination-task-title {
-    font-size: 30px;
-    font-weight: 900;
-    letter-spacing: -0.03em;
-    color: var(--color-text-strong);
-}
-
-/* =========================================================
-   TABLE
-   ========================================================= */
-
-.procrastination-table-wrap {
-    overflow-x: auto;
-}
-
-.procrastination-table {
-    width: 100%;
-    min-width: 760px;
-    border-collapse: collapse;
-}
-
-.procrastination-table th,
-.procrastination-table td {
-    padding: 14px 12px;
-    border-bottom: 1px solid #eee3d4;
-    text-align: left;
-    vertical-align: top;
-    font-size: 14px;
-}
-
-.procrastination-table th {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-text-muted);
-    font-weight: 800;
-    background: #fbf7f2;
-}
-
-.task-cell-title {
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--color-text-strong);
-    margin-bottom: 4px;
-}
-
-.task-cell-subtext {
-    font-size: 13px;
-    line-height: 1.7;
-    font-weight: 700;
-}
-
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 800;
-}
-
-.status-done {
-    background: #eef8ee;
-    color: #6f936f;
-}
-
-.status-pending {
-    background: #edf4fb;
-    color: #6f86ad;
-}
-
-.task-detail-row td {
-    color: var(--color-text-soft);
-}
-
-.task-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 14px;
-    padding: 12px 0 4px;
-}
-
-.task-detail-label {
-    margin-bottom: 4px;
-}
-
-.task-detail-block p {
-    font-size: 14px;
-    line-height: 1.82;
-    color: var(--color-text);
-    font-weight: 700;
-}
-
-/* =========================================================
-   SUMMARY CARDS
-   ========================================================= */
-
-.entries-summary-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 14px;
-    margin-bottom: 20px;
-}
-
-.summary-card {
-    padding: 18px;
-    background: rgba(255,255,255,0.88);
-    border: 1px solid #eadfce;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    box-shadow: var(--shadow-xs);
-}
-
-.summary-label {
-    font-size: 12px;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 800;
-}
-
-.summary-value {
-    font-size: 28px;
-    font-weight: 900;
-    color: var(--color-text-strong);
-    letter-spacing: -0.03em;
-}
-
-/* =========================================================
-   HISTORY LIST
-   ========================================================= */
-
-.entries-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.entry-library-card {
-    padding: 18px;
-    background: rgba(255,255,255,0.90);
-    border: 1px solid #eadfce;
-    border-radius: 22px;
-    transition:
-        transform var(--transition-fast),
-        box-shadow var(--transition-fast),
-        border-color var(--transition-fast);
-}
-
-.entry-library-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
-    border-color: #e0d3c1;
-}
-
-.entry-library-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 14px;
     margin-bottom: 10px;
-}
-
-.entry-library-title {
-    font-size: 18px;
-    font-weight: 800;
     color: var(--color-text-strong);
-    text-decoration: none;
-    letter-spacing: -0.01em;
-}
-
-.entry-library-title:hover {
-    text-decoration: underline;
-}
-
-.entry-library-preview {
     font-size: 15px;
-    line-height: 1.82;
-    color: var(--color-text-soft);
-    font-weight: 700;
-    margin-bottom: 12px;
+    line-height: 1.35;
+    font-weight: 850;
 }
 
-.entry-library-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+.form-control,
+.form-group input,
+.form-group textarea,
+.score-card input,
+.score-card textarea {
+    margin-top: 0;
+}
+
+.form-error {
+    margin-top: 8px;
+    color: #b86161;
     font-size: 13px;
-    color: var(--color-text-muted);
-}
-
-.entry-library-meta {
-    white-space: nowrap;
     font-weight: 800;
-}
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (max-width: 1100px) {
-    .entries-summary-grid,
-    .procrastination-comparison-grid,
-    .score-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .task-detail-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 700px) {
-    .entries-summary-grid,
-    .procrastination-comparison-grid,
-    .score-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .entry-library-top,
-    .entry-library-footer,
-    .entry-actions,
-    .entry-actions-left,
-    .procrastination-view-top,
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .procrastination-table {
-        min-width: 620px;
-    }
 }
 
 /* =========================================================
@@ -415,24 +143,614 @@
 
 .worksheet-flow-step strong {
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     color: var(--color-text-strong);
     font-size: 14px;
     font-weight: 900;
 }
 
 .worksheet-flow-step p {
-    color: var(--color-text-soft);
-    font-size: 13px;
-    line-height: 1.6;
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.65;
     font-weight: 700;
 }
 
-.form-error {
-    margin-top: 6px;
-    color: #b86161;
+/* Specific fix for create worksheet form */
+.worksheet-create-page .procrastination-form-card {
+    padding: 26px 28px;
+}
+
+.worksheet-create-page .card-title {
+    margin-bottom: 18px;
+}
+
+.worksheet-create-page .form-group {
+    margin-top: 20px;
+}
+
+.worksheet-create-page .form-group:first-of-type {
+    margin-top: 0;
+}
+
+.worksheet-create-page .form-group label {
+    margin-bottom: 10px;
+    color: var(--color-text-strong);
+    font-size: 15.5px;
+    font-weight: 850;
+}
+
+.worksheet-create-page textarea {
+    min-height: 128px;
+}
+
+/* =========================================================
+   ADD TASK / COMPLETE TASK FORM PAGES
+   ========================================================= */
+
+.worksheet-task-page,
+.worksheet-complete-page {
+    padding-bottom: 48px;
+}
+
+.task-guidance-card {
+    margin-bottom: 18px;
+    padding: 22px 24px;
+}
+
+.task-guidance-card p,
+.form-section-heading p {
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 1.75;
+    font-weight: 700;
+}
+
+.task-add-form {
+    padding-top: 24px;
+}
+
+.form-section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.form-section-heading .card-title {
+    margin-bottom: 5px;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.section-number {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: #8797c7;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 900;
+    box-shadow: 0 10px 24px rgba(91, 110, 157, 0.18);
+}
+
+.roomy-form-group {
+    margin-top: 14px;
+}
+
+.roomy-form-group + .roomy-form-group {
+    margin-top: 22px;
+}
+
+.task-add-form .procrastination-section,
+.completion-review-form .procrastination-section {
+    padding-bottom: 28px;
+    margin-bottom: 28px;
+}
+
+.task-add-form .procrastination-form-footer,
+.completion-review-form .procrastination-form-footer {
+    padding-top: 4px;
+}
+
+.task-add-form .procrastination-form-footer .btn-primary,
+.completion-review-form .procrastination-form-footer .btn-primary {
+    width: auto;
+    min-width: 210px;
+}
+
+/* =========================================================
+   SCORE / COMPARISON BLOCKS
+   ========================================================= */
+
+.procrastination-comparison-grid,
+.score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.comparison-card,
+.score-card {
+    padding: 16px;
+    border-radius: 16px;
+    background: #fbf7f2;
+    border: 1px solid #eadfce;
+}
+
+.comparison-label,
+.score-scale,
+.muted-inline,
+.table-limit-note,
+.procrastination-view-label {
+    color: var(--color-text-soft);
+}
+
+.comparison-label,
+.score-scale,
+.table-limit-note,
+.procrastination-view-label {
     font-size: 13px;
+    line-height: 1.7;
     font-weight: 800;
+}
+
+.comparison-value {
+    margin-top: 4px;
+    color: var(--color-text-strong);
+    font-size: 28px;
+    line-height: 1.1;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+.score-input {
+    margin-top: 12px;
+    max-width: 160px;
+}
+
+/* =========================================================
+   VIEW HEADER / SUMMARY CARDS
+   ========================================================= */
+
+.procrastination-view-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.procrastination-view-label {
+    margin-bottom: 6px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+}
+
+.procrastination-task-title {
+    color: var(--color-text-strong);
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+.entries-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.summary-card {
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid #eadfce;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: var(--shadow-xs);
+}
+
+.summary-label {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+}
+
+.summary-value {
+    color: var(--color-text-strong);
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+/* =========================================================
+   WORKSHEET BOARD / TASK CARDS
+   ========================================================= */
+
+.worksheet-board-card {
+    padding: 22px;
+    max-height: 820px;
+    overflow: hidden;
+}
+
+.worksheet-board-header {
+    margin-bottom: 22px;
+}
+
+.worksheet-board-subtitle {
+    margin-top: 6px;
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 1.7;
+    font-weight: 700;
+}
+
+.worksheet-task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-height: 680px;
+    overflow-y: auto;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #c5cfeb #f6efe5;
+}
+
+.worksheet-task-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.worksheet-task-list::-webkit-scrollbar-track {
+    background: #edf4fb;
+    border-radius: 999px;
+}
+
+.worksheet-task-list::-webkit-scrollbar-thumb {
+    background: #aebce2;
+    border-radius: 999px;
+}
+
+.worksheet-task-list::-webkit-scrollbar-thumb:hover {
+    background: #8797c7;
+}
+
+.worksheet-task-card {
+    position: relative;
+    padding: 20px;
+    border: 1px solid #eadfce;
+    border-left: 6px solid #8797c7;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 12px 28px rgba(91, 110, 157, 0.08);
+}
+
+.worksheet-task-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.worksheet-task-topline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.worksheet-task-number {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.task-state-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    line-height: 1;
+}
+
+.task-state-complete {
+    background: #eef8ee;
+    color: #6f936f;
+    border: 1px solid #d8ead8;
+    box-shadow: 0 4px 10px rgba(111, 147, 111, 0.08);
+}
+
+.task-state-pending {
+    background: #edf4fb;
+    color: #6f86ad;
+    border: 1px solid #dce6f5;
+}
+
+.worksheet-task-title {
+    margin: 0 0 10px;
+    color: var(--color-text-strong);
+    font-size: 21px;
+    line-height: 1.3;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.worksheet-task-step {
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 1.75;
+    font-weight: 700;
+}
+
+.worksheet-task-action {
+    flex: 0 0 auto;
+}
+
+.worksheet-score-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.worksheet-score-card,
+.worksheet-note-block {
+    border-radius: 16px;
+    background: #fffaf5;
+    border: 1px solid #eadfce;
+}
+
+.worksheet-score-card {
+    padding: 14px;
+}
+
+.worksheet-score-card span,
+.worksheet-note-block span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.worksheet-score-card strong {
+    color: var(--color-text-strong);
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.worksheet-reflection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.worksheet-note-block {
+    padding: 15px;
+}
+
+.worksheet-note-block p {
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 1.75;
+    font-weight: 700;
+}
+
+.worksheet-empty-state {
+    padding: 34px 20px;
+    text-align: center;
+    border: 1px dashed #d9cbb9;
+    border-radius: 20px;
+    background: #fbf7f2;
+}
+
+.worksheet-empty-state h4 {
+    margin-bottom: 6px;
+    color: var(--color-text-strong);
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.worksheet-empty-state p {
+    margin-bottom: 18px;
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 1.7;
+    font-weight: 700;
+}
+
+.worksheet-footer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+/* =========================================================
+   WORKSHEET HISTORY PAGE
+   ========================================================= */
+
+.worksheet-history-page {
+    padding-bottom: 56px;
+}
+
+.history-hero {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 22px;
+    margin-bottom: 22px;
+    padding: 28px;
+}
+
+.history-hero .page-title {
+    margin-bottom: 8px;
+}
+
+.history-hero .page-subtitle {
+    max-width: 720px;
+}
+
+.worksheet-history-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.worksheet-history-card {
+    display: block;
+    padding: 22px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid #eadfce;
+    border-left: 6px solid #8797c7;
+    box-shadow: 0 14px 30px rgba(91, 110, 157, 0.08);
+    text-decoration: none;
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.worksheet-history-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sm);
+    border-color: #d8c8b4;
+}
+
+.history-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.history-card-date {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.history-card-top h3 {
+    margin: 0;
+    color: var(--color-text-strong);
+    font-size: 21px;
+    line-height: 1.3;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.history-completion-pill {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: #edf4fb;
+    color: #6f86ad;
+    font-size: 13px;
+    font-weight: 900;
+    transition: transform var(--transition-fast);
+}
+
+.worksheet-history-card:hover .history-completion-pill {
+    transform: scale(1.06);
+}
+
+.history-card-note {
+    min-height: 52px;
+    margin-bottom: 18px;
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 1.75;
+    font-weight: 700;
+}
+
+.history-card-note.muted {
+    color: var(--color-text-soft);
+}
+
+.history-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.history-metrics div {
+    padding: 13px;
+    border-radius: 16px;
+    background: #fbf7f2;
+    border: 1px solid #eadfce;
+}
+
+.history-metrics span {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--color-text-muted);
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.history-metrics strong {
+    color: var(--color-text-strong);
+    font-size: 18px;
+    font-weight: 900;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .entries-summary-grid,
+    .procrastination-comparison-grid,
+    .score-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .worksheet-reflection-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .worksheet-score-grid,
+    .worksheet-reflection-grid,
+    .worksheet-history-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .worksheet-task-main,
+    .history-hero {
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 760px) {
@@ -442,5 +760,47 @@
 
     .worksheet-hero {
         padding: 22px;
+    }
+}
+
+@media (max-width: 700px) {
+    .entries-summary-grid,
+    .procrastination-comparison-grid,
+    .score-grid,
+    .worksheet-score-grid,
+    .worksheet-reflection-grid,
+    .worksheet-history-grid,
+    .history-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .entry-actions,
+    .entry-actions-left,
+    .procrastination-view-top,
+    .section-header,
+    .worksheet-footer-actions,
+    .history-card-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .worksheet-task-list {
+        max-height: 620px;
+        padding-right: 4px;
+    }
+
+    .form-section-heading {
+        gap: 10px;
+    }
+
+    .section-number {
+        width: 30px;
+        height: 30px;
+        font-size: 13px;
+    }
+
+    .task-add-form .procrastination-form-footer .btn-primary,
+    .completion-review-form .procrastination-form-footer .btn-primary {
+        width: 100%;
     }
 }
