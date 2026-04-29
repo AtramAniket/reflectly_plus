@@ -67,6 +67,17 @@
     flex-wrap: wrap;
 }
 
+.insights-keyword-cloud {
+    overflow: hidden;
+}
+
+.insights-keyword {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .insights-week-nav__button,
 .insights-week-pill,
 .insights-status-badge,
@@ -147,6 +158,24 @@
     background: #fff0ee;
     color: #b06d68;
     border-color: #f1d8d5;
+}
+
+.insights-pattern-list,
+.insights-suggestion-list {
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+.insights-pattern-list::-webkit-scrollbar,
+.insights-suggestion-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.insights-pattern-list::-webkit-scrollbar-thumb,
+.insights-suggestion-list::-webkit-scrollbar-thumb {
+    background: #d8cbbb;
+    border-radius: 999px;
 }
 
 /* =========================================================

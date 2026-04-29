@@ -73,29 +73,6 @@
 
             <div class="habit-card-list">
 
-                {% if not at_limit %}
-                    <div class="habit-card habit-card-create">
-                        <div class="habit-card-main">
-                            <div class="habit-card-title-row">
-                                <span class="habit-card-title">Add Habit</span>
-                                <span class="habit-card-helper">Up to {{ max_habits }}</span>
-                            </div>
-
-                            <form method="POST" class="habit-inline-form">
-                                <input
-                                    type="text"
-                                    name="name"
-                                    placeholder="Read for 20 minutes"
-                                    required
-                                >
-                                <button type="submit" class="btn-primary habit-inline-submit">
-                                    Create
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                {% endif %}
-
                 {% for habit in habits %}
                     {% set current_streak = habit_streaks.get(habit.id, 0) %}
                     {% set best_streak = habit_best_streaks.get(habit.id, 0) %}
@@ -122,9 +99,13 @@
                             {% if completed_today %}
                                 <span class="habit-chip-status is-done">Done</span>
                             {% else %}
-                                <a href="{{ url_for('habit.complete_habit', habit_id=habit.id) }}" class="habit-chip-status is-action">
-                                    Mark done
-                                </a>
+                                <form method="POST" action="{{ url_for('habit.complete_habit', habit_id=habit.id) }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="next" value="{{ url_for('habit.create_habit', habit_id=habit.id, year=selected_year, month=selected_month) }}">
+                                    <button type="submit" class="habit-chip-status is-action">
+                                        Mark done
+                                    </button>
+                                </form>
                             {% endif %}
 
                             <details class="habit-archive-menu">
@@ -154,6 +135,30 @@
                         </div>
                     </div>
                 {% endfor %}
+
+                {% if not at_limit %}
+                    <div class="habit-card habit-card-create">
+                        <div class="habit-card-main">
+                            <div class="habit-card-title-row">
+                                <span class="habit-card-title">Add Habit</span>
+                                <span class="habit-card-helper">Up to {{ max_habits }}</span>
+                            </div>
+
+                            <form method="POST" class="habit-inline-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Read for 20 minutes"
+                                    required
+                                >
+                                <button type="submit" class="btn-primary habit-inline-submit">
+                                    Create
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
 
                 {% if archived_habits %}
                     <section class="archived-habits-section">
