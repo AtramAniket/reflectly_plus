@@ -132,6 +132,7 @@
                 <p class="checklist-submit-help">
                     You’re not aiming for a perfect answer here — just an honest snapshot.
                 </p>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn-primary checklist-submit-btn">Submit check-in</button>
             </div>
         </div>
