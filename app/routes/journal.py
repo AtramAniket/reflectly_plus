@@ -6,6 +6,7 @@ from app.models.journal import JournalEntry
 from flask_login import current_user, login_required
 from app.services.ai_insights import analyze_simple_journal
 from app.models.journal_ai_analysis import JournalAIAnalysis
+from app.forms.journal_forms import SimpleJournalForm
 from flask import (
     Blueprint,
     url_for,
@@ -63,10 +64,54 @@ def create_new_entry(entry_type):
     if entry_type not in ['simple', 'gratitude', 'reflection']:
         abort(404)
 
+    simple_form = SimpleJournalForm() if entry_type == "simple" else None
+
+    if entry_type == "simple":
+        if simple_form.validate_on_submit():
+            try:
+                new_entry = JournalEntry(
+                    title=simple_form.title.data.strip(),
+                    content=simple_form.content.data.strip(),
+                    entry_type='simple',
+                    mood_score=simple_form.mood_score.data,
+                    user_id=current_user.id,
+                    image_url=None
+                )
+
+                db.session.add(new_entry)
+                db.session.commit()
+
+                flash('New journal entry added successfully.', 'success')
+                return redirect(url_for('journal.view_all_entries'))
+
+            except SQLAlchemyError:
+                db.session.rollback()
+                current_app.logger.exception("Database error while saving simple journal entry")
+                flash('Something went wrong while saving the entry. Please try again.', 'error')
+                return redirect(request.url)
+
+            except Exception:
+                db.session.rollback()
+                current_app.logger.exception("Unexpected error while creating simple journal entry")
+                flash('An unexpected error occurred. Please try again later.', 'error')
+                return redirect(request.url)
+
+        if request.method == "POST":
+            for errors in simple_form.errors.values():
+                for error in errors:
+                    flash(error, "error")
+
+            return redirect(request.url)
+
+        return render_template(
+            'create_entry.html',
+            entry_type=entry_type,
+            simple_form=simple_form
+        )
+
     if request.method == 'POST':
         from datetime import datetime
 
-        title = request.form.get('title', '').strip()
         mood_score_raw = request.form.get('mood_score', '').strip()
         image_url = None
 
@@ -81,29 +126,7 @@ def create_new_entry(entry_type):
                 flash('Mood score must be between 1 and 10.', 'error')
                 return redirect(request.url)
 
-            # SIMPLE JOURNAL ENTRY
-            if entry_type == 'simple':
-                if not title:
-                    flash('Title is required and cannot be empty.', 'error')
-                    return redirect(request.url)
-
-                content = request.form.get('content', '').strip()
-
-                if not content:
-                    flash('Content is required to save journal entry.', 'error')
-                    return redirect(request.url)
-
-                new_entry = JournalEntry(
-                    title=title,
-                    content=content,
-                    entry_type='simple',
-                    mood_score=mood_score,
-                    user_id=current_user.id,
-                    image_url=image_url
-                )
-
-            # GRATITUDE JOURNAL ENTRY
-            elif entry_type == 'gratitude':
+            if entry_type == 'gratitude':
                 gratitude_1 = request.form.get('gratitude_1', '').strip()
                 gratitude_2 = request.form.get('gratitude_2', '').strip()
                 gratitude_3 = request.form.get('gratitude_3', '').strip()
@@ -135,7 +158,6 @@ def create_new_entry(entry_type):
                     image_url=image_url
                 )
 
-            # REFLECTION JOURNAL ENTRY
             else:
                 went_well = request.form.get('went_well', '').strip()
                 challenging = request.form.get('challenging', '').strip()
