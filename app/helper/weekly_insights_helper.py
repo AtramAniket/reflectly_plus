@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+from html import unescape
 from collections import Counter, defaultdict
 from datetime import date, datetime, time, timedelta, timezone
 from statistics import mean
@@ -864,24 +866,42 @@ def extract_simple_keywords(text: str) -> list[str]:
     """
     Extract simple recurring keywords from journal content.
 
-    This intentionally stays lightweight and avoids sending raw personal text
-    into the weekly signal summary.
+    Removes HTML, Quill image/base64 payloads, URLs, and noisy markup before
+    counting words.
     """
     if not text:
         return []
+
+    text = unescape(text)
+
+    # Remove base64 image/data payloads from Quill image embeds
+    text = re.sub(r'data:image\/[^"\']+', ' ', text, flags=re.IGNORECASE)
+
+    # Remove img tags entirely
+    text = re.sub(r'<img[^>]*>', ' ', text, flags=re.IGNORECASE)
+
+    # Remove all remaining HTML tags
+    text = re.sub(r'<[^>]+>', ' ', text)
+
+    # Remove URLs
+    text = re.sub(r'https?:\/\/\S+|www\.\S+', ' ', text)
+
+    # Keep only normal words
+    words = re.findall(r"[a-zA-Z][a-zA-Z']{2,}", text.lower())
 
     stop_words = {
         "the", "and", "is", "in", "it", "to", "of", "a", "i", "was",
         "for", "on", "that", "with", "my", "this", "had", "are", "but",
         "have", "just", "been", "from", "they", "them", "then", "into",
-        "about", "your", "their", "felt",
+        "about", "your", "their", "felt", "you", "were", "what", "when",
+        "where", "why", "how", "will", "would", "could", "should", "there",
+        "here", "today", "really", "very", "entry", "journal",
     }
 
-    cleaned_words = []
-    for raw_word in text.split():
-        word = raw_word.strip(".,!?;:()[]{}\"'").lower()
-        if len(word) > 3 and word not in stop_words:
-            cleaned_words.append(word)
+    cleaned_words = [
+        word for word in words
+        if len(word) > 3 and word not in stop_words
+    ]
 
     return cleaned_words
 
