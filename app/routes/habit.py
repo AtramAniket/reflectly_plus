@@ -288,7 +288,7 @@ def create_habit():
     )
 
 
-@habit.route('/habits/<int:habit_id>/complete')
+@habit.route('/habits/<int:habit_id>/complete', methods=['POST'])
 @login_required
 def complete_habit(habit_id):
     target_habit = Habit.query.filter_by(
@@ -297,6 +297,11 @@ def complete_habit(habit_id):
         is_archived=False
     ).first_or_404()
 
+    redirect_target = request.form.get("next") or url_for(
+        "habit.create_habit",
+        habit_id=target_habit.id
+    )
+
     existing_log = HabitLog.query.filter_by(
         habit_id=target_habit.id,
         date=date.today()
@@ -304,7 +309,7 @@ def complete_habit(habit_id):
 
     if existing_log:
         flash('You already marked this habit as done today.', 'info')
-        return redirect(url_for('habit.create_habit', habit_id=target_habit.id))
+        return redirect(redirect_target)
 
     log = HabitLog(
         habit_id=target_habit.id,
@@ -315,7 +320,7 @@ def complete_habit(habit_id):
     db.session.commit()
 
     flash('Habit marked as done successfully!', 'success')
-    return redirect(url_for('habit.create_habit', habit_id=target_habit.id))
+    return redirect(redirect_target)
 
 
 @habit.route('/habits/<int:habit_id>/archive', methods=['POST'])
