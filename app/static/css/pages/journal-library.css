@@ -168,6 +168,46 @@
 }
 
 /* =========================================================
+   ENTRY TYPE BADGES
+   ========================================================= */
+
+.entry-type-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    box-shadow: var(--shadow-xs);
+}
+
+/* Simple Journal */
+.simple-badge {
+    background: #eef3ff;
+    color: #556a96;
+    border-color: #dce5ff;
+}
+
+/* Gratitude */
+.gratitude-badge {
+    background: #fff4d9;
+    color: #8c641f;
+    border-color: #f2dfb2;
+}
+
+/* Reflection */
+.reflection-badge {
+    background: #f3ebff;
+    color: #70558a;
+    border-color: #e2d4f7;
+}
+
+/* =========================================================
    RESPONSIVE
    ========================================================= */
 
