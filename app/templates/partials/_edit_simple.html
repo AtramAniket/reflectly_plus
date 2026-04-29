@@ -1,31 +1,54 @@
 <div class="form-group">
-    <label>Title</label>
-    <input
-        type="text"
-        name="title"
-        value="{{ entry.title }}"
-        required
-    >
+    {{ simple_form.title.label }}
+    {{ simple_form.title(
+        value=entry.title,
+        maxlength="80",
+        required=True
+    ) }}
 </div>
 
 <div class="form-group">
-    <label>Write your thoughts</label>
+    <label for="editor">Write your thoughts</label>
 
     <div id="editor">
         {{ entry.content | safe }}
     </div>
 
-    <input type="hidden" name="content" id="hiddenContent">
+    {{ simple_form.content(id="hiddenContent") }}
 </div>
 
 <div class="form-group">
-    <label>Mood (1–10)</label>
-    <input
-        type="number"
-        name="mood_score"
-        min="1"
-        max="10"
-        value="{{ entry.mood_score }}"
-        required
-    >
+    <label>Mood</label>
+
+    <div class="mood-picker" id="edit-mood-picker">
+        {% for score, emoji, label in [
+            (1, "😣", "Very low"),
+            (2, "😕", "Low"),
+            (3, "🙁", "Heavy"),
+            (4, "😐", "Uneasy"),
+            (5, "🫥", "Flat"),
+            (6, "🙂", "Okay"),
+            (7, "😊", "Light"),
+            (8, "😄", "Good"),
+            (9, "😁", "Bright"),
+            (10, "🤩", "Excellent")
+        ] %}
+            <button
+                type="button"
+                class="mood-option {% if entry.mood_score == score %}is-selected{% endif %}"
+                data-score="{{ score }}"
+                data-label="{{ label }}"
+            >
+                <span class="mood-option-emoji">{{ emoji }}</span>
+                <span class="mood-option-score">{{ score }}</span>
+            </button>
+        {% endfor %}
+    </div>
+
+    {{ simple_form.mood_score(id="hidden-mood-score", value=entry.mood_score) }}
+
+    <div class="entry-form-helper entry-helper-row">
+        <span id="mood-selection-text">Selected mood</span>
+        <span id="mood-selection-score">{{ entry.mood_score }} / 10</span>
+    </div>
 </div>

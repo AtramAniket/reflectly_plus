@@ -1,5 +1,6 @@
 <div class="journal-step-panel is-active" id="journal-step-1">
     <div class="journal-focus-card journal-focus-card--narrow">
+
         <div class="journal-focus-head">
             <h1 class="journal-focus-title">Give your entry a title.</h1>
             <p class="journal-focus-text">
@@ -8,15 +9,14 @@
         </div>
 
         <div class="form-group">
-            <label for="title">Entry Title</label>
-            <input
-                id="title"
-                type="text"
-                name="title"
-                placeholder="Give your entry a title"
-                maxlength="80"
-                required
-            >
+            {{ simple_form.title.label }}
+            {{ simple_form.title(
+                id="title",
+                placeholder="Give your entry a title",
+                maxlength="80",
+                required=True
+            ) }}
+
             <div class="entry-form-helper entry-helper-row">
                 <span>Keep it short and memorable.</span>
                 <span id="title-count">0 / 80</span>
@@ -24,67 +24,53 @@
         </div>
 
         <div class="journal-step-actions">
-            <button type="button" class="btn-primary journal-next-btn" id="go-to-mood">
+            <button type="button" class="btn-primary" id="go-to-mood">
                 Next
             </button>
         </div>
+
     </div>
 </div>
 
 <div class="journal-step-panel" id="journal-step-2">
     <div class="journal-focus-card">
+
         <div class="journal-focus-head">
             <h2 class="journal-focus-title">How are you feeling right now?</h2>
             <p class="journal-focus-text">
-                Pick the one that feels closest. We’ll save the score behind the scenes.
+                Pick the one that feels closest.
             </p>
         </div>
 
         <div class="form-group">
-            <div class="mood-picker" id="mood-picker">
-                <button type="button" class="mood-option" data-score="1" data-label="Very low">
-                    <span class="mood-option-emoji">😣</span>
-                    <span class="mood-option-score">1</span>
-                </button>
-                <button type="button" class="mood-option" data-score="2" data-label="Low">
-                    <span class="mood-option-emoji">😕</span>
-                    <span class="mood-option-score">2</span>
-                </button>
-                <button type="button" class="mood-option" data-score="3" data-label="Heavy">
-                    <span class="mood-option-emoji">🙁</span>
-                    <span class="mood-option-score">3</span>
-                </button>
-                <button type="button" class="mood-option" data-score="4" data-label="Uneasy">
-                    <span class="mood-option-emoji">😐</span>
-                    <span class="mood-option-score">4</span>
-                </button>
-                <button type="button" class="mood-option" data-score="5" data-label="Flat">
-                    <span class="mood-option-emoji">🫥</span>
-                    <span class="mood-option-score">5</span>
-                </button>
-                <button type="button" class="mood-option" data-score="6" data-label="Okay">
-                    <span class="mood-option-emoji">🙂</span>
-                    <span class="mood-option-score">6</span>
-                </button>
-                <button type="button" class="mood-option" data-score="7" data-label="Light">
-                    <span class="mood-option-emoji">😊</span>
-                    <span class="mood-option-score">7</span>
-                </button>
-                <button type="button" class="mood-option" data-score="8" data-label="Good">
-                    <span class="mood-option-emoji">😄</span>
-                    <span class="mood-option-score">8</span>
-                </button>
-                <button type="button" class="mood-option" data-score="9" data-label="Bright">
-                    <span class="mood-option-emoji">😁</span>
-                    <span class="mood-option-score">9</span>
-                </button>
-                <button type="button" class="mood-option" data-score="10" data-label="Excellent">
-                    <span class="mood-option-emoji">🤩</span>
-                    <span class="mood-option-score">10</span>
-                </button>
+            <label>Mood</label>
+
+            <div class="mood-picker">
+                {% for score, emoji, label in [
+                    (1,"😣","Very low"),
+                    (2,"😕","Low"),
+                    (3,"🙁","Heavy"),
+                    (4,"😐","Uneasy"),
+                    (5,"🫥","Flat"),
+                    (6,"🙂","Okay"),
+                    (7,"😊","Light"),
+                    (8,"😄","Good"),
+                    (9,"😁","Bright"),
+                    (10,"🤩","Excellent")
+                ] %}
+                    <button
+                        type="button"
+                        class="mood-option"
+                        data-score="{{ score }}"
+                        data-label="{{ label }}"
+                    >
+                        <span class="mood-option-emoji">{{ emoji }}</span>
+                        <span class="mood-option-score">{{ score }}</span>
+                    </button>
+                {% endfor %}
             </div>
 
-            <input type="hidden" name="mood_score" id="hidden-mood-score" required>
+            {{ simple_form.mood_score(id="hidden-mood-score") }}
 
             <div class="entry-form-helper entry-helper-row">
                 <span id="mood-selection-text">Choose the emoji that feels closest.</span>
@@ -93,39 +79,50 @@
         </div>
 
         <div class="journal-step-actions journal-step-actions-between">
-            <button type="button" class="btn-secondary journal-back-btn" id="back-to-title">
+            <button type="button" class="btn-secondary" id="back-to-title">
                 Back
             </button>
-            <button type="button" class="btn-primary journal-next-btn" id="go-to-writing">
+
+            <button type="button" class="btn-primary" id="go-to-writing">
                 Next
             </button>
         </div>
+
     </div>
 </div>
 
 <div class="journal-step-panel" id="journal-step-3">
     <div class="journal-entry-stage">
+
         <div class="journal-entry-stage__top">
-            <h2 class="journal-entry-stage__title" id="entry-title-preview">Untitled entry</h2>
+            <h2 class="journal-entry-stage__title" id="entry-title-preview">
+                Untitled entry
+            </h2>
 
             <div class="journal-entry-stage__meta">
-                <span class="journal-meta-pill" id="entry-mood-preview">Mood not selected</span>
+                <span class="journal-meta-pill" id="entry-mood-preview">
+                    Mood not selected
+                </span>
                 <span class="journal-meta-pill">Simple Journal</span>
             </div>
         </div>
 
         <div class="form-card journal-editor-card">
             <div class="form-group">
+
                 <label for="editor">What’s on your mind?</label>
                 <div id="editor"></div>
-                <input type="hidden" name="content" id="hidden-content">
+
+                {{ simple_form.content(id="hidden-content") }}
+
                 <p class="entry-form-helper">
-                    Tip: use the toolbar to add headings, quotes, bullet points, links, or images.
+                    Tip: use headings, lists, quotes, links or images.
                 </p>
+
             </div>
 
             <div class="journal-step-actions journal-step-actions-between">
-                <button type="button" class="btn-secondary journal-back-btn" id="back-to-mood">
+                <button type="button" class="btn-secondary" id="back-to-mood">
                     Back
                 </button>
 
@@ -134,139 +131,121 @@
                 </button>
             </div>
         </div>
+
     </div>
 </div>
 
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
 <script>
-    (function () {
-        const form = document.getElementById('simpleJournalForm');
-        const titleInput = document.getElementById('title');
-        const titleCount = document.getElementById('title-count');
-        const hiddenMoodInput = document.getElementById('hidden-mood-score');
-        const moodOptions = document.querySelectorAll('.mood-option');
-        const moodSelectionText = document.getElementById('mood-selection-text');
-        const moodSelectionScore = document.getElementById('mood-selection-score');
+(function () {
+    const form = document.getElementById("simpleJournalForm");
 
-        const stepOne = document.getElementById('journal-step-1');
-        const stepTwo = document.getElementById('journal-step-2');
-        const stepThree = document.getElementById('journal-step-3');
+    const titleInput = document.getElementById("title");
+    const titleCount = document.getElementById("title-count");
 
-        const progressFill = document.getElementById('journal-progress-fill');
-        const progressStep = document.getElementById('journal-progress-step');
+    const hiddenMood = document.getElementById("hidden-mood-score");
+    const moodButtons = document.querySelectorAll(".mood-option");
 
-        const goToMoodBtn = document.getElementById('go-to-mood');
-        const backToTitleBtn = document.getElementById('back-to-title');
-        const goToWritingBtn = document.getElementById('go-to-writing');
-        const backToMoodBtn = document.getElementById('back-to-mood');
+    const moodText = document.getElementById("mood-selection-text");
+    const moodScore = document.getElementById("mood-selection-score");
 
-        const titlePreview = document.getElementById('entry-title-preview');
-        const moodPreview = document.getElementById('entry-mood-preview');
-        const hiddenContent = document.getElementById('hidden-content');
+    const step1 = document.getElementById("journal-step-1");
+    const step2 = document.getElementById("journal-step-2");
+    const step3 = document.getElementById("journal-step-3");
 
-        const moodMap = {
-            1: "😣 Very low · 1/10",
-            2: "😕 Low · 2/10",
-            3: "🙁 Heavy · 3/10",
-            4: "😐 Uneasy · 4/10",
-            5: "🫥 Flat · 5/10",
-            6: "🙂 Okay · 6/10",
-            7: "😊 Light · 7/10",
-            8: "😄 Good · 8/10",
-            9: "😁 Bright · 9/10",
-            10: "🤩 Excellent · 10/10"
-        };
+    const fill = document.getElementById("journal-progress-fill");
+    const progressText = document.getElementById("journal-progress-step");
 
-        const quill = new Quill('#editor', {
-            theme: 'snow',
-            placeholder: 'Write your thoughts...',
-            modules: {
-                toolbar: [
-                    [{ header: [1, 2, false] }],
-                    ['bold', 'italic', 'underline'],
-                    ['blockquote', 'code-block'],
-                    [{ list: 'ordered' }, { list: 'bullet' }],
-                    ['link', 'image']
-                ]
-            }
+    const titlePreview = document.getElementById("entry-title-preview");
+    const moodPreview = document.getElementById("entry-mood-preview");
+
+    const hiddenContent = document.getElementById("hidden-content");
+
+    const quill = new Quill("#editor", {
+        theme: "snow",
+        placeholder: "Write your thoughts...",
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, false] }],
+                ["bold", "italic", "underline"],
+                ["blockquote"],
+                [{ list: "ordered" }, { list: "bullet" }],
+                ["link", "image"]
+            ]
+        }
+    });
+
+    function showStep(step) {
+        step1.classList.toggle("is-active", step === 1);
+        step2.classList.toggle("is-active", step === 2);
+        step3.classList.toggle("is-active", step === 3);
+
+        if (step === 1) {
+            fill.style.width = "33%";
+            progressText.textContent = "Step 1 of 3";
+        } else if (step === 2) {
+            fill.style.width = "66%";
+            progressText.textContent = "Step 2 of 3";
+        } else {
+            fill.style.width = "100%";
+            progressText.textContent = "Step 3 of 3";
+        }
+    }
+
+    titleInput.addEventListener("input", function () {
+        titleCount.textContent = `${this.value.length} / 80`;
+        titlePreview.textContent = this.value.trim() || "Untitled entry";
+    });
+
+    moodButtons.forEach(btn => {
+        btn.addEventListener("click", function () {
+            const score = this.dataset.score;
+            const label = this.dataset.label;
+
+            hiddenMood.value = score;
+
+            moodButtons.forEach(b => b.classList.remove("is-selected"));
+            this.classList.add("is-selected");
+
+            moodText.textContent = label;
+            moodScore.textContent = `${score} / 10`;
+            moodPreview.textContent = `${label} · ${score}/10`;
         });
+    });
 
-        function updateTitleCount() {
-            titleCount.textContent = `${titleInput.value.length} / 80`;
+    document.getElementById("go-to-mood").addEventListener("click", function () {
+        if (!titleInput.value.trim()) {
+            titleInput.focus();
+            titleInput.reportValidity();
+            return;
         }
 
-        function showStep(step) {
-            stepOne.classList.toggle('is-active', step === 1);
-            stepTwo.classList.toggle('is-active', step === 2);
-            stepThree.classList.toggle('is-active', step === 3);
+        showStep(2);
+    });
 
-            if (step === 1) {
-                progressFill.style.width = '33.33%';
-                progressStep.textContent = 'Step 1 of 3';
-            } else if (step === 2) {
-                progressFill.style.width = '66.66%';
-                progressStep.textContent = 'Step 2 of 3';
-            } else {
-                progressFill.style.width = '100%';
-                progressStep.textContent = 'Step 3 of 3';
-            }
-        }
-
-        function setMood(score, label) {
-            hiddenMoodInput.value = score;
-
-            moodOptions.forEach(option => {
-                option.classList.toggle('is-selected', option.dataset.score === String(score));
-            });
-
-            moodSelectionText.textContent = label || "Mood selected";
-            moodSelectionScore.textContent = `${score} / 10`;
-            moodPreview.textContent = moodMap[score] || `Mood · ${score}/10`;
-        }
-
-        titleInput.addEventListener('input', function () {
-            updateTitleCount();
-            titlePreview.textContent = titleInput.value.trim() || 'Untitled entry';
-        });
-
-        moodOptions.forEach(option => {
-            option.addEventListener('click', function () {
-                setMood(this.dataset.score, this.dataset.label);
-            });
-        });
-
-        goToMoodBtn.addEventListener('click', function () {
-            if (!titleInput.value.trim()) {
-                titleInput.focus();
-                titleInput.reportValidity();
-                return;
-            }
-            titlePreview.textContent = titleInput.value.trim();
-            showStep(2);
-        });
-
-        backToTitleBtn.addEventListener('click', function () {
-            showStep(1);
-        });
-
-        goToWritingBtn.addEventListener('click', function () {
-            if (!hiddenMoodInput.value) {
-                moodSelectionText.textContent = 'Please choose a mood before continuing.';
-                return;
-            }
-            showStep(3);
-        });
-
-        backToMoodBtn.addEventListener('click', function () {
-            showStep(2);
-        });
-
-        form.addEventListener('submit', function () {
-            hiddenContent.value = quill.root.innerHTML;
-        });
-
-        updateTitleCount();
+    document.getElementById("back-to-title").addEventListener("click", function () {
         showStep(1);
-    })();
+    });
+
+    document.getElementById("go-to-writing").addEventListener("click", function () {
+        if (!hiddenMood.value) {
+            moodText.textContent = "Please choose a mood before continuing.";
+            return;
+        }
+
+        showStep(3);
+    });
+
+    document.getElementById("back-to-mood").addEventListener("click", function () {
+        showStep(2);
+    });
+
+    form.addEventListener("submit", function () {
+        hiddenContent.value = quill.root.innerHTML;
+    });
+
+    showStep(1);
+})();
 </script>

@@ -1,36 +1,84 @@
 <div class="form-group">
-    <label>Title</label>
-    <input
-        type="text"
-        name="title"
-        value="{{ entry.title }}"
-        required
-    >
+    {{ reflection_form.went_well.label }}
+    {{ reflection_form.went_well(
+        id="went_well",
+        required=True
+    ) }}
 </div>
 
 <div class="form-group">
-    <label>What went well today?</label>
-    <textarea name="went_well" required>{{ entry.structured_content.went_well }}</textarea>
+    {{ reflection_form.challenging.label }}
+    {{ reflection_form.challenging(
+        id="challenging",
+        required=True
+    ) }}
 </div>
 
 <div class="form-group">
-    <label>What felt difficult?</label>
-    <textarea name="challenging" required>{{ entry.structured_content.challenging }}</textarea>
+    {{ reflection_form.tomorrow.label }}
+    {{ reflection_form.tomorrow(
+        id="tomorrow",
+        required=True
+    ) }}
 </div>
 
 <div class="form-group">
-    <label>What will you carry into tomorrow?</label>
-    <textarea name="tomorrow" required>{{ entry.structured_content.tomorrow }}</textarea>
+    <label>Mood</label>
+
+    <div class="mood-picker" id="edit-reflection-mood-picker">
+        {% for score, emoji, label in [
+            (1, "😣", "Very low"),
+            (2, "😕", "Low"),
+            (3, "🙁", "Heavy"),
+            (4, "😐", "Uneasy"),
+            (5, "🫥", "Mixed"),
+            (6, "🙂", "Okay"),
+            (7, "😊", "Steady"),
+            (8, "😄", "Good"),
+            (9, "😁", "Bright"),
+            (10, "🤩", "Excellent")
+        ] %}
+            <button
+                type="button"
+                class="mood-option {% if entry.mood_score == score %}is-selected{% endif %}"
+                data-score="{{ score }}"
+                data-label="{{ label }}"
+            >
+                <span class="mood-option-emoji">{{ emoji }}</span>
+                <span class="mood-option-score">{{ score }}</span>
+            </button>
+        {% endfor %}
+    </div>
+
+    {{ reflection_form.mood_score(id="reflection-hidden-mood-score", value=entry.mood_score) }}
+
+    <div class="entry-form-helper entry-helper-row">
+        <span id="reflection-mood-selection-text">Selected mood</span>
+        <span id="reflection-mood-selection-score">{{ entry.mood_score }} / 10</span>
+    </div>
 </div>
 
-<div class="form-group">
-    <label>Mood (1–10)</label>
-    <input
-        type="number"
-        name="mood_score"
-        min="1"
-        max="10"
-        value="{{ entry.mood_score }}"
-        required
-    >
-</div>
+<script>
+(function () {
+    const moodInput = document.getElementById("reflection-hidden-mood-score");
+    const moodOptions = document.querySelectorAll("#edit-reflection-mood-picker .mood-option");
+    const moodText = document.getElementById("reflection-mood-selection-text");
+    const moodScore = document.getElementById("reflection-mood-selection-score");
+
+    moodOptions.forEach(option => {
+        option.addEventListener("click", function () {
+            const score = this.dataset.score;
+            const label = this.dataset.label;
+
+            moodInput.value = score;
+
+            moodOptions.forEach(btn => {
+                btn.classList.toggle("is-selected", btn.dataset.score === score);
+            });
+
+            moodText.textContent = label || "Mood selected";
+            moodScore.textContent = `${score} / 10`;
+        });
+    });
+})();
+</script>

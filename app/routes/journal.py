@@ -6,7 +6,11 @@ from app.models.journal import JournalEntry
 from flask_login import current_user, login_required
 from app.services.ai_insights import analyze_simple_journal
 from app.models.journal_ai_analysis import JournalAIAnalysis
-from app.forms.journal_forms import SimpleJournalForm
+from app.forms.journal_forms import (
+    SimpleJournalForm,
+    GratitudeJournalForm,
+    ReflectionJournalForm
+)
 from flask import (
     Blueprint,
     url_for,
@@ -64,54 +68,164 @@ def create_new_entry(entry_type):
     if entry_type not in ['simple', 'gratitude', 'reflection']:
         abort(404)
 
-    simple_form = SimpleJournalForm() if entry_type == "simple" else None
-
     if entry_type == "simple":
+
+        simple_form = SimpleJournalForm()
+
         if simple_form.validate_on_submit():
             try:
                 new_entry = JournalEntry(
                     title=simple_form.title.data.strip(),
                     content=simple_form.content.data.strip(),
-                    entry_type='simple',
-                    mood_score=simple_form.mood_score.data,
+                    entry_type="simple",
+                    mood_score=int(simple_form.mood_score.data),
                     user_id=current_user.id,
-                    image_url=None
+                    image_url=None,
                 )
 
                 db.session.add(new_entry)
                 db.session.commit()
 
-                flash('New journal entry added successfully.', 'success')
-                return redirect(url_for('journal.view_all_entries'))
+                flash("New journal entry added successfully.", "success")
+                return redirect(url_for("journal.view_all_entries"))
 
             except SQLAlchemyError:
                 db.session.rollback()
                 current_app.logger.exception("Database error while saving simple journal entry")
-                flash('Something went wrong while saving the entry. Please try again.', 'error')
+                flash("Something went wrong while saving the entry. Please try again.", "error")
                 return redirect(request.url)
 
             except Exception:
                 db.session.rollback()
                 current_app.logger.exception("Unexpected error while creating simple journal entry")
-                flash('An unexpected error occurred. Please try again later.', 'error')
+                flash("An unexpected error occurred. Please try again later.", "error")
                 return redirect(request.url)
 
         if request.method == "POST":
-            for errors in simple_form.errors.values():
-                for error in errors:
+            for field_errors in simple_form.errors.values():
+                for error in field_errors:
                     flash(error, "error")
 
-            return redirect(request.url)
+        return render_template(
+            "create_entry.html",
+            entry_type=entry_type,
+            simple_form=simple_form,
+        )
+
+    if entry_type == "gratitude":
+
+        gratitude_form = GratitudeJournalForm()
+
+        if gratitude_form.validate_on_submit():
+            try:
+                now = datetime.now()
+                generated_title = (
+                    f"Gratitude Journal Entry • "
+                    f"{now.strftime('%A %B %d, %Y')} "
+                    f"{now.strftime('%I:%M %p').lstrip('0')}"
+                )
+
+                new_entry = JournalEntry(
+                    title=generated_title,
+                    content=None,
+                    structured_content={
+                        "gratitude_1": gratitude_form.gratitude_1.data.strip(),
+                        "gratitude_2": gratitude_form.gratitude_2.data.strip(),
+                        "gratitude_3": gratitude_form.gratitude_3.data.strip(),
+                    },
+                    entry_type="gratitude",
+                    mood_score=int(gratitude_form.mood_score.data),
+                    user_id=current_user.id,
+                    image_url=None,
+                )
+
+                db.session.add(new_entry)
+                db.session.commit()
+
+                flash("New gratitude entry added successfully.", "success")
+                return redirect(url_for("journal.view_all_entries"))
+
+            except SQLAlchemyError:
+                db.session.rollback()
+                current_app.logger.exception("Database error while saving gratitude journal entry")
+                flash("Something went wrong while saving the entry. Please try again.", "error")
+                return redirect(request.url)
+
+            except Exception:
+                db.session.rollback()
+                current_app.logger.exception("Unexpected error while creating gratitude journal entry")
+                flash("An unexpected error occurred. Please try again later.", "error")
+                return redirect(request.url)
+
+        if request.method == "POST":
+            for field_errors in gratitude_form.errors.values():
+                for error in field_errors:
+                    flash(error, "error")
 
         return render_template(
-            'create_entry.html',
+            "create_entry.html",
             entry_type=entry_type,
-            simple_form=simple_form
+            gratitude_form=gratitude_form,
+        )
+
+    if entry_type == "reflection":
+
+        reflection_form = ReflectionJournalForm()
+
+        if reflection_form.validate_on_submit():
+            try:
+                now = datetime.now()
+
+                generated_title = (
+                    f"Daily Reflection Entry • "
+                    f"{now.strftime('%A %B %d, %Y')} "
+                    f"{now.strftime('%I:%M %p').lstrip('0')}"
+                )
+
+                new_entry = JournalEntry(
+                    title=generated_title,
+                    content=None,
+                    structured_content={
+                        "went_well": reflection_form.went_well.data.strip(),
+                        "challenging": reflection_form.challenging.data.strip(),
+                        "tomorrow": reflection_form.tomorrow.data.strip(),
+                    },
+                    entry_type="reflection",
+                    mood_score=int(reflection_form.mood_score.data),
+                    user_id=current_user.id,
+                    image_url=None,
+                )
+
+                db.session.add(new_entry)
+                db.session.commit()
+
+                flash("New reflection entry added successfully.", "success")
+                return redirect(url_for("journal.view_all_entries"))
+
+            except SQLAlchemyError:
+                db.session.rollback()
+                current_app.logger.exception("Database error while saving reflection journal entry")
+                flash("Something went wrong while saving the entry. Please try again.", "error")
+                return redirect(request.url)
+
+            except Exception:
+                db.session.rollback()
+                current_app.logger.exception("Unexpected error while creating reflection journal entry")
+                flash("Unexpected error occurred. Please try again.", "error")
+                return redirect(request.url)
+
+        if request.method == "POST":
+            for field_errors in reflection_form.errors.values():
+                for error in field_errors:
+                    flash(error, "error")
+
+        return render_template(
+            "create_entry.html",
+            entry_type=entry_type,
+            reflection_form=reflection_form,
         )
 
     if request.method == 'POST':
-        from datetime import datetime
-
         mood_score_raw = request.form.get('mood_score', '').strip()
         image_url = None
 
@@ -135,12 +249,6 @@ def create_new_entry(entry_type):
                     flash('Please answer all gratitude prompts.', 'error')
                     return redirect(request.url)
 
-                structured_content = {
-                    'gratitude_1': gratitude_1,
-                    'gratitude_2': gratitude_2,
-                    'gratitude_3': gratitude_3,
-                }
-
                 now = datetime.now()
                 generated_title = (
                     f"Gratitude Journal Entry • "
@@ -151,7 +259,11 @@ def create_new_entry(entry_type):
                 new_entry = JournalEntry(
                     title=generated_title,
                     content=None,
-                    structured_content=structured_content,
+                    structured_content={
+                        'gratitude_1': gratitude_1,
+                        'gratitude_2': gratitude_2,
+                        'gratitude_3': gratitude_3,
+                    },
                     entry_type='gratitude',
                     mood_score=mood_score,
                     user_id=current_user.id,
@@ -167,12 +279,6 @@ def create_new_entry(entry_type):
                     flash('Please answer all reflection prompts.', 'error')
                     return redirect(request.url)
 
-                structured_content = {
-                    'went_well': went_well,
-                    'challenging': challenging,
-                    'tomorrow': tomorrow,
-                }
-
                 now = datetime.now()
                 generated_title = (
                     f"Daily Reflection Entry • "
@@ -183,7 +289,11 @@ def create_new_entry(entry_type):
                 new_entry = JournalEntry(
                     title=generated_title,
                     content=None,
-                    structured_content=structured_content,
+                    structured_content={
+                        'went_well': went_well,
+                        'challenging': challenging,
+                        'tomorrow': tomorrow,
+                    },
                     entry_type='reflection',
                     mood_score=mood_score,
                     user_id=current_user.id,
@@ -364,6 +474,150 @@ def edit_entry(entry_id):
     if entry.user_id != current_user.id:
         abort(403)
 
+    simple_form = None
+    gratitude_form = None
+    reflection_form = None
+
+    if entry.entry_type == "simple":
+        
+        simple_form = SimpleJournalForm(obj=entry)
+
+        if request.method == "GET":
+            simple_form.title.data = entry.title
+            simple_form.content.data = entry.content
+            simple_form.mood_score.data = str(entry.mood_score)
+
+        if simple_form.validate_on_submit():
+            try:
+                entry.title = simple_form.title.data.strip()
+                entry.content = simple_form.content.data.strip()
+                entry.mood_score = int(simple_form.mood_score.data)
+                entry.structured_content = None
+
+                db.session.commit()
+
+                flash("Journal entry updated successfully.", "success")
+                return redirect(url_for("journal.view_entry", entry_id=entry.id))
+
+            except SQLAlchemyError:
+                db.session.rollback()
+                current_app.logger.exception("Database error while editing simple journal entry")
+                flash("Something went wrong while updating your entry. Please try again.", "error")
+                return redirect(request.url)
+
+            except Exception:
+                db.session.rollback()
+                current_app.logger.exception("Unexpected error while editing simple journal entry")
+                flash("Unexpected error occurred. Please try again.", "error")
+                return redirect(request.url)
+
+        if request.method == "POST":
+            for field_errors in simple_form.errors.values():
+                for error in field_errors:
+                    flash(error, "error")
+
+        return render_template(
+            "edit_entry.html",
+            entry=entry,
+            simple_form=simple_form,
+        )
+
+    if entry.entry_type == "gratitude":
+
+        gratitude_form = GratitudeJournalForm()
+
+        if request.method == "GET":
+            gratitude_form.gratitude_1.data = entry.structured_content.get("gratitude_1", "")
+            gratitude_form.gratitude_2.data = entry.structured_content.get("gratitude_2", "")
+            gratitude_form.gratitude_3.data = entry.structured_content.get("gratitude_3", "")
+            gratitude_form.mood_score.data = str(entry.mood_score)
+
+        if gratitude_form.validate_on_submit():
+            try:
+                entry.content = None
+                entry.structured_content = {
+                    "gratitude_1": gratitude_form.gratitude_1.data.strip(),
+                    "gratitude_2": gratitude_form.gratitude_2.data.strip(),
+                    "gratitude_3": gratitude_form.gratitude_3.data.strip(),
+                }
+                entry.mood_score = int(gratitude_form.mood_score.data)
+
+                db.session.commit()
+
+                flash("Gratitude entry updated successfully.", "success")
+                return redirect(url_for("journal.view_entry", entry_id=entry.id))
+
+            except SQLAlchemyError:
+                db.session.rollback()
+                current_app.logger.exception("Database error while editing gratitude journal entry")
+                flash("Something went wrong while updating your entry. Please try again.", "error")
+                return redirect(request.url)
+
+            except Exception:
+                db.session.rollback()
+                current_app.logger.exception("Unexpected error while editing gratitude journal entry")
+                flash("Unexpected error occurred. Please try again.", "error")
+                return redirect(request.url)
+
+        if request.method == "POST":
+            for field_errors in gratitude_form.errors.values():
+                for error in field_errors:
+                    flash(error, "error")
+
+        return render_template(
+            "edit_entry.html",
+            entry=entry,
+            gratitude_form=gratitude_form,
+        )
+
+    if entry.entry_type == "reflection":
+
+        reflection_form = ReflectionJournalForm()
+
+        if request.method == "GET":
+            reflection_form.went_well.data = entry.structured_content.get("went_well", "")
+            reflection_form.challenging.data = entry.structured_content.get("challenging", "")
+            reflection_form.tomorrow.data = entry.structured_content.get("tomorrow", "")
+            reflection_form.mood_score.data = str(entry.mood_score)
+
+        if reflection_form.validate_on_submit():
+            try:
+                entry.content = None
+                entry.structured_content = {
+                    "went_well": reflection_form.went_well.data.strip(),
+                    "challenging": reflection_form.challenging.data.strip(),
+                    "tomorrow": reflection_form.tomorrow.data.strip(),
+                }
+                entry.mood_score = int(reflection_form.mood_score.data)
+
+                db.session.commit()
+
+                flash("Reflection entry updated successfully.", "success")
+                return redirect(url_for("journal.view_entry", entry_id=entry.id))
+
+            except SQLAlchemyError:
+                db.session.rollback()
+                current_app.logger.exception("Database error while editing reflection journal entry")
+                flash("Something went wrong while updating your entry. Please try again.", "error")
+                return redirect(request.url)
+
+            except Exception:
+                db.session.rollback()
+                current_app.logger.exception("Unexpected error while editing reflection journal entry")
+                flash("Unexpected error occurred. Please try again.", "error")
+                return redirect(request.url)
+
+        if request.method == "POST":
+            for field_errors in reflection_form.errors.values():
+                for error in field_errors:
+                    flash(error, "error")
+
+        return render_template(
+            "edit_entry.html",
+            entry=entry,
+            reflection_form=reflection_form,
+        )
+
     if request.method == 'POST':
         title = request.form.get("title", "").strip()
         mood_score_raw = request.form.get("mood_score", "").strip()
@@ -386,17 +640,7 @@ def edit_entry(entry_id):
             entry.title = title
             entry.mood_score = mood_score
 
-            if entry.entry_type == "simple":
-                content = request.form.get("content", "").strip()
-
-                if not content:
-                    flash("Content is required for a simple journal entry.", "error")
-                    return redirect(request.url)
-
-                entry.content = content
-                entry.structured_content = None
-
-            elif entry.entry_type == "gratitude":
+            if entry.entry_type == "gratitude":
                 gratitude_1 = request.form.get("gratitude_1", "").strip()
                 gratitude_2 = request.form.get("gratitude_2", "").strip()
                 gratitude_3 = request.form.get("gratitude_3", "").strip()
@@ -452,7 +696,8 @@ def edit_entry(entry_id):
 
     return render_template(
         "edit_entry.html",
-        entry=entry
+        entry=entry,
+        simple_form=simple_form,
     )
 
 
