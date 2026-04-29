@@ -6,8 +6,9 @@ from flask_login import current_user, login_required
 from app.models.habit import Habit
 from app.models.habit_log import HabitLog
 from app.models.journal import JournalEntry
-from app.services.ai_insights import generate_insight
 from app.helper.illustrations_helper import build_scene_payload
+from app.models.weekly_insight import WeeklyInsight
+from app.helper.weekly_insights_helper import build_insight_response
 
 main = Blueprint("main", __name__)
 
@@ -116,6 +117,26 @@ def dashboard():
     #  Get imgaes for dahboard using mapper
     dashboad_scene = build_scene_payload(score = avg_mood_score, seed_value=f'dashboard-{current_user.id}')
 
+    latest_weekly_insight_record = (
+        WeeklyInsight.query
+        .filter_by(user_id=current_user.id)
+        .order_by(WeeklyInsight.week_start.desc())
+        .first()
+    )
+
+    latest_weekly_insight = (
+        build_insight_response(latest_weekly_insight_record)
+        if latest_weekly_insight_record
+        else None
+    )
+
+    dashboard_patterns = []
+    dashboard_suggestions = []
+
+    if latest_weekly_insight:
+        dashboard_patterns = latest_weekly_insight.get("patterns", [])[:3]
+        dashboard_suggestions = latest_weekly_insight.get("suggestions", [])[:3]
+
     return render_template(
         'dashboard.html',
         email=current_user.email,
@@ -131,5 +152,8 @@ def dashboard():
         today_logs=today_logs,
         habit_streaks=habit_streaks,
         dashboard_scene=dashboad_scene,
+        latest_weekly_insight=latest_weekly_insight,
+        dashboard_patterns=dashboard_patterns,
+        dashboard_suggestions=dashboard_suggestions,
         active_habits_count=len(active_habits_count)
     )
