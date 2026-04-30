@@ -313,6 +313,7 @@
             </button>
 
             <form method="POST" action="{{ url_for('journal.delete_entry', entry_id=entry.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn-danger">
                     Delete Entry
                 </button>
@@ -339,6 +340,8 @@
         const reframeEl = document.getElementById('reflection-reframe');
         const distortionsList = document.getElementById('reflection-distortions-list');
         const distortionsBlock = document.getElementById('reflection-distortions-block');
+
+        const csrfToken = "{{ csrf_token() }}";
 
         let reflectionRequestInFlight = false;
 
@@ -445,6 +448,8 @@
                 setLoading(true);
 
                 const formData = new FormData();
+                formData.append('csrf_token', csrfToken);
+
                 if (regenerate) {
                     formData.append('regenerate', 'true');
                 }
@@ -455,12 +460,22 @@
                         method: 'POST',
                         body: formData,
                         headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': csrfToken,
+                            'Accept': 'application/json'
                         }
                     }
                 );
 
-                const data = await response.json();
+                const rawResponse = await response.text();
+                let data;
+
+                try {
+                    data = JSON.parse(rawResponse);
+                } catch (error) {
+                    console.error('Non-JSON response from reflection endpoint:', rawResponse);
+                    throw new Error('The reflection request failed before JSON was returned. Please refresh and try again.');
+                }
 
                 if (!response.ok || !data.ok) {
                     throw new Error(data.message || 'Could not generate reflection.');
