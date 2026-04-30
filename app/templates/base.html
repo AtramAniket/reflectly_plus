@@ -22,102 +22,13 @@
 </head>
 
 <body>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open navigation" aria-controls="appSidebar" aria-expanded="false">
+        <span data-lucide="menu"></span>
+    </button>
 
-    <aside class="sidebar">
-        <div class="sidebar-brand">
-            <div class="sidebar-brand-icon">✦</div>
-            <div>
-                <h2 class="sidebar-title">Reflectly</h2>
-                <p class="sidebar-tagline">Journal with intention</p>
-            </div>
-        </div>
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
 
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Overview</p>
-            <a href="{{ url_for('main.dashboard') }}"
-               class="sidebar-link {% if request.endpoint == 'main.dashboard' %}is-active{% endif %}">
-                <span class="sidebar-icon" data-lucide="layout-dashboard"></span>
-                <span>Dashboard</span>
-            </a>
-        </div>
-
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Journal</p>
-
-            <a href="{{ url_for('journal.create_new_entry', entry_type='simple') }}"
-               class="sidebar-link sidebar-sub-link {% if request.endpoint == 'journal.create_new_entry' and request.view_args and request.view_args.get('entry_type') == 'simple' %}is-active{% endif %}">
-                <span class="sidebar-icon" data-lucide="pen-square"></span>
-                <span>Simple Journal</span>
-            </a>
-
-            <a href="{{ url_for('journal.create_new_entry', entry_type='gratitude') }}"
-               class="sidebar-link sidebar-sub-link {% if request.endpoint == 'journal.create_new_entry' and request.view_args and request.view_args.get('entry_type') == 'gratitude' %}is-active{% endif %}">
-                <span class="sidebar-icon" data-lucide="heart-handshake"></span>
-                <span>Gratitude Journal</span>
-            </a>
-
-            <a href="{{ url_for('journal.create_new_entry', entry_type='reflection') }}"
-               class="sidebar-link sidebar-sub-link {% if request.endpoint == 'journal.create_new_entry' and request.view_args and request.view_args.get('entry_type') == 'reflection' %}is-active{% endif %}">
-                <span class="sidebar-icon" data-lucide="sparkles"></span>
-                <span>Daily Reflection</span>
-            </a>
-
-            <a href="{{ url_for('journal.view_all_entries') }}"
-               class="sidebar-link sidebar-sub-link {% if request.endpoint == 'journal.view_all_entries' %}is-active{% endif %}">
-                <span class="sidebar-icon" data-lucide="book-open-text"></span>
-                <span>All Entries</span>
-            </a>
-        </div>
-
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Habits</p>
-
-            <a href="{{ url_for('habit.create_habit') }}"
-               class="sidebar-link sidebar-sub-link {% if request.endpoint == 'habit.create_habit' %}is-active{% endif %}">
-                <span class="sidebar-icon" data-lucide="badge-check"></span>
-                <span>Habits</span>
-            </a>
-        </div>
-
-        <div class="sidebar-section">
-            <p class="sidebar-heading">Tools</p>
-
-            <a href="{{ url_for('tools.mood_checklist') }}"
-               class="sidebar-link {% if request.endpoint == 'tools.mood_checklist' %}is-active{% endif %}">
-                <span class="sidebar-icon" data-lucide="brain"></span>
-                <span>Mood Check-In</span>
-            </a>
-
-            <a href="{{ url_for('tools.anti_procrastination') }}"
-               class="sidebar-link {% if request.endpoint == 'tools.anti_procrastination' %}is-active{% endif %}">
-                <span class="sidebar-icon" data-lucide="clipboard-pen-line"></span>
-                <span>Anti-Procrastination</span>
-            </a>
-        </div>
-
-        <div class="sidebar-section">
-            <p class="sidebar-heading">History</p>
-
-            <a href="{{ url_for('insights.home') }}"
-               class="sidebar-link {% if request.endpoint == 'insights.home' %}is-active{% endif %}">
-                <span class="sidebar-icon" data-lucide="wand-sparkles"></span>
-                <span>Insights</span>
-            </a>
-
-            <a href="{{ url_for('main.logs') }}"
-               class="sidebar-link {% if request.endpoint == 'main.logs' %}is-active{% endif %}">
-                <span class="sidebar-icon" data-lucide="history"></span>
-                <span>Logs</span>
-            </a>
-        </div>
-
-        <div class="sidebar-footer">
-            <a href="{{ url_for('auth.logout') }}" class="sidebar-link logout-link">
-                <span class="sidebar-icon" data-lucide="log-out"></span>
-                <span>Logout</span>
-            </a>
-        </div>
-    </aside>
+    {% include "partials/_sidebar.html" %}
 
     <main class="main">
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -139,6 +50,47 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         lucide.createIcons();
+    </script>
+
+    <script>
+        const menuBtn = document.getElementById("mobileMenuBtn");
+        const closeBtn = document.getElementById("sidebarCloseBtn");
+        const sidebar = document.getElementById("appSidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+
+        function openSidebar() {
+            sidebar?.classList.add("is-open");
+            overlay?.classList.add("is-open");
+            document.body.classList.add("sidebar-open");
+            menuBtn?.setAttribute("aria-expanded", "true");
+        }
+
+        function closeSidebar() {
+            sidebar?.classList.remove("is-open");
+            overlay?.classList.remove("is-open");
+            document.body.classList.remove("sidebar-open");
+            menuBtn?.setAttribute("aria-expanded", "false");
+        }
+
+        menuBtn?.addEventListener("click", openSidebar);
+        closeBtn?.addEventListener("click", closeSidebar);
+        overlay?.addEventListener("click", closeSidebar);
+
+        document.querySelectorAll(".sidebar-link").forEach(link => {
+            link.addEventListener("click", closeSidebar);
+        });
+
+        window.addEventListener("keydown", event => {
+            if (event.key === "Escape") {
+                closeSidebar();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 900) {
+                closeSidebar();
+            }
+        });
     </script>
 
     <script>

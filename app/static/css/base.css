@@ -268,6 +268,112 @@ button {
     padding: 28px;
 }
 
+ 
+.mobile-menu-btn,
+.sidebar-overlay,
+.sidebar-mobile-close {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    body {
+        display: block;
+    }
+
+    body.sidebar-open {
+        overflow: hidden;
+    }
+
+    .mobile-menu-btn {
+        position: fixed;
+        top: 18px;
+        left: 18px;
+        z-index: 120;
+        width: 44px;
+        height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        color: #f7f4ee;
+        background: linear-gradient(180deg, #2d3a55 0%, #33435f 100%);
+        box-shadow: 0 12px 26px rgba(46, 58, 82, 0.22);
+        cursor: pointer;
+    }
+
+    .mobile-menu-btn span,
+    .sidebar-mobile-close span {
+        width: 21px;
+        height: 21px;
+    }
+
+    body.sidebar-open .mobile-menu-btn {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .sidebar {
+        width: min(82vw, 320px);
+        height: 100dvh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translateX(-105%);
+        transition: transform var(--transition-mid);
+        z-index: 110;
+        overflow-y: auto;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: none;
+        padding: 18px 14px;
+    }
+
+    .sidebar.is-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-mobile-close {
+        position: absolute;
+        top: 18px;
+        right: 14px;
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        color: #f7f4ee;
+        background: rgba(255, 255, 255, 0.10);
+        cursor: pointer;
+    }
+
+    .sidebar-brand {
+        padding-right: 48px;
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: block;
+        background: rgba(31, 42, 61, 0.42);
+        backdrop-filter: blur(3px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--transition-mid);
+    }
+
+    .sidebar-overlay.is-open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 78px 18px 18px;
+        min-height: 100dvh;
+    }
+}
+
 /* =========================================================
    3. GENERIC TYPOGRAPHY + CONTAINERS
    ========================================================= */
@@ -580,25 +686,6 @@ textarea {
 /* =========================================================
    8. RESPONSIVE
    ========================================================= */
-
-@media (max-width: 900px) {
-    body {
-        display: block;
-    }
-
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 1px solid rgba(226, 212, 191, 0.75);
-    }
-
-    .main {
-        margin-left: 0;
-        padding: 18px;
-    }
-}
 
 @media (max-width: 700px) {
     .main {

@@ -38,7 +38,7 @@ def upgrade():
         sa.Column('archived_note', sa.Text(), nullable=True)
     )
 
-    op.execute("UPDATE habits SET is_archived = 0 WHERE is_archived IS NULL")
+    op.execute("UPDATE habits SET is_archived = False WHERE is_archived IS NULL")
 
     with op.batch_alter_table('habits') as batch_op:
         batch_op.alter_column('is_archived', nullable=False, server_default=None)
