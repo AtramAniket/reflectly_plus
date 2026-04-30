@@ -55,6 +55,11 @@ def generate_weekly_insight_payload(
         )
 
         content = response.choices[0].message.content or "{}"
+        content = content.strip()
+
+        if content.startswith("```"):
+            content = content.replace("```json", "").replace("```", "").strip()
+
         parsed = json.loads(content)
 
         return normalize_weekly_ai_output(
