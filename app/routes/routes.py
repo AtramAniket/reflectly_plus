@@ -38,10 +38,12 @@ def home():
         return redirect(url_for('main.dashboard'))
     return redirect(url_for('auth.login'))
 
+
 @main.route("/logs")
 @login_required
 def logs():
     return render_template("logs.html")
+
 
 @main.route("/dashboard")
 @login_required
@@ -69,7 +71,7 @@ def dashboard():
 
     one_week_ago = datetime.now(timezone.utc) - timedelta(days=7)
 
-    entries_this_week = (
+    entries_this_week_count = (
         JournalEntry.query
         .filter(
             JournalEntry.user_id == current_user.id,
@@ -88,12 +90,10 @@ def dashboard():
             trend = 'Stable ➖'
 
     if all_entries:
-        # insights = generate_insight(avg_mood_score, trend, all_entries)
         insights = 'This is a placeholder for AI Insights using OpenAI API'
     else:
         insights = 'Start Journalling to get insights'
 
-    # Active habits only
     habits = (
         Habit.query
         .filter_by(user_id=current_user.id, is_archived=False)
@@ -101,7 +101,6 @@ def dashboard():
         .all()
     )
 
-    # Today's completed logs for this user's active habits only
     today_logs = {
         log.habit_id
         for log in HabitLog.query.join(Habit).filter(
@@ -112,18 +111,19 @@ def dashboard():
         ).all()
     }
 
-    # Streaks for active habits only
     habit_streaks = {}
     for habit in habits:
         active_logs = [log for log in habit.logs if log.completed]
         habit_streaks[habit.id] = calculate_streaks(active_logs)
 
-    # Current active habits
+    active_habits_count = (
+        Habit.query
+        .filter_by(user_id=current_user.id, is_archived=False)
+        .order_by(Habit.id.desc())
+        .all()
+    )
 
-    active_habits_count = Habit.query.filter_by(user_id=current_user.id, is_archived=False).order_by(Habit.id.desc()).all()
-
-    #  Get imgaes for dahboard using mapper
-    dashboad_scene = build_scene_payload(score = avg_mood_score, seed_value=f'dashboard-{current_user.id}')
+    dashboard_scene = build_scene_payload(score=avg_mood_score, seed_value=f'dashboard-{current_user.id}')
 
     latest_weekly_insight_record = (
         WeeklyInsight.query
@@ -141,9 +141,30 @@ def dashboard():
     dashboard_patterns = []
     dashboard_suggestions = []
 
+    weekly_insight_status = "ready" if latest_weekly_insight else "no_data"
+    weekly_insight_message = {
+        "title": "Your weekly insight is ready",
+        "body": "Review the patterns and suggestions generated from your recent activity.",
+        "icon": "sparkles",
+    }
+
     if latest_weekly_insight:
         dashboard_patterns = latest_weekly_insight.get("patterns", [])[:3]
         dashboard_suggestions = latest_weekly_insight.get("suggestions", [])[:3]
+    elif entries_this_week_count > 0:
+        weekly_insight_status = "insufficient"
+        weekly_insight_message = {
+            "title": "Weekly insight is warming up",
+            "body": "Add a few more journal entries, mood check-ins, or habit logs this week to unlock a stronger weekly reflection.",
+            "icon": "seedling",
+        }
+    else:
+        weekly_insight_status = "no_data"
+        weekly_insight_message = {
+            "title": "Start this week's story",
+            "body": "Once you add some activity this week, Reflectly can prepare a meaningful weekly insight for you.",
+            "icon": "book-heart",
+        }
 
     return render_template(
         'dashboard.html',
@@ -151,7 +172,7 @@ def dashboard():
         journal_entries=recent_entries,
         average_mood_score=avg_mood_score,
         total_entries=total_entries,
-        entries_this_week=entries_this_week,
+        entries_this_week=entries_this_week_count,
         trend=trend,
         dates=dates,
         moods=mood_values,
@@ -159,9 +180,11 @@ def dashboard():
         habits=habits,
         today_logs=today_logs,
         habit_streaks=habit_streaks,
-        dashboard_scene=dashboad_scene,
+        dashboard_scene=dashboard_scene,
         latest_weekly_insight=latest_weekly_insight,
         dashboard_patterns=dashboard_patterns,
         dashboard_suggestions=dashboard_suggestions,
+        weekly_insight_status=weekly_insight_status,
+        weekly_insight_message=weekly_insight_message,
         active_habits_count=len(active_habits_count)
     )
