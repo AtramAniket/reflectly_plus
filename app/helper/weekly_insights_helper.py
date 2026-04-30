@@ -15,6 +15,7 @@ from app.models.journal import JournalEntry
 from app.models.mood_checklist import MoodChecklistResult
 from app.models.procrastination_sheet import ProcrastinationSheet
 from app.models.weekly_insight import WeeklyInsight
+from app.models.user import User
 from app.services.weekly_insight_service import generate_weekly_insight_payload
 
 
@@ -154,6 +155,85 @@ def get_or_generate_weekly_insight(
     )
 
     return build_insight_response(saved_insight)
+
+
+# ---------------------------------------------------------------------------
+# CRON / scheduled generation helpers
+# ---------------------------------------------------------------------------
+
+def generate_weekly_insights_for_all_users(
+    target_date: Optional[date] = None,
+    force_refresh: bool = False,
+) -> dict[str, Any]:
+    """
+    Generate weekly insights for every user.
+
+    This function is safe to call from a Flask CLI command or Render Cron Job.
+
+    It is intentionally idempotent by default:
+    - if a user already has a WeeklyInsight row for the target week, they are skipped
+    - pass force_refresh=True only for manual/admin regeneration
+
+    Returns a compact run summary for terminal logs.
+    """
+    users = User.query.order_by(User.id.asc()).all()
+
+    results: dict[str, Any] = {
+        "users_seen": len(users),
+        "generated": 0,
+        "skipped_existing": 0,
+        "failed": 0,
+        "errors": [],
+    }
+
+    for user in users:
+        week_start, _week_end = get_week_range_for_user(user, target_date)
+
+        existing_insight = WeeklyInsight.query.filter_by(
+            user_id=user.id,
+            week_start=week_start,
+        ).first()
+
+        if existing_insight and not force_refresh:
+            results["skipped_existing"] += 1
+            continue
+
+        try:
+            get_or_generate_weekly_insight(
+                user=user,
+                target_date=target_date,
+                force_refresh=force_refresh,
+            )
+            results["generated"] += 1
+
+        except Exception as exc:  # keep cron running for remaining users
+            db.session.rollback()
+            results["failed"] += 1
+            results["errors"].append(
+                {
+                    "user_id": user.id,
+                    "week_start": week_start.isoformat(),
+                    "error": str(exc),
+                }
+            )
+
+    return results
+
+
+def generate_previous_weekly_insights_for_all_users(
+    force_refresh: bool = False,
+) -> dict[str, Any]:
+    """
+    Generate insights for the completed previous week.
+
+    Recommended for production cron so the job does not generate a partial
+    current-week insight early Monday.
+    """
+    target_date = datetime.now(timezone.utc).date() - timedelta(days=7)
+    return generate_weekly_insights_for_all_users(
+        target_date=target_date,
+        force_refresh=force_refresh,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -651,36 +731,33 @@ def aggregate_habit_data(
         user_timezone,
     )
 
-    active_habits = (
-        Habit.query
-        .filter(
-            Habit.user_id == user.id,
-            getattr(Habit, "is_archived", False) == False if hasattr(Habit, "is_archived") else True,
-        )
-        .all()
-    )
+    habit_filters = [Habit.user_id == user.id]
+    if hasattr(Habit, "is_archived"):
+        habit_filters.append(Habit.is_archived.is_(False))
 
+    active_habits = Habit.query.filter(*habit_filters).all()
     active_habit_ids = [habit.id for habit in active_habits]
 
+    completed_logs = []
     if active_habit_ids:
+        # HabitLog currently stores the habit day in `date`, not `created_at`.
+        # Keep this date-based so it works cleanly with PostgreSQL and the existing app routes.
         completed_logs = (
             HabitLog.query
             .filter(
                 HabitLog.habit_id.in_(active_habit_ids),
-                HabitLog.created_at >= start_dt,
-                HabitLog.created_at < end_dt,
+                HabitLog.date >= week_start,
+                HabitLog.date <= week_end,
+                HabitLog.completed.is_(True),
             )
             .all()
         )
-    else:
-        completed_logs = []
 
     log_dates: set[str] = set()
 
     for log in completed_logs:
-        log_dt = getattr(log, "completed_at", None) or getattr(log, "created_at", None)
-        if log_dt:
-            log_dates.add(log_dt.date().isoformat())
+        if log.date:
+            log_dates.add(log.date.isoformat())
 
     expected_logs = len(active_habits) * 7 if active_habits else 0
     completion_rate = round(len(completed_logs) / expected_logs, 2) if expected_logs > 0 else 0
