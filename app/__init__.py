@@ -39,6 +39,16 @@ def create_app():
     app.register_blueprint(journal)
     app.register_blueprint(insight)
 
+    # CLI command for Render Cron / manual scheduled generation
+    from .helper.weekly_insights_helper import generate_previous_weekly_insights_for_all_users
+
+    @app.cli.command("generate-weekly-insights")
+    def generate_weekly_insights_command():
+        """Generate weekly insights for the completed previous week."""
+        results = generate_previous_weekly_insights_for_all_users()
+        print("Weekly insights generation complete")
+        print(results)
+
     @login_manager.user_loader
     def load_user(user_id):
         return db.session.get(User, int(user_id))
