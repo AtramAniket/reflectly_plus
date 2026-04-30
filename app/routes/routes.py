@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, timezone
 
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import current_user, login_required
@@ -67,8 +67,16 @@ def dashboard():
     avg_mood_score = round(sum(mood_values) / len(mood_values), 2) if mood_values else None
     dates = [e.created_at.strftime('%d %b %H:%M') for e in all_entries if e.mood_score is not None]
 
-    one_week_ago = datetime.utcnow() - timedelta(days=7)
-    entries_this_week = [e for e in all_entries if e.created_at and e.created_at >= one_week_ago]
+    one_week_ago = datetime.now(timezone.utc) - timedelta(days=7)
+
+    entries_this_week = (
+        JournalEntry.query
+        .filter(
+            JournalEntry.user_id == current_user.id,
+            JournalEntry.created_at >= one_week_ago
+        )
+        .count()
+    )
 
     trend = 'Not enough data'
     if len(mood_values) >= 3:
@@ -143,7 +151,7 @@ def dashboard():
         journal_entries=recent_entries,
         average_mood_score=avg_mood_score,
         total_entries=total_entries,
-        entries_this_week=len(entries_this_week),
+        entries_this_week=entries_this_week,
         trend=trend,
         dates=dates,
         moods=mood_values,
