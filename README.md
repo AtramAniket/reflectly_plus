@@ -12,12 +12,37 @@ Reflectly is a full-stack journaling and self-reflection platform designed to he
 
 ## 📸 Screenshots
 
-*(Add 3–5 screenshots here for maximum impact)*
+<img width="1914" height="917" alt="dashboard-preview-final" src="https://github.com/user-attachments/assets/2c332d96-20a7-483b-ab7f-8421f7ba8d78" />
 
-* Dashboard overview
-* Journal entry flow
-* Mood check-in
-* Weekly insights
+---
+
+<img width="1915" height="911" alt="journal-entry-three" src="https://github.com/user-attachments/assets/6aa3a092-577b-4cb9-aa51-73f138d7b024" />
+
+---
+
+<img width="1915" height="911" alt="journal-entry-two" src="https://github.com/user-attachments/assets/524a3d17-4a17-4569-9be1-269aefe72e28" />
+
+---
+
+<img width="1650" height="919" alt="journal-entry-view" src="https://github.com/user-attachments/assets/25c8ac69-eb68-4703-a65a-36d91d9701dd" />
+
+
+---
+
+<img width="1648" height="914" alt="mood-checkin-three" src="https://github.com/user-attachments/assets/669f7d2c-12bc-4c44-834e-d19fec11fa68" />
+
+---
+
+
+<img width="1643" height="911" alt="mood-chekin-five" src="https://github.com/user-attachments/assets/c1da3ade-9104-434d-9613-8bb200e946b3" />
+
+---
+
+<img width="1919" height="921" alt="insights-one" src="https://github.com/user-attachments/assets/fae286f6-4634-4a21-97ff-699fd6a1b001" />
+
+---
+
+<img width="1646" height="921" alt="insights-two" src="https://github.com/user-attachments/assets/900f4c72-f888-4dc8-91e2-da57fa67b203" />
 
 ---
 
